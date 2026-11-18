@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Software — Lore Machine</title>
+<!-- icons + link previews -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="description" content="Enter Lore Machine">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lore Machine">
+<meta property="og:title" content="Software — Lore Machine">
+<meta property="og:description" content="Enter Lore Machine">
+<meta property="og:url" content="https://loremachine.info/software">
+<meta property="og:image" content="https://loremachine.info/assets/share.jpg">
+<meta property="og:image:width" content="928">
+<meta property="og:image:height" content="400">
+<meta property="og:video" content="https://loremachine.info/assets/share.mp4">
+<meta property="og:video:secure_url" content="https://loremachine.info/assets/share.mp4">
+<meta property="og:video:type" content="video/mp4">
+<meta property="og:video:width" content="928">
+<meta property="og:video:height" content="400">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Software — Lore Machine">
+<meta name="twitter:description" content="Enter Lore Machine">
+<meta name="twitter:image" content="https://loremachine.info/assets/share.jpg">
+<!-- /previews -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter+Tight:wght@600;700;800&display=swap">
+<style>
+:root{
+  --night:#07021A; --violet:#300064; --accent:#FF375E; --cyan:#3FE7F2;
+  --amber:#FFB38A; --ice:#D6F1F4; --ink:#EDE6FF; --text:#F7EEFF;
+  --font:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--night);color:var(--text);font-family:var(--font);overflow:hidden}
+
+/* ---------- Three.js mounts here ---------- */
+#scene{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block;pointer-events:none;
+  /* placeholder until the scene is live */
+  background:radial-gradient(ellipse 80% 50% at 50% 48%,#6B1560 0%,#2A0A55 35%,#07021A 75%)}
+.shade{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(7,2,26,.8) 0%,rgba(7,2,26,.25) 40%,rgba(7,2,26,.35) 70%,rgba(7,2,26,.85) 100%)}
+
+.page{position:relative;z-index:2;height:100%;display:grid;grid-template-rows:auto 1fr auto auto;
+  padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+
+/* inked manga corners */
+.corner{position:fixed;width:150px;height:150px;z-index:2;pointer-events:none}
+.corner.tl{left:20px;top:20px}
+.corner.tr{right:20px;top:20px;transform:scaleX(-1)}
+.corner.bl{left:20px;bottom:76px;transform:scaleY(-1)}
+.corner.br{right:20px;bottom:76px;transform:scale(-1,-1)}
+
+/* header */
+header{display:flex;flex-direction:column;align-items:center;gap:18px;padding-top:72px;text-align:center}
+.wordmark{width:190px;height:auto}
+h1{margin:0;font-weight:800;font-stretch:82%;font-size:clamp(40px,5vw,72px);line-height:.92;
+  letter-spacing:-.04em;color:var(--ice);text-shadow:0 2px 22px rgba(7,2,26,.9)}
+.cipher{margin:0;min-height:1.4em;white-space:pre;font-size:15px;letter-spacing:.3em;color:var(--ice);opacity:.72}
+
+/* stage: buttons flank the mark */
+.stage{display:grid;grid-template-columns:340px minmax(0,1fr) 340px;align-items:center;padding:0 136px}
+.mark{display:flex;justify-content:center}
+.mark img{height:min(310px,34vh);width:auto;filter:drop-shadow(0 0 36px rgba(255,55,94,.5))}
+.door{position:relative;display:flex;flex-direction:column;align-items:flex-start}
+.door.right{align-items:flex-end;text-align:right}
+.door button{display:flex;align-items:center;gap:14px;min-width:290px;min-height:64px;padding:16px 26px;
+  font:800 24px/1 var(--font);letter-spacing:-.01em;text-transform:uppercase;cursor:pointer;
+  color:var(--text);background:rgba(7,2,26,.62);border:2px solid rgba(247,238,255,.45);
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+  transition:transform 140ms cubic-bezier(.2,.9,.3,1.4),background 140ms,border-color 140ms,box-shadow 140ms}
+.door button span{flex-grow:1;text-align:left}
+.door .tri{width:14px;height:16px;fill:var(--accent);opacity:0;flex-shrink:0;animation:blink .9s steps(2) infinite}
+.door.open button{color:#fff;background:rgba(255,55,94,.22);border-color:var(--accent);transform:translateX(10px);
+  box-shadow:0 0 28px rgba(255,55,94,.55),inset 0 0 18px rgba(255,55,94,.25)}
+.door.open .tri{opacity:1}
+.door button:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.panel{position:absolute;top:100%;margin-top:14px;width:340px;display:none;flex-direction:column;gap:8px}
+.door.left .panel{left:0} .door.right .panel{right:0;align-items:flex-end}
+.door.open .panel{display:flex;animation:reveal 180ms ease-out}
+.panel p{margin:0;font-size:18px;line-height:1.35;letter-spacing:-.01em;color:var(--amber);text-shadow:0 1px 12px rgba(7,2,26,.95)}
+.panel a{font-weight:500;font-size:16px;color:var(--text);text-decoration:underline;text-decoration-color:var(--accent);
+  text-decoration-thickness:2px;text-underline-offset:6px;padding:10px 0;min-height:44px}
+
+.util{display:flex;justify-content:center;align-items:center;gap:18px;margin:0 auto 22px}
+.pages{display:flex;gap:6px}
+.pages a{display:grid;place-items:center;min-height:44px;padding:0 10px;font-size:15px;font-weight:500;letter-spacing:.01em;
+  color:rgba(237,230,255,.55);text-decoration:none;transition:color .18s ease}
+.pages a:hover,.pages a:focus-visible{color:var(--ice);text-decoration:underline;text-decoration-color:var(--accent);
+  text-decoration-thickness:2px;text-underline-offset:6px}
+.pages a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.util .rule{width:1px;height:18px;background:rgba(237,230,255,.22)}
+.socials{display:flex;justify-content:center;gap:14px}
+.socials a{display:grid;place-items:center;width:44px;height:44px;color:rgba(237,230,255,.42);
+  transition:color .18s ease,transform .18s ease,filter .18s ease}
+.socials svg{width:22px;height:22px;display:block}
+.socials a:hover,.socials a:focus-visible{color:var(--ice);transform:translateY(-2px);
+  filter:drop-shadow(0 0 8px rgba(255,55,94,.7))}
+.socials a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ticker */
+.ticker{height:48px;overflow:hidden;display:flex;align-items:center;background:rgba(7,2,26,.88);border-top:1px solid rgba(255,55,94,.45)}
+.track{display:flex;white-space:nowrap;font-weight:600;font-size:15px;letter-spacing:.01em;color:var(--ice)}
+.copy{display:flex;align-items:center;flex-shrink:0;animation:ticker 150s linear infinite;will-change:transform;backface-visibility:hidden}
+.track:hover .copy{animation-play-state:paused}
+.item{display:inline-flex;align-items:center;padding:0 20px}
+.arr{width:9px;height:10px;fill:var(--accent)}
+.sep{color:rgba(214,241,244,.3)}
+
+/* kunai cursor + lock-on reticle (fine pointers only) */
+.kunai,.reticle{position:fixed;left:0;top:0;pointer-events:none;z-index:100;opacity:0}
+.kunai{width:30px;height:30px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6));transform-origin:3px 3px;will-change:transform}
+.reticle{filter:drop-shadow(0 0 6px rgba(255,55,94,.8));
+  transition:left 150ms cubic-bezier(.2,.9,.3,1.2),top 150ms cubic-bezier(.2,.9,.3,1.2),width 150ms cubic-bezier(.2,.9,.3,1.2),height 150ms cubic-bezier(.2,.9,.3,1.2),opacity 120ms}
+.reticle i{position:absolute;width:14px;height:14px;border:0 solid var(--accent)}
+.reticle i:nth-child(1){left:0;top:0;border-left-width:3px;border-top-width:3px}
+.reticle i:nth-child(2){right:0;top:0;border-right-width:3px;border-top-width:3px}
+.reticle i:nth-child(3){left:0;bottom:0;border-left-width:3px;border-bottom-width:3px}
+.reticle i:nth-child(4){right:0;bottom:0;border-right-width:3px;border-bottom-width:3px}
+@media (pointer:fine){ body.kunai-on,body.kunai-on *{cursor:none!important} }
+@media (pointer:coarse){ .kunai,.reticle{display:none} }
+
+@keyframes reveal{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes blink{0%{visibility:visible}50%{visibility:hidden}}
+@keyframes ticker{from{transform:translate3d(0,0,0)}to{transform:translate3d(-100%,0,0)}}
+
+/* mobile */
+@media (max-width:760px){
+  html,body{overflow:auto}
+  header{align-items:flex-start;text-align:left;padding:40px 24px 0;gap:12px}
+  .wordmark{width:130px}
+  .cipher{font-size:12px;letter-spacing:.25em}
+  .stage{grid-template-columns:1fr;padding:24px;gap:14px;align-content:end}
+  .mark{order:-1;justify-content:flex-end} .mark img{height:170px}
+  .door,.door.right{align-items:stretch;text-align:left}
+  .door button{width:100%;min-width:0;font-size:20px}
+  .door.open button{transform:none}
+  .panel,.door.right .panel{position:static;width:auto;align-items:flex-start;margin-top:10px}
+  .panel p{font-size:16px}
+  .util{flex-direction:column;gap:0;margin-bottom:14px} .util .rule{display:none} .socials{gap:4px} .pages a{font-size:14px}
+  .ticker{height:40px} .track{font-size:12px}
+  .corner{width:90px;height:90px} .corner.bl,.corner.br{bottom:44px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- press ---------- */
+.home{display:block;line-height:0}
+.press{align-self:center;width:min(1180px,100% - 240px);margin:0 auto;display:grid;
+  grid-template-columns:minmax(0,.78fr) minmax(0,1.5fr);gap:12px;align-items:stretch;padding:20px 0}
+html,body{overflow:auto} .page{min-height:100%;height:auto}
+.plate{position:relative;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--text);
+  background:rgba(7,2,26,.68);border:2px solid rgba(247,238,255,.26);padding:12px 18px 13px;
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  transition:transform 140ms cubic-bezier(.2,.9,.3,1.4),background 140ms,border-color 140ms,box-shadow 140ms}
+.plate .meta{display:flex;align-items:baseline;gap:8px;font-size:11.5px;color:rgba(237,230,255,.58)}
+.plate .meta b{font-weight:800;font-size:12.5px;letter-spacing:.02em;color:var(--amber)}
+.plate .tri{position:absolute;left:6px;top:16px;width:9px;height:11px;fill:var(--accent);opacity:0;animation:blink .9s steps(2) infinite}
+.plate .hl{font-weight:700;font-size:14px;line-height:1.25;color:var(--ice);
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.plate:hover,.plate:focus-visible{background:rgba(255,55,94,.16);border-color:var(--accent);transform:translateX(6px);
+  box-shadow:0 0 24px rgba(255,55,94,.45),inset 0 0 16px rgba(255,55,94,.2)}
+.plate:hover .tri,.plate:focus-visible .tri{opacity:1}
+.plate:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.lead{justify-content:flex-end;gap:12px;padding:28px 30px 26px}
+.lead .meta{font-size:13px} .lead .meta b{font-size:15px}
+.lead .tri{top:auto;bottom:auto;left:12px;margin-top:3px}
+.lead .hl{font-weight:800;font-stretch:82%;font-size:clamp(32px,3.2vw,46px);line-height:.95;letter-spacing:-.035em;
+  -webkit-line-clamp:unset;display:block}
+.lead .dek{font-size:16px;line-height:1.4;color:var(--text);opacity:.85;max-width:44ch}
+.lead .go{align-self:flex-start;margin-top:2px;font-weight:500;font-size:15px;text-decoration:underline;
+  text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:6px}
+.more{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:10px}
+.more .plate{height:100%}
+.pages a[aria-current="page"]{color:var(--ice)}
+@media (max-width:1100px){ .press{grid-template-columns:1fr;width:min(820px,100% - 160px)} .lead{padding:22px 26px} }
+@media (max-width:760px){
+  .press{width:auto;margin:0;padding:20px 24px;gap:10px;align-self:start}
+  .plate{padding:12px 16px} .lead{padding:20px 18px}
+  .plate:hover,.plate:focus-visible{transform:none}
+  .lead .hl{font-size:30px} .lead .dek{font-size:15px}
+  .plate .tri{display:none} .plate .hl{-webkit-line-clamp:4}
+  .more{grid-template-columns:1fr;grid-auto-rows:auto}
+}
+
+/* ---------- top bar + emblem menu ---------- */
+.topbar{position:fixed;top:50px;left:62px;right:62px;z-index:40;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.topbar > *{pointer-events:auto}
+.topbar .wordmark{width:170px;height:auto;display:block}
+header{padding-top:118px}
+.menu-btn{display:grid;place-items:center;min-width:44px;min-height:44px;padding:4px;margin-right:-4px;background:none;border:0;cursor:pointer}
+.menu-btn img{height:35px;width:auto;display:block;filter:drop-shadow(0 0 10px rgba(255,55,94,.45));
+  transition:transform 260ms cubic-bezier(.2,.9,.3,1.3),filter 160ms}
+.menu-btn:hover img,.menu-btn:focus-visible img{filter:drop-shadow(0 0 16px rgba(255,55,94,.9));transform:scale(1.08)}
+.menu-btn[aria-expanded="true"] img{transform:rotateY(180deg) scale(1.08);filter:drop-shadow(0 0 18px rgba(63,231,242,.8))}
+.menu-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.menu{position:fixed;inset:0;z-index:30;display:grid;place-content:center;justify-items:center;gap:28px;
+  background:rgba(7,2,26,.94)}
+.menu[hidden]{display:none}
+body.menu-open .page{opacity:.08;transition:opacity 160ms}
+.menu-list{display:flex;flex-direction:column;gap:12px}
+.menu-list a{display:flex;align-items:center;gap:14px;min-width:300px;min-height:60px;padding:14px 24px;text-decoration:none;
+  font:800 26px/1 var(--font);letter-spacing:-.01em;text-transform:uppercase;color:var(--text);
+  background:rgba(7,2,26,.62);border:2px solid rgba(247,238,255,.4);
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+  transition:transform 140ms cubic-bezier(.2,.9,.3,1.4),background 140ms,border-color 140ms,box-shadow 140ms}
+.menu-list .tri{width:14px;height:16px;fill:var(--accent);opacity:0;flex-shrink:0;animation:blink .9s steps(2) infinite}
+.menu-list a:hover,.menu-list a:focus-visible{color:#fff;background:rgba(255,55,94,.22);border-color:var(--accent);transform:translateX(10px);
+  box-shadow:0 0 28px rgba(255,55,94,.55),inset 0 0 18px rgba(255,55,94,.25);outline:none}
+.menu-list a:hover .tri,.menu-list a:focus-visible .tri{opacity:1}
+.menu-list a[aria-current="page"]{border-color:rgba(255,55,94,.7);color:var(--ice)}
+@keyframes menuIn{from{opacity:0}to{opacity:1}}
+@media (max-width:760px){
+  .topbar{top:34px;left:30px;right:26px} .topbar .wordmark{width:128px} .menu-btn img{height:27px}
+  header{padding-top:92px}
+  .menu-list a{min-width:260px;font-size:22px}
+}
+
+/* ---------- news extras ---------- */
+header .sub{margin:0;font-size:16px;color:rgba(237,230,255,.7);max-width:64ch}
+.plate .sub2{font-size:12.5px;line-height:1.3;color:rgba(237,230,255,.66);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.news .plate{gap:4px;padding-top:11px;padding-bottom:11px}
+.news .plate .hl{-webkit-line-clamp:1}
+.news .lead{gap:12px;padding:26px 28px 24px}
+.news .lead .hl{-webkit-line-clamp:unset}
+.news .lead .dek{font-size:14.5px;max-width:52ch}
+@media (max-width:760px){ header .sub{font-size:14px} .news .plate .hl{-webkit-line-clamp:3} .plate .sub2{white-space:normal} }
+
+/* ---------- product ---------- */
+.product{align-self:center;width:min(1180px,100% - 240px);margin:0 auto;display:grid;
+  grid-template-columns:minmax(0,.8fr) minmax(0,1.25fr);gap:48px;align-items:center;padding:20px 0}
+.pitch{display:flex;flex-direction:column;gap:18px}
+.pitch p{margin:0;font-size:17px;line-height:1.5;color:var(--text);text-shadow:0 1px 14px rgba(7,2,26,.95);max-width:42ch}
+.pitch .big{font-weight:800;font-stretch:82%;font-size:clamp(30px,3vw,42px);line-height:1;letter-spacing:-.03em;color:var(--ice)}
+.cta{align-self:flex-start;margin-top:6px;display:flex;align-items:center;gap:12px;min-height:52px;padding:12px 24px;text-decoration:none;
+  font:800 18px/1 var(--font);text-transform:uppercase;letter-spacing:.01em;color:var(--text);
+  background:rgba(7,2,26,.62);border:2px solid rgba(247,238,255,.4);
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  transition:transform 140ms cubic-bezier(.2,.9,.3,1.4),background 140ms,border-color 140ms,box-shadow 140ms}
+.cta{position:relative} .cta .tri{position:absolute;left:9px;width:9px;height:11px;fill:var(--accent);opacity:0;animation:blink .9s steps(2) infinite}
+.cta:hover,.cta:focus-visible{color:#fff;background:rgba(255,55,94,.22);border-color:var(--accent);transform:translateX(8px);
+  box-shadow:0 0 28px rgba(255,55,94,.55),inset 0 0 18px rgba(255,55,94,.25)}
+.cta:hover .tri,.cta:focus-visible .tri{opacity:1}
+.cta:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.video{position:relative;aspect-ratio:16/9;background:rgba(7,2,26,.8);border:2px solid rgba(247,238,255,.3);padding:6px;
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+  box-shadow:0 0 40px rgba(63,231,242,.18)}
+.video iframe,.video .ph{width:100%;height:100%;border:0;display:block}
+.video .ph{display:grid;place-items:center;align-content:center;gap:14px;text-decoration:none;color:var(--ice);
+  background:radial-gradient(ellipse at center,rgba(255,55,94,.18),rgba(7,2,26,.9));font-weight:700;font-size:16px}
+.video .ph svg{width:74px;height:74px;fill:var(--accent);filter:drop-shadow(0 0 16px rgba(255,55,94,.7))}
+@media (max-width:1100px){ .product{grid-template-columns:1fr;width:min(760px,100% - 160px);gap:28px} }
+@media (max-width:760px){ .product{width:auto;margin:0;padding:20px 24px;gap:22px;align-self:start}
+  .pitch p{font-size:16px} .pitch .big{font-size:30px} }
+
+/* ---------- interface sounds toggle ---------- */
+.sfx-toggle{display:grid;place-items:center;width:44px;height:44px;padding:0;background:none;border:0;cursor:pointer;
+  color:rgba(237,230,255,.42);transition:color .18s ease,filter .18s ease}
+.sfx-toggle svg{width:20px;height:20px;display:block}
+.sfx-toggle:hover,.sfx-toggle:focus-visible{color:var(--ice);filter:drop-shadow(0 0 8px rgba(255,55,94,.7))}
+.sfx-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sfx-toggle[aria-pressed="false"]{opacity:.55}
+.sfx-toggle[aria-pressed="false"] path:last-child{display:none}
+/* display type: Inter Tight */
+h1,.pitch .big,.about .big,.lead .hl,.contact-card h2{font-family:'Inter Tight','Archivo',system-ui,sans-serif;font-stretch:100%;font-weight:700;letter-spacing:-.035em}
+/* phones: no corner frames, sound toggle sits in the icon row */
+@media (max-width:760px){
+  .corner{display:none}
+  .util{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:0}
+  .util .pages{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body class="kunai-on" data-view="software">
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="shade" aria-hidden="true"></div>
+<div class="corner tl" aria-hidden="true"><svg viewBox="0 0 150 150" fill="#EDE6FF"><polygon points="6.0,21.5 140.0,22.6 140.0,22.2 6.0,17.9" opacity="0.92"/><polygon points="18.4,10.0 17.8,120.0 18.2,120.0 22.0,10.0" opacity="0.92"/><polygon points="15.2,19.4 105.2,20.7 105.2,20.5 15.2,18.2" opacity="0.35"/><polygon points="20.7,13.9 19.7,88.9 19.9,88.9 21.9,13.9" opacity="0.35"/></svg></div>
+<div class="corner tr" aria-hidden="true"><svg viewBox="0 0 150 150" fill="#EDE6FF"><polygon points="6.0,21.5 140.0,22.6 140.0,22.2 6.0,17.9" opacity="0.92"/><polygon points="18.4,10.0 17.8,120.0 18.2,120.0 22.0,10.0" opacity="0.92"/><polygon points="15.2,19.4 105.2,20.7 105.2,20.5 15.2,18.2" opacity="0.35"/><polygon points="20.7,13.9 19.7,88.9 19.9,88.9 21.9,13.9" opacity="0.35"/></svg></div>
+<div class="corner bl" aria-hidden="true"><svg viewBox="0 0 150 150" fill="#EDE6FF"><polygon points="6.0,21.5 140.0,22.6 140.0,22.2 6.0,17.9" opacity="0.92"/><polygon points="18.4,10.0 17.8,120.0 18.2,120.0 22.0,10.0" opacity="0.92"/><polygon points="15.2,19.4 105.2,20.7 105.2,20.5 15.2,18.2" opacity="0.35"/><polygon points="20.7,13.9 19.7,88.9 19.9,88.9 21.9,13.9" opacity="0.35"/></svg></div>
+<div class="corner br" aria-hidden="true"><svg viewBox="0 0 150 150" fill="#EDE6FF"><polygon points="6.0,21.5 140.0,22.6 140.0,22.2 6.0,17.9" opacity="0.92"/><polygon points="18.4,10.0 17.8,120.0 18.2,120.0 22.0,10.0" opacity="0.92"/><polygon points="15.2,19.4 105.2,20.7 105.2,20.5 15.2,18.2" opacity="0.35"/><polygon points="20.7,13.9 19.7,88.9 19.9,88.9 21.9,13.9" opacity="0.35"/></svg></div>
+
+<div class="page">
+  <header><h1>Software</h1></header>
+
+  <main class="product"><div class="pitch"><p>World Builders are a new creator class using generative technology to build cinematic universes. Their audiences are exploding across social, but their stories are scattered across posts.</p><p class="big">Lore Machine is their home.</p><p>Creators serialize interactive graphic novels called LORE into Worlds fans pay to experience.</p><a class="cta" href="https://www.loremachine.world/" target="_blank" rel="noopener"><svg class="tri" viewBox="0 0 14 16" aria-hidden="true"><path d="M0 0L14 8L0 16Z"/></svg><span>Launch App</span></a></div><div class="video"><iframe src="https://www.youtube-nocookie.com/embed/-dGg4wL_cAQ?rel=0&amp;modestbranding=1" title="Lore Machine video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div></main>
+
+  <div class="util"><nav class="socials" aria-label="Lore Machine elsewhere"><a href="https://loremachine.substack.com/" target="_blank" rel="noopener" aria-label="Substack"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h16v2.4H4zM4 7.3h16v2.4H4zM4 11.6h16V21l-8-4.4L4 21z"/></svg></a><a href="https://www.instagram.com/lore.machine/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg></a><a href="https://x.com/lore_machine" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.5 3h4.9l4.2 5.9L17.8 3h2.4l-6.5 7.4L21 21h-4.9l-4.6-6.4L5.8 21H3.4l7-8z"/><path fill="#07021A" d="M6.4 4.4h1.4l10 15.2h-1.4z"/></svg></a><a href="https://www.youtube.com/@Lore_Machine" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M2.6 7.2C2.8 5.7 3.9 4.7 5.4 4.6 7.5 4.4 9.8 4.3 12 4.3s4.5.1 6.6.3c1.5.1 2.6 1.1 2.8 2.6.2 1.6.3 3.2.3 4.8s-.1 3.2-.3 4.8c-.2 1.5-1.3 2.5-2.8 2.6-2.1.2-4.4.3-6.6.3s-4.5-.1-6.6-.3c-1.5-.1-2.6-1.1-2.8-2.6C2.4 15.2 2.3 13.6 2.3 12s.1-3.2.3-4.8zM10 8.6v6.8l5.8-3.4z"/></svg></a><a href="https://www.linkedin.com/company/loremachine/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zm1.6 7.4V18h2.5v-7.6zm1.25-4a1.45 1.45 0 100 2.9 1.45 1.45 0 000-2.9zM11 10.4V18h2.5v-4c0-1.1.4-1.9 1.4-1.9s1.3.8 1.3 1.9v4h2.5v-4.6c0-2.2-1.1-3.2-2.8-3.2-1.2 0-2 .6-2.4 1.2v-1z"/></svg></a></nav><button class="sfx-toggle" type="button" aria-pressed="true" aria-label="Interface sounds"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9h4l5-4v14l-5-4H3z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg></button></div>
+
+  <div class="ticker" aria-label="Lore Machine manifesto">
+    <div class="track">
+      <div class="copy"><span class="item">Social media turned culture into a slot machine.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">Generations conditioned to scroll.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">Creators trapped chasing views.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">No lasting stories.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">No owned audiences.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">No recurring revenue.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">Generative AI has unleashed a new generation of storytellers building entire cinematic universes.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">We call them World Builders.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">They’re attracting passionate audiences, pioneering a new form of entertainment.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">But World Builders have no home.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">The unlock is an entirely new storytelling format: The LORE turns passive scrolling into playable Worlds, and fleeting viewers into paying fans.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">The Revolution Is Now.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">We’re on a mission to break the social media trance and give the next generation something worth scrolling through.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">One LORE at a time.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg></div>
+      <div class="copy" aria-hidden="true"><span class="item">Social media turned culture into a slot machine.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">Generations conditioned to scroll.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">Creators trapped chasing views.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">No lasting stories.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">No owned audiences.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">No recurring revenue.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">Generative AI has unleashed a new generation of storytellers building entire cinematic universes.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">We call them World Builders.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">They’re attracting passionate audiences, pioneering a new form of entertainment.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">But World Builders have no home.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">The unlock is an entirely new storytelling format: The LORE turns passive scrolling into playable Worlds, and fleeting viewers into paying fans.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">The Revolution Is Now.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">We’re on a mission to break the social media trance and give the next generation something worth scrolling through.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg><span class="item">One LORE at a time.</span><svg class="arr" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0L9 5L0 10Z"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<div class="topbar"><a class="home" href="index.html" aria-label="Lore Machine home"><img class="wordmark" src="assets/wordmark.png" alt="Lore Machine"></a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu"><img src="assets/emblem.png" alt=""></button></div>
+<div class="menu" id="menu" hidden><nav class="menu-list" aria-label="Site"><a href="index.html"><svg class="tri" viewBox="0 0 14 16" aria-hidden="true"><path d="M0 0L14 8L0 16Z"/></svg><span>Home</span></a><a href="about.html"><svg class="tri" viewBox="0 0 14 16" aria-hidden="true"><path d="M0 0L14 8L0 16Z"/></svg><span>About</span></a><a href="news.html"><svg class="tri" viewBox="0 0 14 16" aria-hidden="true"><path d="M0 0L14 8L0 16Z"/></svg><span>News</span></a><a href="press.html"><svg class="tri" viewBox="0 0 14 16" aria-hidden="true"><path d="M0 0L14 8L0 16Z"/></svg><span>Press</span></a><a href="https://wiki.loremachine.world/the-lore-machine-user-manual" target="_blank" rel="noopener"><svg class="tri" viewBox="0 0 14 16" aria-hidden="true"><path d="M0 0L14 8L0 16Z"/></svg><span>Manual</span></a></nav><nav class="socials menu-socials" aria-label="Lore Machine elsewhere (menu)"><a href="https://loremachine.substack.com/" target="_blank" rel="noopener" aria-label="Substack"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h16v2.4H4zM4 7.3h16v2.4H4zM4 11.6h16V21l-8-4.4L4 21z"/></svg></a><a href="https://www.instagram.com/lore.machine/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg></a><a href="https://x.com/lore_machine" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.5 3h4.9l4.2 5.9L17.8 3h2.4l-6.5 7.4L21 21h-4.9l-4.6-6.4L5.8 21H3.4l7-8z"/><path fill="#07021A" d="M6.4 4.4h1.4l10 15.2h-1.4z"/></svg></a><a href="https://www.youtube.com/@Lore_Machine" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M2.6 7.2C2.8 5.7 3.9 4.7 5.4 4.6 7.5 4.4 9.8 4.3 12 4.3s4.5.1 6.6.3c1.5.1 2.6 1.1 2.8 2.6.2 1.6.3 3.2.3 4.8s-.1 3.2-.3 4.8c-.2 1.5-1.3 2.5-2.8 2.6-2.1.2-4.4.3-6.6.3s-4.5-.1-6.6-.3c-1.5-.1-2.6-1.1-2.8-2.6C2.4 15.2 2.3 13.6 2.3 12s.1-3.2.3-4.8zM10 8.6v6.8l5.8-3.4z"/></svg></a><a href="https://www.linkedin.com/company/loremachine/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zm1.6 7.4V18h2.5v-7.6zm1.25-4a1.45 1.45 0 100 2.9 1.45 1.45 0 000-2.9zM11 10.4V18h2.5v-4c0-1.1.4-1.9 1.4-1.9s1.3.8 1.3 1.9v4h2.5v-4.6c0-2.2-1.1-3.2-2.8-3.2-1.2 0-2 .6-2.4 1.2v-1z"/></svg></a></nav></div>
+<div class="reticle" id="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="kunai" id="kunai" aria-hidden="true">
+  <svg width="30" height="30" viewBox="0 0 30 30" style="display:block;overflow:visible" aria-hidden="true">
+  <g transform="translate(3 3) rotate(-45)" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M0 0 L2.7 4 L2.7 16 L-2.7 16 L-2.7 4 Z" fill="#fff" stroke="#000" stroke-width="1.5"/>
+    <path d="M0 2.2 V15" stroke="#9a9a9a" stroke-width=".9"/>
+    <rect x="-6.4" y="15.6" width="12.8" height="2.9" rx=".9" fill="#000" stroke="#fff" stroke-width="1.1"/>
+    <rect x="-1.75" y="18.5" width="3.5" height="6.6" fill="#000" stroke="#fff" stroke-width="1.1"/>
+    <path d="M-1.75 20.6 H1.75 M-1.75 22.8 H1.75" stroke="#fff" stroke-width=".8"/>
+    <circle cx="0" cy="27" r="2.1" fill="#fff" stroke="#000" stroke-width="1.4"/>
+  </g>
+</svg>
+</div>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(pointer: fine)').matches;
+
+  // Hook for the Three.js scene: window.loreScene = { setMood(m) {} }
+  const setMood = (m) => window.loreScene && window.loreScene.setMood && window.loreScene.setMood(m);
+
+  // ---- Software / Studio menu ----
+  const doors = [...document.querySelectorAll('.door')];
+  const open = (d) => doors.forEach(x => {
+    const on = x === d; x.classList.toggle('open', on);
+    x.querySelector('button').setAttribute('aria-expanded', on);
+  });
+  doors.forEach(d => {
+    const b = d.querySelector('button');
+    if (fine) {
+      d.addEventListener('mouseenter', () => { open(d); setMood(d.dataset.mood); });
+      d.addEventListener('mouseleave', () => { open(null); setMood(null); });
+      b.addEventListener('focus', () => { open(d); setMood(d.dataset.mood); });
+      b.addEventListener('click', () => open(d));
+    } else {
+      b.addEventListener('click', () => { const on = !d.classList.contains('open'); open(on ? d : null); setMood(on ? d.dataset.mood : null); });
+    }
+  });
+
+  // ---- Cipher: Japanese / Korean / Mandarin ----
+  const small = innerWidth <= 760;
+  const P = small
+    ? [['ja','IPアダプテーション'],['ko','IP 어댑테이션'],['zh-Hans','IP改编 · 故事科技']]
+    : [['ja','IPアダプテーション・ストーリーテクノロジー'],['ko','IP 어댑테이션 · 스토리 테크놀로지'],['zh-Hans','IP改编 · 故事科技']];
+  const POOL = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴ가나다라마바사아자차카타파하거너더러머버서어저처커터퍼허故事改编科技数据光影城市雨夜梦境01#%<>/=+*';
+  const rnd = () => POOL[Math.floor(Math.random() * POOL.length)];
+  const el = document.getElementById('cipher') || document.createElement('p');
+  let i = 0, t = 0;
+  if (reduce) {
+    const show = () => { el.lang = P[i][0]; el.textContent = P[i][1]; i = (i + 1) % P.length; };
+    show(); setInterval(show, 3000);
+  } else setInterval(() => {
+    const [lang, text] = P[i]; const ch = Array.from(text); const n = ch.length;
+    const R = n * 2 + 8, H = 46, S = n + 8, B = 6; t++;
+    let out = '';
+    if (t <= R) out = ch.map((c, k) => c === ' ' ? ' ' : (t > k * 2 + 6 ? c : (t > k * 2 - 4 ? rnd() : '\u3000'))).join('');
+    else if (t <= R + H) out = text;
+    else if (t <= R + H + S) { const u = t - R - H; out = ch.map((c, k) => c === ' ' ? ' ' : (k < u - 6 ? '\u3000' : (k < u ? rnd() : c))).join(''); }
+    else if (t > R + H + S + B) { i = (i + 1) % P.length; t = 0; }
+    el.lang = lang; el.textContent = out;
+  }, 55);
+
+  // ---- Kunai cursor + lock-on reticle ----
+  if (!fine) { document.body.classList.remove('kunai-on'); return; }
+  const k = document.getElementById('kunai'), r = document.getElementById('reticle');
+  const m = { x: -100, y: -100, on: false, target: null };
+  addEventListener('mousemove', e => {
+    m.x = e.clientX; m.y = e.clientY; m.on = true;
+    const hit = e.target.closest && e.target.closest('button, a');
+    m.target = hit ? hit.getBoundingClientRect() : null;
+    k.style.opacity = 1;
+    k.style.transform = `translate(${m.x - 3}px, ${m.y - 3}px) rotate(${m.target ? -12 : 0}deg) scale(${m.target ? .9 : 1})`;
+  }, { passive: true });
+  document.addEventListener('mouseleave', () => { m.on = false; m.target = null; });
+  const pad = 8;
+  (function loop() {
+    k.style.opacity = m.on ? 1 : 0;
+    k.style.transform = `translate(${m.x - 3}px, ${m.y - 3}px) rotate(${m.target ? -12 : 0}deg) scale(${m.target ? .9 : 1})`;
+    const q = m.target;
+    if (q && m.on) Object.assign(r.style, { opacity: 1, left: q.left - pad + 'px', top: q.top - pad + 'px', width: q.width + pad * 2 + 'px', height: q.height + pad * 2 + 'px' });
+    else Object.assign(r.style, { opacity: 0, left: m.x - 20 + 'px', top: m.y - 20 + 'px', width: '40px', height: '40px' });
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+<!-- Three.js city scene -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="scene.js"></script>
+
+<script>
+(() => {
+  const btn = document.querySelector('.menu-btn'), menu = document.getElementById('menu');
+  if (!btn || !menu) return;
+  const set = (on) => {
+    menu.hidden = !on; btn.setAttribute('aria-expanded', on); document.body.classList.toggle('menu-open', on); window.loreScene && window.loreScene[on ? 'pause' : 'resume']();
+    if (on) menu.querySelector('a').focus(); else btn.focus();
+  };
+  btn.addEventListener('click', () => set(menu.hidden));
+  menu.addEventListener('click', (e) => { if (e.target === menu) set(false); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) set(false); });
+})();
+</script>
+<script>(function(){function go(){window.loreScene&&window.loreScene.setMood('software')}window.loreScene?go():addEventListener('lorescene:ready',go)})();</script>
+<script>
+/* Interface sounds: soft synthesized tones on hover and select (Web Audio, no files).
+   Warm sine partials through a small "room" (filtered echo) instead of chiptune blips.
+   Browsers only allow sound after the first click/tap/keypress, so the first hover before that is silent. */
+(() => {
+  let on = true; try { on = localStorage.getItem('lm-sfx') !== 'off'; } catch (e) {}
+  const tg = document.querySelector('.sfx-toggle');
+  const sync = () => { if (tg) { tg.setAttribute('aria-pressed', on); tg.setAttribute('aria-label', on ? 'Mute interface sounds' : 'Turn on interface sounds'); } };
+  sync();
+  let ctx = null, bus = null;
+  const unlock = () => {
+    if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return; }
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    ctx = new AC();
+    const tone = ctx.createBiquadFilter(); tone.type = 'lowpass'; tone.frequency.value = 2600; tone.Q.value = 0.4;
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3;
+    // small room: filtered feedback echo gives the tones a tail without getting heavy
+    const dly = ctx.createDelay(0.5); dly.delayTime.value = 0.095;
+    const fb = ctx.createGain(); fb.gain.value = 0.32;
+    const damp = ctx.createBiquadFilter(); damp.type = 'lowpass'; damp.frequency.value = 1500;
+    const wet = ctx.createGain(); wet.gain.value = 0.35;
+    tone.connect(comp); tone.connect(dly); dly.connect(damp); damp.connect(fb); fb.connect(dly); damp.connect(wet); wet.connect(comp);
+    comp.connect(ctx.destination);
+    bus = tone;
+  };
+  ['pointerdown', 'keydown', 'touchstart'].forEach(ev => addEventListener(ev, unlock, { passive: true }));
+  // one warm note: fundamental + soft 2nd and 3rd partials, a hair of detune for body
+  const note = (f, { dur = 0.22, vol = 0.05, at = 0, attack = 0.01 } = {}) => {
+    if (!on || !ctx || ctx.state !== 'running') return;
+    const t = ctx.currentTime + at, g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + attack);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    g.connect(bus);
+    [[1, 1, 0], [1, 0.5, 4], [2, 0.22, 0], [3, 0.07, 0]].forEach(([mul, amp, cents]) => {
+      const o = ctx.createOscillator(), a = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = f * mul; o.detune.value = cents; a.gain.value = amp;
+      o.connect(a); a.connect(g); o.start(t); o.stop(t + dur + 0.05);
+    });
+  };
+  const hoverBig = () => note(329.63, { dur: 0.26, vol: 0.05 });           // E4 — buttons, cards
+  const hoverLink = () => note(440, { dur: 0.18, vol: 0.032 });            // A4 — text links, icons
+  const select = () => { note(293.66, { dur: 0.5, vol: 0.055 }); note(440, { dur: 0.6, vol: 0.045, at: 0.07 }); }; // D4 → A4
+  const chime = () => { note(392, { dur: 0.45, vol: 0.05 }); note(587.33, { dur: 0.55, vol: 0.04, at: 0.08 }); };
+  let last = null, lastT = 0;
+  document.addEventListener('pointerover', (e) => {
+    if (e.pointerType && e.pointerType !== 'mouse') return;
+    const el = e.target.closest && e.target.closest('a, button, input, textarea, .plate');
+    if (!el || el === last) return;
+    last = el; const now = performance.now(); if (now - lastT < 70) return; lastT = now;
+    (el.matches('button, .cta, .plate, .menu-list a') ? hoverBig : hoverLink)();
+  });
+  document.addEventListener('pointerout', (e) => { if (last && !last.contains(e.relatedTarget)) last = null; });
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest && e.target.closest('a, button');
+    if (!el) return;
+    if (el === tg) return;
+    unlock(); select();
+    if (navigator.vibrate && matchMedia('(pointer:coarse)').matches) { try { navigator.vibrate(8); } catch (err) {} }
+  });
+  if (tg) tg.addEventListener('click', () => {
+    on = !on; try { localStorage.setItem('lm-sfx', on ? 'on' : 'off'); } catch (e) {}
+    sync(); unlock(); if (on) setTimeout(chime, 20);
+  });
+})();
+
+</script>
+</body>
+</html>

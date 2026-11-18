@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base href="/construct/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:,">
+<title>The Construct</title>
+<script>try{if(window.top===window.self&&!/\/$|\.html?$/.test(location.pathname))location.replace(location.pathname+'/'+location.search+location.hash)}catch(e){}</script>
+<style>
+@font-face{font-family:Archivo;src:url(fonts/archivo.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-style:normal;font-display:swap}
+@font-face{font-family:Archivo;src:url(fonts/archivo-italic.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-style:italic;font-display:swap}
+@font-face{font-family:'Playfair Display';src:url(fonts/playfair-700i.woff2) format('woff2');font-weight:700;font-style:italic;font-display:swap}
+:root{--col:min(100vw,max(620px,70vh))}
+@media (orientation:portrait){:root{--col:100vw}}
+html,body{margin:0;padding:0;background:#000;color:#fff}
+body{overflow-x:hidden;-webkit-text-size-adjust:100%}
+.strip{width:var(--col);max-width:100vw;margin:0 auto;position:relative}
+.blk{position:relative;width:100%}
+.pn{aspect-ratio:9/16;container-type:inline-size;overflow:clip}
+.hero{aspect-ratio:9/16;overflow:clip}
+.pn+.pn,.pn+.stage,.stage+.pn,.stage+.stage,.hero+.stage{margin-top:-17.8%}
+.hero+.pn{margin-top:-17.8%}
+.media{position:absolute;inset:0;overflow:hidden}
+.pn .media{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 91%,rgba(0,0,0,.25) 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 91%,rgba(0,0,0,.25) 100%)}
+.pn.fo .media{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 84%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 84%,transparent 100%)}
+.hero .media{-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.4) 0,#000 7%,#000 91%,rgba(0,0,0,.25) 100%);mask-image:linear-gradient(to bottom,rgba(0,0,0,.4) 0,#000 7%,#000 91%,rgba(0,0,0,.25) 100%)}
+.stage{height:var(--sh,300vh)}
+.stage .sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:clip}
+.stage .media{--fade:0px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fade));mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fade))}
+.cam,.att,.glw{position:absolute;left:0;top:0;width:100%;height:100%;transform-origin:0 0}
+.cam img{display:block;width:100%;height:100%}
+canvas.gl{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .35s linear}
+.glw{mix-blend-mode:screen;pointer-events:none}
+.fog{position:absolute;inset:-2%;pointer-events:none;mix-blend-mode:screen;background-image:url(assets/fog.png);background-repeat:repeat;opacity:var(--fo,.16)}
+.fog.f1{background-size:calc(var(--col) * .9) auto;animation:drift1 80s linear infinite}
+.fog.f2{background-size:calc(var(--col) * .55) auto;animation:drift2 55s linear infinite;opacity:calc(var(--fo,.16) * .7)}
+@keyframes drift1{from{background-position:0 0}to{background-position:calc(var(--col) * .9) calc(var(--col) * -.18)}}
+@keyframes drift2{from{background-position:0 0}to{background-position:calc(var(--col) * -.55) calc(var(--col) * .08)}}
+.lamp{position:absolute;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,196,120,.62) 0,rgba(255,150,64,.22) 38%,rgba(255,120,40,0) 70%);opacity:.74;animation:flick var(--d,3s) ease-in-out infinite;animation-delay:var(--dl,0s)}
+.lamp.cool{background:radial-gradient(circle,rgba(255,170,110,.5) 0,rgba(220,110,60,.16) 40%,rgba(200,90,40,0) 70%);animation-name:smoulder}
+@keyframes flick{0%{opacity:.74}13%{opacity:.81}27%{opacity:.68}41%{opacity:.8}58%{opacity:.66}73%{opacity:.83}88%{opacity:.7}100%{opacity:.74}}
+.glint{position:absolute;width:7%;aspect-ratio:1;transform:translate(-50%,-50%) scale(.3);opacity:0;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.95) 0,rgba(220,235,255,.5) 18%,rgba(200,220,255,0) 45%),linear-gradient(90deg,transparent 0,transparent 47%,rgba(255,255,255,.9) 50%,transparent 53%,transparent 100%),linear-gradient(0deg,transparent 0,transparent 47%,rgba(255,255,255,.8) 50%,transparent 53%,transparent 100%);border-radius:50%;animation:glint 6.5s ease-in-out infinite;animation-delay:var(--dl,0s)}
+@keyframes glint{0%,80%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(0)}86%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(20deg)}94%,100%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(40deg)}}
+@keyframes smoulder{0%,100%{opacity:.5}50%{opacity:.82}}
+.cap{position:absolute}
+.pz{position:absolute;inset:0;transform-origin:50% 50%;will-change:transform}
+.bx{position:absolute;inset:0;box-sizing:border-box;display:flex;align-items:center;justify-content:center}
+.cap-c .bx{background:#013d01;border:var(--bw,2px) solid #34444a}
+.cap-b .bx{background:#e1ef01;border:var(--bw,2px) solid #26302c}
+.tx{position:relative;width:100%;box-sizing:border-box;text-align:center;font-family:Archivo,system-ui,sans-serif;font-style:italic;font-weight:720;font-stretch:116%;line-height:1.22;letter-spacing:.005em;margin:0}
+.cap-c .tx{color:#fff}
+.cap-b .tx{color:#111409}
+.tx .c{display:inline}
+.spark{position:absolute;width:.5em;height:.5em;margin:-.25em 0 0 -.25em;border-radius:50%;pointer-events:none;opacity:0;background:radial-gradient(circle,#fff6d8 0,rgba(255,206,120,.85) 35%,rgba(255,170,60,0) 70%)}
+.cap-b .spark{background:radial-gradient(circle,#fff 0,rgba(140,170,0,.7) 35%,rgba(120,150,0,0) 70%)}
+.tail{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.ttl{position:absolute;left:0;right:0;top:57%;margin:0;font-size:inherit;font-weight:inherit;display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.ttl img{width:84%;height:auto;display:block;opacity:0;transform:scale(.96);transition:opacity 1.4s ease,transform 1.8s cubic-bezier(.2,.7,.2,1)}
+.ttl.on img{opacity:1;transform:none}
+.cue{margin-top:4%;font:italic 600 clamp(10px,2.6cqw,14px)/1 Archivo,system-ui,sans-serif;font-stretch:118%;letter-spacing:.32em;text-transform:uppercase;color:rgba(214,240,190,.72);opacity:0;transition:opacity 1.2s ease 1s}
+.ttl.on .cue{opacity:1}
+.hero{container-type:inline-size}
+.end{height:78vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3.5vh}
+.end img{width:72%;height:auto;display:block}
+.end .tbc{font:italic 700 clamp(18px,4.2vw,30px)/1 'Playfair Display',Georgia,serif;color:#d9e8c4;letter-spacing:.02em}
+.end>*{opacity:0}
+#flash{position:fixed;left:50%;top:0;width:var(--col);max-width:100vw;height:100vh;transform:translateX(-50%);pointer-events:none;z-index:19;opacity:0;mix-blend-mode:screen;background:radial-gradient(ellipse 120% 70% at 50% 0%,rgba(225,238,255,.95) 0,rgba(170,195,235,.45) 45%,rgba(120,150,200,.12) 75%,rgba(0,0,0,0) 100%)}
+#snd{position:fixed;z-index:30;bottom:calc(14px + env(safe-area-inset-bottom,0px));right:max(14px,calc(50vw - var(--col) / 2 + 14px));width:44px;height:44px;border-radius:50%;border:1px solid rgba(214,240,190,.45);background:rgba(4,10,4,.55);color:#e2f0a8;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent}
+#snd svg{width:22px;height:22px;display:block}#snd .on{display:none}#snd[aria-pressed=true] .on{display:block}#snd[aria-pressed=true] .off{display:none}
+.sndcue{pointer-events:auto;margin-top:3%;background:rgba(4,10,4,.35);border:1px solid rgba(214,240,190,.38);border-radius:999px;color:rgba(226,240,168,.9);font:italic 600 clamp(10px,2.5cqw,13px)/1 Archivo,system-ui,sans-serif;font-stretch:118%;letter-spacing:.2em;text-transform:uppercase;padding:.75em 1.35em;cursor:pointer;opacity:0;transition:opacity 1.2s ease 1.4s;-webkit-tap-highlight-color:transparent}
+.ttl.on .sndcue{opacity:1}.sndcue.hide{visibility:hidden}
+#rain{position:fixed;left:50%;top:0;width:var(--col);max-width:100vw;height:100vh;transform:translateX(-50%);pointer-events:none;z-index:20}
+@media (prefers-reduced-motion:reduce){.fog,.lamp,.glint{animation:none!important}.glint{opacity:0!important}.ttl img,.cue{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="strip" id="strip">
+<section class="blk hero" id="b-title" style="--fo:0.08"><div class="media"><div class="cam"><img src="assets/title.jpg" alt="A ruined stone valley at night: a vast broken arch overhead, a stepped tower wrapped in moss, blue mist pooling between the stones." width="1080" height="1920" loading="eager" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"></div><h1 class="ttl"><img src="assets/logo.png" alt="The Construct" width="2452" height="649"><span class="cue" aria-hidden="true">Scroll</span><button class="sndcue" type="button">Tap for sound</button></h1></section>
+<section class="blk stage" id="b-s1" style="--fo:0.055;--sh:240vh"><div class="sticky"><div class="media"><div class="cam"><img src="assets/s1.jpg" alt="A lone climber clings to a sheer cliff above a vast overgrown maze, colossal domed towers and arched bridges beyond." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s1-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">The Construct is an unforgiving abacus.</span><span class="ty" aria-hidden="true">The Construct is an unforgiving abacus.</span></p></div></div></div></div></div></section>
+<section class="blk stage" id="b-s2" style="--fo:0.07;--sh:300vh"><div class="sticky"><div class="media"><div class="cam"><img src="assets/s2.jpg" alt="Arden, terrified, clings to the mossy cliff face high above the stepped ruins of the Construct." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s2-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Where one miscalculation becomes a rounding error in its accounting.</span><span class="ty" aria-hidden="true">Where one miscalculation becomes a rounding error in its accounting.</span></p></div></div></div></div></div></section>
+<section class="blk pn" id="b-s3"><div class="media"><div class="cam"><img src="assets/s3.jpg" alt="A cloaked figure walks down a rain-slick lamplit street past the sign of Halversham &amp; Fisk Accountants, a gothic city of smokestacks below." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:26.82%;top:65.41%;width:12.00%;aspect-ratio:1;--d:3.12s;--dl:-1.68s"></i><i class="lamp " style="left:85.40%;top:64.91%;width:12.00%;aspect-ratio:1;--d:3.88s;--dl:-1.40s"></i><i class="lamp " style="left:69.68%;top:68.00%;width:12.00%;aspect-ratio:1;--d:3.21s;--dl:-1.76s"></i><i class="lamp " style="left:32.11%;top:60.78%;width:11.66%;aspect-ratio:1;--d:2.7s;--dl:-1.54s"></i><i class="lamp " style="left:21.29%;top:68.43%;width:10.01%;aspect-ratio:1;--d:3.41s;--dl:-2.38s"></i><i class="lamp " style="left:36.27%;top:66.59%;width:9.32%;aspect-ratio:1;--d:2.55s;--dl:-0.91s"></i><i class="lamp " style="left:66.40%;top:69.55%;width:6.01%;aspect-ratio:1;--d:2.55s;--dl:-2.43s"></i></div><div class="att"><div class="cap cap-c" id="cap-s3-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">New Halcyon</span><span class="ty" aria-hidden="true">New Halcyon</span></p></div></div></div><div class="cap cap-c" id="cap-s3-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Three Months Prior.</span><span class="ty" aria-hidden="true">Three Months Prior.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s4"><div class="media"><div class="cam"><img src="assets/s4.jpg" alt="Arden Payn, curly-haired and bespectacled, reads a letter at his desk in a dim hall of green lamps." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s4-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">This is Arden Payn.</span><span class="ty" aria-hidden="true">This is Arden Payn.</span></p></div></div></div><div class="cap cap-c" id="cap-s4-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">He is a Junior Accountant for Halversham &amp; Fisk, the largest firm in the City.</span><span class="ty" aria-hidden="true">He is a Junior Accountant for Halversham &amp; Fisk, the largest firm in the City.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s5"><div class="media"><div class="cam"><img src="assets/s5.jpg" alt="Hands hold a burned letter that begins “My Dearest Arden” and bears the word “Spatsreach”." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s5-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Today, Arden receives a letter.</span><span class="ty" aria-hidden="true">Today, Arden receives a letter.</span></p></div></div></div><div class="cap cap-c" id="cap-s5-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Arden never receives letters.</span><span class="ty" aria-hidden="true">Arden never receives letters.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s6"><div class="media"><div class="cam"><img src="assets/s6.jpg" alt="Arden glances back over his shoulder in a rainy industrial street, clutching his satchel, a carriage behind him." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:2.78%;top:45.64%;width:11.99%;aspect-ratio:1;--d:3.51s;--dl:-0.13s"></i><i class="lamp " style="left:10.17%;top:51.98%;width:10.33%;aspect-ratio:1;--d:3.97s;--dl:-2.89s"></i><i class="lamp " style="left:96.29%;top:44.27%;width:9.00%;aspect-ratio:1;--d:3.45s;--dl:-1.85s"></i><i class="lamp " style="left:5.38%;top:51.02%;width:9.00%;aspect-ratio:1;--d:2.65s;--dl:-0.05s"></i><i class="lamp " style="left:2.80%;top:49.17%;width:8.32%;aspect-ratio:1;--d:3.25s;--dl:-0.18s"></i><i class="lamp " style="left:85.07%;top:49.38%;width:7.67%;aspect-ratio:1;--d:2.7s;--dl:-0.73s"></i><i class="lamp " style="left:16.55%;top:49.47%;width:6.66%;aspect-ratio:1;--d:2.45s;--dl:-1.39s"></i><i class="lamp " style="left:14.07%;top:47.82%;width:5.65%;aspect-ratio:1;--d:3.1s;--dl:-2.53s"></i><i class="lamp " style="left:88.56%;top:47.13%;width:5.00%;aspect-ratio:1;--d:3.23s;--dl:-1.92s"></i><i class="lamp " style="left:22.16%;top:54.32%;width:5.00%;aspect-ratio:1;--d:3.2s;--dl:-1.99s"></i></div><div class="att"><div class="cap cap-c" id="cap-s6-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">It is a letter from his Uncle and is the only correspondence Arden has had since the tragic accident so many years ago. In it his Uncle’s plea brings Arden a purpose that he’s never felt before in his life.</span><span class="ty" aria-hidden="true">It is a letter from his Uncle and is the only correspondence Arden has had since the tragic accident so many years ago. In it his Uncle’s plea brings Arden a purpose that he’s never felt before in his life.</span></p></div></div></div><div class="cap cap-c" id="cap-s6-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">He guards this letter like gold.</span><span class="ty" aria-hidden="true">He guards this letter like gold.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s7"><div class="media"><div class="cam"><img src="assets/s7.jpg" alt="A large silhouetted man waits in a rainy alley as Arden walks toward him clutching his bag; another figure crouches in the shadows." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s7-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Unfortunately for Arden there are those who don’t care about his sentimentality, let alone his well-being.</span><span class="ty" aria-hidden="true">Unfortunately for Arden there are those who don’t care about his sentimentality, let alone his well-being.</span></p></div></div></div><div class="cap cap-b" id="cap-s7-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Good evening, Mr. Payn.</span><span class="ty" aria-hidden="true">Good evening, Mr. Payn.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk stage" id="b-s8" style="--sh:230vh"><div class="sticky"><div class="media"><div class="cam"><img src="assets/s8.jpg" alt="Roki, a scarred, rain-soaked brute, grins wolfishly in close-up beneath a stone arch." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s8-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">M’ master is still waiting on your answer.</span><span class="ty" aria-hidden="true">M’ master is still waiting on your answer.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></div></section>
+<section class="blk pn" id="b-s9"><div class="media"><div class="cam"><img src="assets/s9.jpg" alt="Arden, hat dripping, looks up nervously at the hulking figure beside him in a lamplit alley." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:82.88%;top:29.14%;width:12.00%;aspect-ratio:1;--d:3.13s;--dl:-0.83s"></i><i class="lamp " style="left:82.67%;top:25.28%;width:12.00%;aspect-ratio:1;--d:4.0s;--dl:-2.99s"></i><i class="lamp " style="left:85.79%;top:24.13%;width:6.34%;aspect-ratio:1;--d:3.74s;--dl:-2.12s"></i></div><div class="att"><div class="cap cap-b" id="cap-s9-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">I..I...told you before, Roki. I’m not particularly comfortable with Mr. Deicide’s latest request.</span><span class="ty" aria-hidden="true">I..I...told you before, Roki. I’m not particularly comfortable with Mr. Deicide’s latest request.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s10"><div class="media"><div class="cam"><img src="assets/s10.jpg" alt="Arden stands clutching his satchel in a rainy alley, hemmed in by Roki and a crouching lad with a stick." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:68.64%;top:3.38%;width:12.00%;aspect-ratio:1;--d:2.9s;--dl:-0.69s"></i></div><div class="att"><div class="cap cap-b" id="cap-s10-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">It don’t matter much to me ’bout your comforts, Mr. Payn. I just follow orders and collect me wages.</span><span class="ty" aria-hidden="true">It don’t matter much to me ’bout your comforts, Mr. Payn. I just follow orders and collect me wages.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s11"><div class="media"><div class="cam"><img src="assets/s11.jpg" alt="A snarling young thug raises a club over Arden, who clutches his bag and leans away." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s11-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">The Gallow Lads are a trio not to be trifled with, as everyone in New Halcyon knows.</span><span class="ty" aria-hidden="true">The Gallow Lads are a trio not to be trifled with, as everyone in New Halcyon knows.</span></p></div></div></div><div class="cap cap-b" id="cap-s11-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">I’d rather not. Can’t we shake hands and agree to disagree?</span><span class="ty" aria-hidden="true">I’d rather not. Can’t we shake hands and agree to disagree?</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div><div class="cap cap-b" id="cap-s11-2"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Yeh, ya slag! How ’bout ya gimme the bag, or I’ll crack ya one good.</span><span class="ty" aria-hidden="true">Yeh, ya slag! How ’bout ya gimme the bag, or I’ll crack ya one good.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s12" style="--fo:0.06"><div class="media"><div class="cam"><img src="assets/s12.jpg" alt="Seen between a giant statue&#x27;s legs, Arden runs down a misty canyon of towers with a lad close behind." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"><i class="lamp " style="left:79.40%;top:57.59%;width:12.00%;aspect-ratio:1;--d:2.86s;--dl:-0.21s"></i></div><div class="att"><div class="cap cap-c" id="cap-s12-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Arden doesn’t wait to find out whether or not they will follow through with their threats.</span><span class="ty" aria-hidden="true">Arden doesn’t wait to find out whether or not they will follow through with their threats.</span></p></div></div></div><div class="cap cap-b" id="cap-s12-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Looks like we got a live one, Lads!</span><span class="ty" aria-hidden="true">Looks like we got a live one, Lads!</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s13"><div class="media"><div class="cam"><img src="assets/s13.jpg" alt="Roki stands in the downpour, arm raised and finger pointed, shouting after the fleeing figures." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:79.65%;top:69.40%;width:12.00%;aspect-ratio:1;--d:3.63s;--dl:-1.20s"></i><i class="lamp " style="left:76.66%;top:72.79%;width:5.65%;aspect-ratio:1;--d:3.75s;--dl:-1.16s"></i><i class="lamp " style="left:83.80%;top:69.16%;width:5.00%;aspect-ratio:1;--d:3.93s;--dl:-2.54s"></i></div><div class="att"><div class="cap cap-b" id="cap-s13-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Ya can’t run from your responsibilities, Mr. Payn. Sooner or later all debts will be paid.</span><span class="ty" aria-hidden="true">Ya can’t run from your responsibilities, Mr. Payn. Sooner or later all debts will be paid.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s14"><div class="media"><div class="cam"><img src="assets/s14.jpg" alt="Arden sprints down a rain-lashed alley clutching his satchel, a club-wielding lad hard on his heels." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:18.73%;top:23.17%;width:12.00%;aspect-ratio:1;--d:2.4s;--dl:-0.63s"></i><i class="lamp " style="left:13.60%;top:23.11%;width:12.00%;aspect-ratio:1;--d:3.86s;--dl:-1.41s"></i><i class="lamp " style="left:97.25%;top:38.72%;width:12.00%;aspect-ratio:1;--d:3.97s;--dl:-1.19s"></i><i class="lamp " style="left:13.59%;top:25.61%;width:12.00%;aspect-ratio:1;--d:2.52s;--dl:-1.89s"></i><i class="lamp " style="left:92.34%;top:39.01%;width:9.32%;aspect-ratio:1;--d:3.65s;--dl:-0.81s"></i><i class="lamp " style="left:13.43%;top:20.42%;width:5.00%;aspect-ratio:1;--d:2.54s;--dl:-1.00s"></i></div><div class="att"><div class="cap cap-c" id="cap-s14-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Today is not the day that Arden wishes for any debts to be collected. His calculations predict that flight is his best option.</span><span class="ty" aria-hidden="true">Today is not the day that Arden wishes for any debts to be collected. His calculations predict that flight is his best option.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s15"><div class="media"><div class="cam"><img src="assets/s15.jpg" alt="Arden crouches between two wet stone blocks above a storm grate, clutching his satchel." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:64.62%;top:12.55%;width:12.00%;aspect-ratio:1;--d:3.94s;--dl:-2.27s"></i></div><div class="att"><div class="cap cap-c" id="cap-s15-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Arden knows these streets better than most, having spent time as an urchin begging for alms.</span><span class="ty" aria-hidden="true">Arden knows these streets better than most, having spent time as an urchin begging for alms.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s16"><div class="media"><div class="cam"><img src="assets/s16.jpg" alt="A lad called Boonis lunges and misses in the foreground as Arden slips away along the alley wall." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:21.19%;top:0.91%;width:12.00%;aspect-ratio:1;--d:2.59s;--dl:-0.74s"></i><i class="lamp " style="left:30.93%;top:17.09%;width:12.00%;aspect-ratio:1;--d:2.56s;--dl:-0.18s"></i><i class="lamp " style="left:25.42%;top:1.22%;width:12.00%;aspect-ratio:1;--d:3.68s;--dl:-0.53s"></i><i class="lamp " style="left:36.84%;top:27.19%;width:9.00%;aspect-ratio:1;--d:3.29s;--dl:-1.34s"></i><i class="lamp " style="left:24.18%;top:17.07%;width:5.00%;aspect-ratio:1;--d:2.71s;--dl:-2.20s"></i></div><div class="att"><div class="cap cap-c" id="cap-s16-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">What was once a childhood deficit is now an adult asset, allowing Arden to slip through the fingers of the Lad known as Boonis.</span><span class="ty" aria-hidden="true">What was once a childhood deficit is now an adult asset, allowing Arden to slip through the fingers of the Lad known as Boonis.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s17"><div class="media"><div class="cam"><img src="assets/s17.jpg" alt="Arden pauses against a brick wall in a narrow alley of pipes, glancing back, satchel clasped to his chest." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:49.15%;top:13.67%;width:12.00%;aspect-ratio:1;--d:2.61s;--dl:-1.93s"></i></div><div class="att"><div class="cap cap-c" id="cap-s17-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">With the rain beginning to subside, Arden takes a much needed breath as he navigates his way back home, still clutching his satchel with the letter tightly against his chest.</span><span class="ty" aria-hidden="true">With the rain beginning to subside, Arden takes a much needed breath as he navigates his way back home, still clutching his satchel with the letter tightly against his chest.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s18"><div class="media"><div class="cam"><img src="assets/s18.jpg" alt="From above, Arden walks a dark cobbled alley under a lamp, unaware of a man watching from the shadows." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:70.01%;top:14.26%;width:12.00%;aspect-ratio:1;--d:2.59s;--dl:-1.26s"></i><i class="lamp " style="left:66.56%;top:15.95%;width:6.66%;aspect-ratio:1;--d:2.74s;--dl:-0.81s"></i></div><div class="att"><div class="cap cap-c" id="cap-s18-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Yet just as Arden’s nerves begin to calm, a crack of thunder hearkens another bout of downpour.</span><span class="ty" aria-hidden="true">Yet just as Arden’s nerves begin to calm, a crack of thunder hearkens another bout of downpour.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s19"><div class="media"><div class="cam"><img src="assets/s19.jpg" alt="A tattooed fist smashes into Arden&#x27;s face in a spray of rain, his glasses knocked askew." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:50.41%;top:12.64%;width:12.00%;aspect-ratio:1;--d:3.95s;--dl:-2.41s"></i></div><div class="att"><div class="cap cap-c" id="cap-s19-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">With the following strike of lightning, Arden’s life flashes before his eyes.</span><span class="ty" aria-hidden="true">With the following strike of lightning, Arden’s life flashes before his eyes.</span></p></div></div></div></div></section>
+<section class="blk pn fo" id="b-s20"><div class="media"><div class="cam"><img src="assets/s20.jpg" alt="From above, Arden lies sprawled on the wet cobbles of a deep, narrow alley, his glasses beside him." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s20-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Arden’s body becomes one with the veins of the city.</span><span class="ty" aria-hidden="true">Arden’s body becomes one with the veins of the city.</span></p></div></div></div></div></section>
+<section class="blk stage" id="b-s21" style="--sh:240vh"><div class="sticky"><div class="media"><div class="cam"><img src="assets/s21.jpg" alt="A blurred view of a grey-bearded man leaning over, a lamp glowing behind him." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:50.22%;top:27.28%;width:12.00%;aspect-ratio:1;--d:2.89s;--dl:-2.65s"></i></div><div class="att"><div class="cap cap-c" id="cap-s21-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">At the sound of a familiar voice, Arden’s eyes fight to focus.</span><span class="ty" aria-hidden="true">At the sound of a familiar voice, Arden’s eyes fight to focus.</span></p></div></div></div><div class="cap cap-b" id="cap-s21-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">You took a nasty crack, son.</span><span class="ty" aria-hidden="true">You took a nasty crack, son.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></div></section>
+<section class="blk pn" id="b-s22"><div class="media"><div class="cam"><img src="assets/s22.jpg" alt="Elvin, an old bearded man, leans over Arden, who lies dazed in the rain-soaked alley." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:53.64%;top:40.02%;width:12.00%;aspect-ratio:1;--d:2.74s;--dl:-1.18s"></i></div><div class="att"><div class="cap cap-c" id="cap-s22-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">As fate would have it, Arden’s elderly neighbor, Elvin, stumbles across him on his way home.</span><span class="ty" aria-hidden="true">As fate would have it, Arden’s elderly neighbor, Elvin, stumbles across him on his way home.</span></p></div></div></div><div class="cap cap-b" id="cap-s22-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">What finds you in this alleyway, Arden?</span><span class="ty" aria-hidden="true">What finds you in this alleyway, Arden?</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div><div class="cap cap-b" id="cap-s22-2"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Have you seen my glasses?</span><span class="ty" aria-hidden="true">Have you seen my glasses?</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s23"><div class="media"><div class="cam"><img src="assets/s23.jpg" alt="Elvin looks down sadly at a pair of shattered spectacles held in his muddy hands." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:92.14%;top:26.40%;width:12.00%;aspect-ratio:1;--d:3.77s;--dl:-1.93s"></i><i class="glint" style="left:38.00%;top:60.00%;--dl:0s"></i><i class="glint" style="left:62.00%;top:60.00%;--dl:-3.2s"></i></div><div class="att"><div class="cap cap-b" id="cap-s23-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Unfortunately, they are in a sad state, my friend, as are you.</span><span class="ty" aria-hidden="true">Unfortunately, they are in a sad state, my friend, as are you.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s24"><div class="media"><div class="cam"><img src="assets/s24.jpg" alt="Elvin steadies a hunched, bruised Arden by the shoulder as they walk through the pouring rain." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:14.08%;top:16.66%;width:9.68%;aspect-ratio:1;--d:2.56s;--dl:-2.97s"></i><i class="lamp " style="left:18.30%;top:16.43%;width:6.34%;aspect-ratio:1;--d:2.74s;--dl:-0.77s"></i></div><div class="att"><div class="cap cap-c" id="cap-s24-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Arden’s jaw throbs, but his mind races, distracted with guilt. He frantically searches for the satchel containing his Uncle’s letter.</span><span class="ty" aria-hidden="true">Arden’s jaw throbs, but his mind races, distracted with guilt. He frantically searches for the satchel containing his Uncle’s letter.</span></p></div></div></div><div class="cap cap-b" id="cap-s24-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Let’s get you home. Lucky for you that hit must have slid off your face with the rain. Maybe a light bruising if you’re unlucky.</span><span class="ty" aria-hidden="true">Let’s get you home. Lucky for you that hit must have slid off your face with the rain. Maybe a light bruising if you’re unlucky.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div><div class="cap cap-b" id="cap-s24-2"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">My bag! Where’s my bag?</span><span class="ty" aria-hidden="true">My bag! Where’s my bag?</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s25"><div class="media"><div class="cam"><img src="assets/s25.jpg" alt="Elvin unlocks an ornate iron gate on a rainy gothic street, Arden waiting behind him." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:28.57%;top:12.06%;width:12.00%;aspect-ratio:1;--d:3.64s;--dl:-0.99s"></i><i class="lamp " style="left:30.71%;top:7.48%;width:8.68%;aspect-ratio:1;--d:2.87s;--dl:-0.22s"></i></div><div class="att"><div class="cap cap-c" id="cap-s25-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">If only Arden had not found himself indebted to Mr. Deicide. Perhaps none of this would have happened.</span><span class="ty" aria-hidden="true">If only Arden had not found himself indebted to Mr. Deicide. Perhaps none of this would have happened.</span></p></div></div></div><div class="cap cap-b" id="cap-s25-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Thank you kindly, Elvin. I would have spent a night shivering in an alcove if you hadn’t come along.</span><span class="ty" aria-hidden="true">Thank you kindly, Elvin. I would have spent a night shivering in an alcove if you hadn’t come along.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div><div class="cap cap-b" id="cap-s25-2"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Lucky that I found you and not one of the Lads.</span><span class="ty" aria-hidden="true">Lucky that I found you and not one of the Lads.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s26"><div class="media"><div class="cam"><img src="assets/s26.jpg" alt="Arden stands at a towering gothic atrium as Elvin waits at the foot of a grand curving staircase." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s26-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">But now it matters not. His Uncle’s plea for help surpasses any dangers faced in this city.</span><span class="ty" aria-hidden="true">But now it matters not. His Uncle’s plea for help surpasses any dangers faced in this city.</span></p></div></div></div><div class="cap cap-b" id="cap-s26-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">It was the Lads who laid me out and stole my bag. There was a letter from my Uncle about a place called Spatsreach.</span><span class="ty" aria-hidden="true">It was the Lads who laid me out and stole my bag. There was a letter from my Uncle about a place called Spatsreach.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div><div class="cap cap-b" id="cap-s26-2"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Spatsreach, you say? Well that I might be able to help you with.</span><span class="ty" aria-hidden="true">Spatsreach, you say? Well that I might be able to help you with.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s27"><div class="media"><div class="cam"><img src="assets/s27.jpg" alt="From behind, Arden looks up at Elvin on a spiral staircase rising toward tall lattice windows." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:48.97%;top:59.30%;width:12.00%;aspect-ratio:1;--d:2.54s;--dl:-1.75s"></i><i class="lamp " style="left:49.33%;top:41.27%;width:8.68%;aspect-ratio:1;--d:2.79s;--dl:-1.80s"></i></div><div class="att"><div class="cap cap-b" id="cap-s27-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">How do you know of Spatsreach?</span><span class="ty" aria-hidden="true">How do you know of Spatsreach?</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div><div class="cap cap-b" id="cap-s27-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">There was a time before I was an apartment dweller, drinking from industry’s pulse. It was a time of magic and mystery.</span><span class="ty" aria-hidden="true">There was a time before I was an apartment dweller, drinking from industry’s pulse. It was a time of magic and mystery.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s28"><div class="media"><div class="cam"><img src="assets/s28.jpg" alt="Arden glances back in a gothic hallway as Elvin waits in an open doorway lit by a fire." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:52.75%;top:69.60%;width:12.00%;aspect-ratio:1;--d:2.99s;--dl:-1.36s"></i><i class="lamp " style="left:55.20%;top:73.35%;width:8.68%;aspect-ratio:1;--d:3.93s;--dl:-1.45s"></i><i class="lamp " style="left:55.06%;top:75.71%;width:5.33%;aspect-ratio:1;--d:3.32s;--dl:-2.60s"></i></div><div class="att"><div class="cap cap-c" id="cap-s28-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Arden follows Elvin up to his apartment on the second floor, just down the hall from his own.</span><span class="ty" aria-hidden="true">Arden follows Elvin up to his apartment on the second floor, just down the hall from his own.</span></p></div></div></div><div class="cap cap-b" id="cap-s28-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">If you’d like to learn more I’d be happy to share.</span><span class="ty" aria-hidden="true">If you’d like to learn more I’d be happy to share.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div><div class="cap cap-b" id="cap-s28-2"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">I’d appreciate that greatly, Elvin. My Uncle left me few clues to follow in his correspondence, so I’m starting at a loss.</span><span class="ty" aria-hidden="true">I’d appreciate that greatly, Elvin. My Uncle left me few clues to follow in his correspondence, so I’m starting at a loss.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s29"><div class="media" style="-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 80%,rgba(0,0,0,.84) 85%,rgba(0,0,0,.5) 90%,rgba(0,0,0,.16) 95%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 80%,rgba(0,0,0,.84) 85%,rgba(0,0,0,.5) 90%,rgba(0,0,0,.16) 95%,transparent 100%)"><div class="cam"><img src="assets/s29.jpg" alt="Elvin points to a glowing map on the wall marked Spatsreach while Arden listens, hat in hand." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s29-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Arden listens raptly as his wizened neighbor relates tales of adventure from his youth as a Delver, scouring magical herbs deep in the folds of the ever-living Construct.</span><span class="ty" aria-hidden="true">Arden listens raptly as his wizened neighbor relates tales of adventure from his youth as a Delver, scouring magical herbs deep in the folds of the ever-living Construct.</span></p></div></div></div><div class="cap cap-b" id="cap-s29-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">My Uncle mentioned something called a “heartbloom.” Would you know of this?</span><span class="ty" aria-hidden="true">My Uncle mentioned something called a “heartbloom.” Would you know of this?</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div><div class="cap cap-b" id="cap-s29-2"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">That is a name I haven’t heard spoke of in years.</span><span class="ty" aria-hidden="true">That is a name I haven’t heard spoke of in years.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk pn fo" id="b-s30" style="margin-top:-35.56%"><div class="media" style="-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.16) 5%,rgba(0,0,0,.5) 10%,rgba(0,0,0,.84) 15%,#000 20%,#000 84%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.16) 5%,rgba(0,0,0,.5) 10%,rgba(0,0,0,.84) 15%,#000 20%,#000 84%,transparent 100%)"><div class="cam"><img src="assets/s30.jpg" alt="An old hand holds out an engraved leather book to Arden in a cluttered library with a fireplace." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:45.18%;top:46.38%;width:11.66%;aspect-ratio:1;--d:2.69s;--dl:-0.46s"></i><i class="lamp " style="left:44.82%;top:44.40%;width:5.00%;aspect-ratio:1;--d:3.85s;--dl:-2.45s"></i></div><div class="att"><div class="cap cap-b" id="cap-s30-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Here, my boy. This book might hold an answer or two to your question…and then pose ten more.</span><span class="ty" aria-hidden="true">Here, my boy. This book might hold an answer or two to your question…and then pose ten more.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></section>
+<section class="blk stage" id="b-s31" style="--sh:240vh"><div class="sticky"><div class="media"><div class="cam"><img src="assets/s31.jpg" alt="An open book shows an illustration titled Heartbloom, a luminous flower flecked with green light." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s31-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Elvin cracks the dry parchment to a page where a beautiful illumination reveals a hypnotic image.</span><span class="ty" aria-hidden="true">Elvin cracks the dry parchment to a page where a beautiful illumination reveals a hypnotic image.</span></p></div></div></div><div class="cap cap-b" id="cap-s31-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#e1ef01" stroke="#26302c" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Ahhh, the Heartbloom. A legendary plant rumored to bring back the dead. The key word is “legendary” as no one has ever laid eyes on it, leading all Delvers to believe it to be nothing more than a myth.</span><span class="ty" aria-hidden="true">Ahhh, the Heartbloom. A legendary plant rumored to bring back the dead. The key word is “legendary” as no one has ever laid eyes on it, leading all Delvers to believe it to be nothing more than a myth.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#e1ef01"/></svg></div></div></div></div></section>
+<section class="blk pn fo" id="b-s32"><div class="media"><div class="cam"><img src="assets/s32.jpg" alt="Arden stares upward, wide-eyed behind cracked glasses, in a candlelit room heaped with curios." width="1080" height="1920" loading="lazy" decoding="async"></div></div><div class="glw"><i class="lamp " style="left:53.00%;top:24.69%;width:12.00%;aspect-ratio:1;--d:2.8s;--dl:-0.57s"></i><i class="lamp " style="left:55.16%;top:27.18%;width:9.32%;aspect-ratio:1;--d:3.58s;--dl:-2.82s"></i><i class="lamp " style="left:45.64%;top:24.39%;width:9.00%;aspect-ratio:1;--d:2.71s;--dl:-2.85s"></i></div><div class="att"><div class="cap cap-c" id="cap-s32-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">With the first clue uncovered in his Uncle’s mysterious letter, Arden feels more lost at sea than before.</span><span class="ty" aria-hidden="true">With the first clue uncovered in his Uncle’s mysterious letter, Arden feels more lost at sea than before.</span></p></div></div></div><div class="cap cap-c" id="cap-s32-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Little does he know that this turn of phrase will soon become his reality, complete with creatures and shipwrecks ripped right from the pages of his favorite fictions.</span><span class="ty" aria-hidden="true">Little does he know that this turn of phrase will soon become his reality, complete with creatures and shipwrecks ripped right from the pages of his favorite fictions.</span></p></div></div></div></div></section>
+<section class="blk end" id="b-end"><img src="assets/logo.png" alt="The Construct" width="2452" height="649" loading="lazy"><div class="tbc">To be continued</div></section>
+</main>
+<div id="flash" aria-hidden="true"></div>
+<button id="snd" type="button" aria-label="Turn sound on" aria-pressed="false"><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg></button>
+<canvas id="rain" aria-hidden="true"></canvas>
+<script>
+(()=>{
+'use strict';
+const CFG={"blocks":[{"k":"title","img":"assets/title.jpg","map":"assets/title-map.png","aspect":[9,16],"focus":0.45,"camcfg":{"z":[1.03,1.13],"c0":[0.5,0.5],"c1":[0.48,0.44],"off":[0.01,0.05]},"caps_cfg":[],"zmin":1.03,"hero":true,"fog":0.08,"bed":"ruins"},{"k":"s1","img":"assets/s1-bg.jpg","map":"assets/s1-map.png","aspect":[9,16],"focus":0.3,"camcfg":null,"caps_cfg":[{"id":"cap-s1-0","type":"c","box":[0.0825,0.1083,0.328,0.0567]}],"zmin":1.0,"stage":true,"fg":"assets/s1.jpg","sched":[0.02,0.08,0.08,0.3,2,3],"fog":0.055,"script":"crane","bed":"ruins","vo":"assets/vo/s1.mp3"},{"k":"s2","img":"assets/s2.jpg","map":"assets/s2-map.png","aspect":[9,16],"focus":0.9,"camcfg":null,"caps_cfg":[{"id":"cap-s2-0","type":"c","box":[0.0814,0.038,0.401,0.0722]}],"zmin":1.0,"stage":true,"sched":[0.03,0.1,0.1,0.32,0.66,0.74],"fog":0.07,"bed":"ruins","sfx":[["p",0.2,"vertigo"],["p",0.72,"dive"]],"vo":"assets/vo/s2.mp3"},{"k":"s3","img":"assets/s3.jpg","map":"assets/s3-map.png","aspect":[9,16],"focus":0.62,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.46],"c1":[0.5,0.56],"off":[0.008,0.035]},"caps_cfg":[{"id":"cap-s3-0","type":"c","box":[0.1012,0.0815,0.2712,0.04]},{"id":"cap-s3-1","type":"c","box":[0.5645,0.4511,0.3308,0.0392]}],"zmin":1.04,"gmode":0,"bed":"city","bedLv":0.85,"vo":"assets/vo/s3.mp3"},{"k":"s4","img":"assets/s4.jpg","map":"assets/s4-map.png","aspect":[9,16],"focus":0.76,"camcfg":{"z":[1.04,1.11],"c0":[0.5,0.5],"c1":[0.5,0.4],"off":[0.006,0.028]},"caps_cfg":[{"id":"cap-s4-0","type":"c","box":[0.0931,0.0598,0.3456,0.0391]},{"id":"cap-s4-1","type":"c","box":[0.5968,0.592,0.2708,0.1092]}],"zmin":1.04,"dust":[0.12,0.0,0.76,0.5],"bed":"office","vo":"assets/vo/s4.mp3"},{"k":"s5","img":"assets/s5.jpg","map":"assets/s5-map.png","aspect":[9,16],"focus":0.8,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.45,0.36],"off":[0.006,0.026]},"caps_cfg":[{"id":"cap-s5-0","type":"c","box":[0.085,0.0694,0.4336,0.0389]},{"id":"cap-s5-1","type":"c","box":[0.492,0.7249,0.4346,0.0395]}],"zmin":1.04,"bed":"office","vo":"assets/vo/s5.mp3"},{"k":"s6","img":"assets/s6.jpg","map":"assets/s6-map.png","aspect":[9,16],"focus":0.86,"camcfg":{"z":[1.04,1.1],"c0":[0.5,0.5],"c1":[0.45,0.42],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s6-0","type":"c","box":[0.0765,0.0365,0.3911,0.1788]},{"id":"cap-s6-1","type":"c","box":[0.5962,0.7249,0.3454,0.0562]}],"zmin":1.04,"gmode":0,"rain":0.45,"bed":"city","vo":"assets/vo/s6.mp3"},{"k":"s7","img":"assets/s7.jpg","map":"assets/s7-map.png","aspect":[9,16],"focus":0.62,"camcfg":{"z":[1.04,1.15],"c0":[0.5,0.5],"c1":[0.47,0.45],"off":[0.007,0.03]},"caps_cfg":[{"id":"cap-s7-0","type":"c","box":[0.0776,0.049,0.3603,0.1089]},{"id":"cap-s7-1","type":"b","box":[0.4421,0.2004,0.2391,0.0562],"tip":[0.775,0.17]}],"zmin":1.04,"rain":1.0,"bed":"alley","bedLv":0.75,"vo":"assets/vo/s7.mp3"},{"k":"s8","img":"assets/s8.jpg","map":"assets/s8-map.png","aspect":[9,16],"focus":0.86,"camcfg":null,"caps_cfg":[{"id":"cap-s8-0","type":"b","box":[0.6189,0.5879,0.2414,0.0735],"tip":[0.565,0.6]}],"zmin":1.0,"stage":true,"rain":0.8,"sched":[0.04,0.12,0.14,0.42,2,3],"script":"push","bed":"alley","sfx":[["p",0.06,"sting"]],"vo":"assets/vo/s8.mp3"},{"k":"s9","img":"assets/s9.jpg","map":"assets/s9-map.png","aspect":[9,16],"focus":0.68,"camcfg":{"z":[1.04,1.11],"c0":[0.5,0.5],"c1":[0.55,0.38],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s9-0","type":"b","box":[0.5053,0.4462,0.3287,0.1178],"tip":[0.47,0.4]}],"zmin":1.04,"gmode":0,"rain":1.0,"bed":"alley","vo":"assets/vo/s9.mp3"},{"k":"s10","img":"assets/s10.jpg","map":"assets/s10-map.png","aspect":[9,16],"focus":0.45,"camcfg":{"z":[1.04,1.13],"c0":[0.5,0.5],"c1":[0.5,0.42],"off":[0.007,0.035]},"caps_cfg":[{"id":"cap-s10-0","type":"b","box":[0.0939,0.0862,0.285,0.1258],"tip":[0.06,0.25]}],"zmin":1.04,"gmode":0,"rain":0.6,"bed":"alley","vo":"assets/vo/s10.mp3"},{"k":"s11","img":"assets/s11.jpg","map":"assets/s11-map.png","aspect":[9,16],"focus":0.75,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.48],"c1":[0.45,0.36],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s11-0","type":"c","box":[0.0683,0.0505,0.2705,0.1091]},{"id":"cap-s11-1","type":"b","box":[0.7302,0.1693,0.2415,0.1091],"tip":[0.72,0.3]},{"id":"cap-s11-2","type":"b","box":[0.0738,0.396,0.2712,0.1095],"tip":[0.09,0.37]}],"zmin":1.04,"rain":0.6,"bed":"alley","vo":"assets/vo/s11.mp3"},{"k":"s12","img":"assets/s12.jpg","map":"assets/s12-map.png","aspect":[9,16],"focus":0.34,"camcfg":{"z":[1.03,1.24],"c0":[0.5,0.5],"c1":[0.5,0.6],"off":[0.008,0.04]},"caps_cfg":[{"id":"cap-s12-0","type":"c","box":[0.0808,0.0323,0.3613,0.0921]},{"id":"cap-s12-1","type":"b","box":[0.1382,0.4545,0.2412,0.073],"tip":[0.34,0.56]}],"zmin":1.03,"gmode":0,"rain":0.2,"fog":0.06,"bed":"alley","sfx":[["c",0.55,"run"]],"vo":"assets/vo/s12.mp3"},{"k":"s13","img":"assets/s13.jpg","map":"assets/s13-map.png","aspect":[9,16],"focus":0.82,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.42,0.36],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s13-0","type":"b","box":[0.4973,0.2494,0.3294,0.0915],"tip":[0.465,0.27]}],"zmin":1.04,"gmode":0,"rain":1.0,"bed":"alley","vo":"assets/vo/s13.mp3"},{"k":"s14","img":"assets/s14.jpg","map":"assets/s14-map.png","aspect":[9,16],"focus":0.8,"camcfg":{"z":[1.04,1.14],"c0":[0.5,0.5],"c1":[0.42,0.45],"off":[0.007,0.035]},"caps_cfg":[{"id":"cap-s14-0","type":"c","box":[0.4931,0.0658,0.3889,0.1094]}],"zmin":1.04,"gmode":0,"rain":1.0,"bed":"alley","vo":"assets/vo/s14.mp3"},{"k":"s15","img":"assets/s15.jpg","map":"assets/s15-map.png","aspect":[9,16],"focus":0.7,"camcfg":{"z":[1.04,1.11],"c0":[0.5,0.5],"c1":[0.52,0.42],"off":[0.006,0.028]},"caps_cfg":[{"id":"cap-s15-0","type":"c","box":[0.068,0.0245,0.3741,0.1094]}],"zmin":1.04,"gmode":0,"rain":0.9,"bed":"alley","vo":"assets/vo/s15.mp3"},{"k":"s16","img":"assets/s16.jpg","map":"assets/s16-map.png","aspect":[9,16],"focus":0.55,"camcfg":{"z":[1.04,1.14],"c0":[0.5,0.5],"c1":[0.62,0.38],"off":[0.008,0.035]},"caps_cfg":[{"id":"cap-s16-0","type":"c","box":[0.5749,0.0334,0.3423,0.1436]}],"zmin":1.04,"gmode":0,"rain":1.0,"bed":"alley","vo":"assets/vo/s16.mp3"},{"k":"s17","img":"assets/s17.jpg","map":"assets/s17-map.png","aspect":[9,16],"focus":0.82,"camcfg":{"z":[1.04,1.11],"c0":[0.5,0.5],"c1":[0.55,0.38],"off":[0.006,0.028]},"caps_cfg":[{"id":"cap-s17-0","type":"c","box":[0.0521,0.0227,0.3762,0.1615]}],"zmin":1.04,"gmode":0,"rain":0.22,"bed":"alley","bedLv":0.5,"vo":"assets/vo/s17.mp3"},{"k":"s18","img":"assets/s18.jpg","map":"assets/s18-map.png","aspect":[9,16],"focus":0.4,"camcfg":{"z":[1.04,1.13],"c0":[0.5,0.5],"c1":[0.66,0.4],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s18-0","type":"c","box":[0.0978,0.064,0.3305,0.1094]}],"zmin":1.04,"gmode":0,"rain":0.3,"thunder":true,"rain2":1.35,"bed":"alley","bedLv":0.7,"vo":"assets/vo/s18.mp3"},{"k":"s19","img":"assets/s19.jpg","map":"assets/s19-map.png","aspect":[9,16],"focus":0.86,"camcfg":{"z":[1.05,1.14],"c0":[0.5,0.5],"c1":[0.56,0.55],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s19-0","type":"c","box":[0.109,0.0551,0.3147,0.0912]}],"zmin":1.05,"gmode":0,"rain":1.0,"thunder":true,"rain2":1.0,"shake":true,"bed":"alley","vo":"assets/vo/s19.mp3"},{"k":"s20","img":"assets/s20.jpg","map":"assets/s20-map.png","aspect":[9,16],"focus":0.3,"camcfg":{"z":[1.18,1.03],"c0":[0.47,0.6],"c1":[0.5,0.5],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s20-0","type":"c","box":[0.0883,0.0792,0.3513,0.0773]}],"zmin":1.18,"rain":0.7,"bed":"alley","bedLv":0.8,"vo":"assets/vo/s20.mp3"},{"k":"s21","img":"assets/s21.jpg","map":"assets/s21-map.png","aspect":[9,16],"focus":0.75,"camcfg":null,"caps_cfg":[{"id":"cap-s21-0","type":"c","box":[0.0786,0.0496,0.2837,0.0903],"sched":[0.03,0.08,0.06,0.26,2,3]},{"id":"cap-s21-1","type":"b","box":[0.6876,0.2949,0.238,0.0724],"tip":[0.62,0.43],"sched":[0.36,0.42,0.42,0.58,2,3]}],"zmin":1.0,"stage":true,"gmode":0,"rain":0.45,"script":"wake","bed":"alley","vo":"assets/vo/s21.mp3"},{"k":"s22","img":"assets/s22.jpg","map":"assets/s22-map.png","aspect":[9,16],"focus":0.62,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.55,0.45],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s22-0","type":"c","box":[0.0627,0.0335,0.2689,0.125]},{"id":"cap-s22-1","type":"b","box":[0.4708,0.2691,0.2391,0.0897],"tip":[0.44,0.3]},{"id":"cap-s22-2","type":"b","box":[0.4315,0.6501,0.2391,0.0556],"tip":[0.6,0.625]}],"zmin":1.04,"gmode":0,"rain":1.0,"bed":"alley","vo":"assets/vo/s22.mp3"},{"k":"s23","img":"assets/s23.jpg","map":"assets/s23-map.png","aspect":[9,16],"focus":0.82,"camcfg":{"z":[1.04,1.13],"c0":[0.5,0.48],"c1":[0.5,0.56],"off":[0.006,0.028]},"caps_cfg":[{"id":"cap-s23-0","type":"b","box":[0.1223,0.3923,0.2394,0.1077],"tip":[0.42,0.44]}],"zmin":1.04,"gmode":0,"rain":0.5,"bed":"alley","vo":"assets/vo/s23.mp3"},{"k":"s24","img":"assets/s24.jpg","map":"assets/s24-map.png","aspect":[9,16],"focus":0.68,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.45,0.4],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s24-0","type":"c","box":[0.0898,0.044,0.3134,0.1404]},{"id":"cap-s24-1","type":"b","box":[0.6813,0.1261,0.2385,0.1749],"tip":[0.645,0.315]},{"id":"cap-s24-2","type":"b","box":[0.1219,0.4967,0.2545,0.0547],"tip":[0.27,0.44]}],"zmin":1.04,"gmode":0,"rain":1.0,"bed":"alley","vo":"assets/vo/s24.mp3"},{"k":"s25","img":"assets/s25.jpg","map":"assets/s25-map.png","aspect":[9,16],"focus":0.7,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.42,0.45],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s25-0","type":"c","box":[0.0489,0.055,0.2986,0.125]},{"id":"cap-s25-1","type":"b","box":[0.5515,0.2703,0.254,0.1597],"tip":[0.52,0.38]},{"id":"cap-s25-2","type":"b","box":[0.5717,0.5413,0.2678,0.0903],"tip":[0.52,0.585]}],"zmin":1.04,"gmode":0,"rain":0.9,"bed":"alley","sfx":[["c",0.55,"gate"]],"vo":"assets/vo/s25.mp3"},{"k":"s26","img":"assets/s26.jpg","map":"assets/s26-map.png","aspect":[9,16],"focus":0.45,"camcfg":{"z":[1.22,1.03],"c0":[0.55,0.56],"c1":[0.5,0.5],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s26-0","type":"c","box":[0.0616,0.0568,0.3581,0.0903]},{"id":"cap-s26-1","type":"b","box":[0.0712,0.3008,0.2837,0.1423],"tip":[0.3,0.52]},{"id":"cap-s26-2","type":"b","box":[0.661,0.4635,0.238,0.1077],"tip":[0.68,0.61]}],"zmin":1.22,"dust":[0.22,0.0,0.56,0.5],"bed":"hall","vo":"assets/vo/s26.mp3"},{"k":"s27","img":"assets/s27.jpg","map":"assets/s27-map.png","aspect":[9,16],"focus":0.55,"camcfg":{"z":[1.04,1.14],"c0":[0.5,0.55],"c1":[0.6,0.42],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s27-0","type":"b","box":[0.1693,0.4404,0.2396,0.0727],"tip":[0.3,0.56]},{"id":"cap-s27-1","type":"b","box":[0.5716,0.5632,0.2539,0.1417],"tip":[0.77,0.5]}],"zmin":1.04,"gmode":0,"dust":[0.2,0.0,0.6,0.45],"bed":"hall","vo":"assets/vo/s27.mp3"},{"k":"s28","img":"assets/s28.jpg","map":"assets/s28-map.png","aspect":[9,16],"focus":0.45,"camcfg":{"z":[1.04,1.13],"c0":[0.5,0.5],"c1":[0.6,0.58],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s28-0","type":"c","box":[0.0794,0.0436,0.2695,0.125]},{"id":"cap-s28-1","type":"b","box":[0.6432,0.407,0.2396,0.0901],"tip":[0.645,0.468],"avoid":[[0.555,0.455,0.16,0.15]]},{"id":"cap-s28-2","type":"b","box":[0.2747,0.569,0.3138,0.141],"tip":[0.3,0.52]}],"zmin":1.04,"gmode":0,"bed":"hall"},{"k":"s29","img":"assets/s29.jpg","map":"assets/s29-map.png","aspect":[9,16],"focus":0.74,"camcfg":{"z":[1.04,1.11],"c0":[0.5,0.5],"c1":[0.55,0.4],"off":[0.006,0.028]},"caps_cfg":[{"id":"cap-s29-0","type":"c","box":[0.0755,0.0458,0.3893,0.1417]},{"id":"cap-s29-1","type":"b","box":[0.0807,0.3401,0.2982,0.0901],"tip":[0.27,0.47]},{"id":"cap-s29-2","type":"b","box":[0.4492,0.4608,0.2396,0.0894],"tip":[0.71,0.47]}],"zmin":1.04,"gmode":1,"gtint":[1,0.5,0.18],"bed":"study"},{"k":"s30","img":"assets/s30.jpg","map":"assets/s30-map.png","aspect":[9,16],"focus":0.7,"camcfg":{"z":[1.03,1.14],"c0":[0.5,0.5],"c1":[0.42,0.6],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s30-0","type":"b","box":[0.0859,0.2369,0.2682,0.1417],"tip":[0.05,0.43]}],"zmin":1.03,"gmode":0,"bed":"study","vo":"assets/vo/s30.mp3"},{"k":"s31","img":"assets/s31.jpg","map":"assets/s31-map.png","aspect":[9,16],"focus":0.7,"camcfg":null,"caps_cfg":[{"id":"cap-s31-0","type":"c","box":[0.5888,0.038,0.3294,0.1079],"sched":[0.02,0.07,0.07,0.24,2,3]},{"id":"cap-s31-1","type":"b","box":[0.1019,0.1832,0.4334,0.1599],"sched":[0.22,0.28,0.28,0.52,2,3]}],"zmin":1.0,"stage":true,"gmode":0,"script":"push","push":[1.32,0.7,0.56],"tw":[0.47,0.41,0.92,0.72],"gtint":[0.45,1,0.55],"sparks":{"rect":[0.46,0.39,0.48,0.36],"n":14,"c":[0.69,0.535,0.2,0.13],"pts":[[0.7566,0.4429],[0.6528,0.4786],[0.7612,0.4816],[0.8167,0.4839],[0.6744,0.4882],[0.7477,0.4876],[0.6075,0.5178],[0.5556,0.5268],[0.6009,0.5274],[0.7878,0.5356],[0.681,0.5495],[0.6434,0.57],[0.6757,0.5703],[0.5984,0.572],[0.757,0.5769],[0.6602,0.5835],[0.6926,0.5843],[0.715,0.5999]]},"bed":"study","sfx":[["t",0.98,"bloom"]],"vo":"assets/vo/s31.mp3"},{"k":"s32","img":"assets/s32.jpg","map":"assets/s32-map.png","aspect":[9,16],"focus":0.84,"camcfg":{"z":[1.04,1.14],"c0":[0.5,0.5],"c1":[0.5,0.42],"off":[0.006,0.03]},"caps_cfg":[{"id":"cap-s32-0","type":"c","box":[0.0768,0.0407,0.3138,0.1243]},{"id":"cap-s32-1","type":"c","box":[0.5742,0.6606,0.3594,0.1417]}],"zmin":1.04,"gmode":0,"dust":[0.1,0.0,0.8,0.45],"bed":"study","vo":"assets/vo/s32.mp3"}]};
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DPR=Math.min(2,window.devicePixelRatio||1);
+const POOL=4;
+const clamp=(x,a,b)=>x<a?a:x>b?b:x, lerp=(a,b,t)=>a+(b-a)*t;
+const ss=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+const easeBack=t=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
+let vh=innerHeight,vw=innerWidth;
+
+/* ---------- blocks ---------- */
+const blocks=CFG.blocks.map(c=>{
+  const el=document.getElementById('b-'+c.k);
+  const box=c.stage?el.querySelector('.sticky'):el;
+  return Object.assign({},c,{el,box,media:el.querySelector('.media'),cam:el.querySelector('.cam'),att:el.querySelector('.att'),glw:el.querySelector('.glw'),
+    still:el.querySelector('.cam img'),fogs:[...el.querySelectorAll('.fog')],slot:null,noGL:false,caps:[],near:false,imgs:null,tf:'',p:0});
+});
+const B=Object.fromEntries(blocks.map(b=>[b.k,b]));
+
+/* ---------- images ---------- */
+function loadImgs(b){
+  if(b.imgs)return;
+  const mk=src=>{const i=new Image();i.decoding='async';i.src=src;return i};
+  b.imgs={c:mk(b.img),m:mk(b.map)};if(b.fg)b.imgs.f=mk(b.fg);
+}
+const ok=i=>!i||(i.complete&&i.naturalWidth>0);const ready=b=>b.imgs&&ok(b.imgs.c)&&ok(b.imgs.m)&&ok(b.imgs.f);
+
+/* ---------- WebGL ---------- */
+const VS='attribute vec2 a;varying vec2 v;void main(){v=vec2(a.x*.5+.5,.5-a.y*.5);gl_Position=vec4(a,0.,1.);}';
+const FS=`precision mediump float;varying vec2 v;uniform sampler2D tc,td,tf;uniform vec4 view;uniform vec2 off,dc,fc,fo;uniform float focus,t,dz,dark,gmode,gamt,fgOn,fz,bl,dv,lid;uniform vec3 gtint;uniform vec4 tw;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}
+void main(){vec2 uv=(v-.5)*view.xy+view.zw;vec2 p=uv;float d;
+for(int i=0;i<3;i++){d=texture2D(td,p).r;p=uv-off*(d-focus)+(uv-dc)*dz*(focus-d);}
+vec3 c=texture2D(tc,p).rgb;
+if(bl>.0005){vec3 a=c;for(int i=0;i<8;i++){float an=float(i)*.7854;a+=texture2D(tc,p+vec2(cos(an),sin(an)*.5625)*bl).rgb+texture2D(tc,p+vec2(cos(an+.39),sin(an+.39)*.5625)*bl*.5).rgb;}c=a/17.;}
+if(dv>.0005){c=mix(c,texture2D(tc,p+vec2(dv,dv*.25)).rgb,.42);}
+vec4 mp=texture2D(td,p);float fb=mp.b*gamt;float sm=(1.-mp.a)*2.*gamt;
+if(sm>.01){vec2 q=p*vec2(16.,10.)+vec2(-t*.06,t*.35);vec2 ds=vec2(vn(q)-.5,vn(q*1.9+5.3)-.5)*.011*sm;vec3 c2=texture2D(tc,p+ds).rgb;float dn=vn(p*vec2(11.,7.)+vec2(-t*.05,t*.28))*.65+vn(p*vec2(23.,15.)+vec2(-t*.08,t*.5))*.35;c=mix(c,c2,clamp(sm*1.2,0.,1.));c*=1.+sm*(dn-.5)*.55;}
+float inT=step(tw.x,p.x)*step(p.x,tw.z)*step(tw.y,p.y)*step(p.y,tw.w);
+if(fb>.01&&inT>.5){float s=vn(p*vec2(210.,118.)+vec2(t*1.1,-t*.8));s=s*s*s*s;float br=.5+.5*sin(t*.9);c*=1.+fb*(s*1.6+br*.18);c+=fb*gtint*(s*.75+br*.1);}
+else if(fb>.01){
+ if(gmode<.5){float n=vn(vec2(p.x*90.,p.y*50.+t*2.2))*.62+vn(vec2(p.x*190.,p.y*105.+t*4.3))*.38;float k=(n-.5)*1.5+.1*sin(t*7.+p.x*30.);c*=1.+fb*k*.42;c+=fb*max(k,0.)*vec3(.15,.07,0.);}
+ else{float k=.5+.35*sin(t*1.05+p.x*7.)+.15*sin(t*.61+p.y*11.);c*=1.+fb*(k-.5)*.55;c+=fb*max(k-.45,0.)*gtint*.4;}
+}
+if(fgOn>.5){vec2 pf=fc+(uv-fc)/fz+fo;float a=texture2D(td,pf).g*step(0.,pf.x)*step(pf.x,1.)*step(0.,pf.y)*step(pf.y,1.);c=mix(c,texture2D(tf,pf).rgb,a);}
+if(lid<5.){float e=abs(v.y-.5)*2.+2.4*(v.x-.5)*(v.x-.5);c*=1.-smoothstep(lid-.14,lid,e);}
+gl_FragColor=vec4(c*dark,1.);}`;
+const slots=[];let heroSlot=null;
+function makeSlot(){
+  const cv=document.createElement('canvas');cv.className='gl';cv.setAttribute('aria-hidden','true');
+  const gl=cv.getContext('webgl',{alpha:false,antialias:false,depth:false,stencil:false,premultipliedAlpha:false,powerPreference:'default'});
+  if(!gl)return null;
+  const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);return o};
+  const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);
+  if(!gl.getProgramParameter(pr,gl.LINK_STATUS))return null;
+  gl.useProgram(pr);
+  const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const al=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);
+  const U={};for(const n of['tc','td','tf','view','off','dc','focus','t','dz','dark','gmode','gamt','gtint','fgOn','fz','fc','fo','bl','dv','lid','tw'])U[n]=gl.getUniformLocation(pr,n);
+  gl.uniform1i(U.tc,0);gl.uniform1i(U.td,1);gl.uniform1i(U.tf,2);
+  const tex=()=>{const x=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,x);
+    for(const[k,v]of[[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]])gl.texParameteri(gl.TEXTURE_2D,k,v);return x};
+  const s={cv,gl,U,tc:tex(),td:tex(),tf:tex(),owner:null,dead:false,shown:false};
+  gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,s.tf);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,1,1,0,gl.RGB,gl.UNSIGNED_BYTE,new Uint8Array([0,0,0]));
+  cv.addEventListener('webglcontextlost',e=>{e.preventDefault();lose(s)},false);
+  return s;
+}
+function lose(s){
+  if(s.dead)return;s.dead=true;const b=s.owner;
+  if(b){b.noGL=true;b.slot=null;b.still.style.visibility='visible';clearTimeout(b.hideT)}
+  s.cv.remove();const i=slots.indexOf(s);if(i>=0)slots.splice(i,1);if(s===heroSlot)heroSlot=null;
+}
+function sizeCanvas(b){
+  const s=b.slot;if(!s)return;let w=b.cw*DPR,h=b.ch*DPR;const k=Math.min(1,1920/Math.max(w,h));
+  w=Math.max(2,Math.round(w*k));h=Math.max(2,Math.round(h*k));if(s.cv.width!==w||s.cv.height!==h){s.cv.width=w;s.cv.height=h}
+}
+function attach(b,s){
+  const gl=s.gl;s.owner=b;s.shown=false;b.slot=s;
+  const fx=b.media.querySelector('.fog');b.media.insertBefore(s.cv,fx||null);s.cv.style.opacity=0;
+  sizeCanvas(b);
+  gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL,gl.NONE);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
+  gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,s.tc);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,b.imgs.c);
+  gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,s.td);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,b.imgs.m);
+  if(b.imgs.f){gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,s.tf);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,b.imgs.f)}
+}
+function release(b){
+  const s=b.slot;if(!s)return;clearTimeout(b.hideT);b.still.style.visibility='visible';
+  s.cv.remove();s.owner=null;s.shown=false;b.slot=null;
+}
+function draw(b,t){
+  const s=b.slot;if(!s||s.dead)return;const gl=s.gl,U=s.U;if(gl.isContextLost())return;
+  gl.viewport(0,0,s.cv.width,s.cv.height);
+  gl.uniform4f(U.view,b.view[0],b.view[1],b.view[2],b.view[3]);gl.uniform2f(U.off,b.off[0],b.off[1]);gl.uniform2f(U.dc,b.dc[0],b.dc[1]);
+  gl.uniform1f(U.focus,b.focus);gl.uniform1f(U.t,t);gl.uniform1f(U.dz,b.dz);gl.uniform1f(U.dark,b.dark);
+  gl.uniform1f(U.bl,b.bl||0);gl.uniform1f(U.dv,b.dv||0);gl.uniform1f(U.lid,b.lid==null?9:b.lid);const T=b.tw||[2,2,-1,-1];gl.uniform4f(U.tw,T[0],T[1],T[2],T[3]);gl.uniform1f(U.fgOn,b.imgs.f?1:0);gl.uniform1f(U.fz,b.fz||1);gl.uniform2f(U.fc,b.fc[0],b.fc[1]);gl.uniform2f(U.fo,b.fo[0],b.fo[1]);gl.uniform1f(U.gmode,b.gmode||0);gl.uniform1f(U.gamt,RM?0:1);const g=b.gtint||[1,.6,.3];gl.uniform3f(U.gtint,g[0],g[1],g[2]);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+  if(!s.shown){s.shown=true;requestAnimationFrame(()=>{if(b.slot===s)s.cv.style.opacity=1});
+    clearTimeout(b.hideT);b.hideT=setTimeout(()=>{if(b.slot===s&&!s.dead)b.still.style.visibility='hidden'},950);}
+}
+function managePool(){
+  const want=blocks.filter(b=>!b.hero&&!b.noGL&&b.near).sort((x,y)=>x.dist-y.dist).slice(0,POOL);
+  for(const b of blocks)if(!b.hero&&b.slot&&!want.includes(b))release(b);
+  const need=want.find(b=>!b.slot&&ready(b));
+  if(need){let s=slots.find(x=>!x.owner&&!x.dead);if(!s&&slots.length<POOL){s=makeSlot();if(s)slots.push(s)}if(s)attach(need,s)}
+  const h=blocks.find(b=>b.hero);
+  if(h&&!h.noGL&&!h.slot&&ready(h)){if(!heroSlot)heroSlot=makeSlot();if(heroSlot)attach(h,heroSlot)}
+}
+
+/* ---------- captions ---------- */
+function buildCaps(){
+  for(const b of blocks)for(const c of(b.caps_cfg||[])){
+    const el=document.getElementById(c.id);const tx=el.querySelector('.tx');const ty=tx.querySelector('.ty');
+    const text=ty.textContent;ty.textContent='';const spans=[];
+    for(const ch of text){const s=document.createElement('span');s.className='c';s.textContent=ch;ty.appendChild(s);spans.push(s)}
+    const spark=document.createElement('i');spark.className='spark';tx.appendChild(spark);
+    b.caps.push({cfg:c,el,pz:el.querySelector('.pz'),bx:el.querySelector('.bx'),tx,spans,spark,n:spans.length,r:-1,pop:-1,prev:new Float32Array(spans.length).fill(-1),box:null,tails:[...el.querySelectorAll('svg.tail')]});
+  }
+}
+function fitCap(b,cp){
+  const c=cp.cfg,Bw=b.Bw,Bh=b.Bh;let x=c.box[0]*Bw,y=c.box[1]*Bh,w=c.box[2]*Bw,h=c.box[3]*Bh;
+  const bw=Math.max(1.5,Bw*.0019);cp.el.style.setProperty('--bw',bw.toFixed(2)+'px');
+  const pad=clamp(Bw*.014,4,16)+(c.type==='b'?clamp(Bw*.012,4,10):2);cp.tx.style.padding=`0 ${pad}px`;
+  const zmin=b.zmin||1.02,fmin=12.5/zmin;
+  const fits=(f,W,H)=>{cp.tx.style.fontSize=f+'px';cp.el.style.width=W+'px';return cp.tx.offsetHeight<=H-2*bw-pad*.6&&cp.tx.scrollWidth<=cp.tx.clientWidth+1};
+  let lo=4,hi=Math.min(64,h);for(let i=0;i<18;i++){const m=(lo+hi)/2;if(fits(m,w,h))lo=m;else hi=m}
+  let f=lo*.97;
+  if(f<fmin){f=fmin;const cx=x+w/2,cy=y+h/2;let W=Math.min(w*1.35,Bw*.94);
+    cp.tx.style.fontSize=f+'px';cp.el.style.width=W+'px';let need=cp.tx.offsetHeight+2*bw+pad*.9;
+    let H=Math.max(h,need);x=clamp(cx-W/2,Bw*.02,Bw*.98-W);y=clamp(cy-H/2,0,Bh-H);w=W;h=H;}
+  cp.tx.style.fontSize=f+'px';
+  if(c.avoid){ // keep the bubble off faces: move it the shortest way out of each avoid rect
+    for(const A of c.avoid){const ax=A[0]*Bw,ay=A[1]*Bh,aw=A[2]*Bw,ah=A[3]*Bh,m=Bw*.012;
+      if(x<ax+aw&&x+w>ax&&y<ay+ah&&y+h>ay){
+        const opts=[[0,ay-m-(y+h)],[0,ay+ah+m-y],[ax-m-(x+w),0],[ax+aw+m-x,0]]
+          .filter(([dx,dy])=>x+dx>=Bw*.02&&x+dx+w<=Bw*.98&&y+dy>=0&&y+dy+h<=Bh)
+          .sort((p,q)=>Math.hypot(...p)-Math.hypot(...q));
+        if(opts.length){x+=opts[0][0];y+=opts[0][1]}}}
+  }
+  if(c.tip){ // a grown bubble must not swallow its own tail tip: slide it clear
+    const tx=c.tip[0]*Bw,ty=c.tip[1]*Bh,m=Math.max(6,Bw*.025);
+    if(tx>x-m&&tx<x+w+m&&ty>y-m&&ty<y+h+m){
+      const opts=[[tx+m-x,0],[tx-m-(x+w),0],[0,ty+m-y],[0,ty-m-(y+h)]]
+        .filter(([dx,dy])=>x+dx>=Bw*.02&&x+dx+w<=Bw*.98&&y+dy>=0&&y+dy+h<=Bh)
+        .sort((p,q)=>Math.hypot(...p)-Math.hypot(...q));
+      if(opts.length){x+=opts[0][0];y+=opts[0][1]}
+    }
+  }
+  Object.assign(cp.el.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'});
+  cp.box=[x,y,w,h];
+  if(c.type==='b'){cp.bx.style.borderRadius=Math.min(h/2,w/2,Bw*.06)+'px';drawTail(b,cp)}
+}
+function drawTail(b,cp){
+  const c=cp.cfg;if(!c.tip)return;const [x,y,w,h]=cp.box;const tx=c.tip[0]*b.Bw-x,ty=c.tip[1]*b.Bh-y;
+  // pick the side the tip lies beyond (by overshoot), not the nearest infinite line
+  const ox=tx<0?-tx:tx>w?tx-w:0,oy=ty<0?-ty:ty>h?ty-h:0;
+  const r=Math.min(h/2,w/2,b.Bw*.06),hw=Math.min(w,h)*.16;const bwi=(parseFloat(cp.el.style.getPropertyValue('--bw'))||2)+.6;let p1,p2;
+  if(oy>0||(ox===0)){const top=ty<h/2;const yy=top?0:h;const bx=clamp(tx,Math.min(r+hw,w/2),Math.max(w-r-hw,w/2));const k=top?1:-1;p1=[bx-hw,yy+k*bwi];p2=[bx+hw,yy+k*bwi]}
+  else{const left=tx<w/2;const xx=left?0:w;const lo=r+hw,hi=h-r-hw;const by=lo<=hi?clamp(ty,lo,hi):h/2;const k=left?1:-1;p1=[xx+k*bwi,by-hw];p2=[xx+k*bwi,by+hw]}
+  const pts=`${p1[0]},${p1[1]} ${tx},${ty} ${p2[0]},${p2[1]}`;
+  for(const s of cp.tails){const bw=parseFloat(cp.el.style.getPropertyValue('--bw'))||2;
+    s.setAttribute('width',w);s.setAttribute('height',h);s.setAttribute('viewBox',`0 0 ${w} ${h}`);
+    const pg=s.querySelector('polygon');pg.setAttribute('points',pts);if(s.classList.contains('under'))pg.setAttribute('stroke-width',bw*2)}
+}
+function typeCap(cp,r,accent,final){
+  if(Math.abs(r-cp.r)<1e-4)return;cp.r=r;const N=cp.n,f=r*(N+4);
+  for(let i=0;i<N;i++){let a=clamp((f-i)/4,0,1);a=Math.round(a*20)/20;if(a===cp.prev[i])continue;cp.prev[i]=a;const s=cp.spans[i].style;
+    if(a>=1){s.opacity=1;s.filter='';s.color=''}else if(a<=0){s.opacity=0;s.filter=''}else{s.opacity=a;s.filter=`blur(${(1-a)*2}px)`;s.color=accent}}
+  const lead=Math.floor(f-.5);const sp=cp.spark.style;
+  if(RM||r<=0||r>=1||lead<0||lead>=N){sp.opacity=0}else{const e=cp.spans[lead];sp.left=(e.offsetLeft+e.offsetWidth)+'px';sp.top=(e.offsetTop+e.offsetHeight*.5)+'px';sp.opacity=.95}
+}
+function popCap(cp,k){
+  if(Math.abs(k-cp.pop)<1e-4)return;cp.pop=k;
+  const s=k>=1?1:lerp(.35,1,easeBack(k));cp.pz.style.transform=`scale(${s.toFixed(4)})`;cp.pz.style.opacity=clamp(k*3,0,1);
+}
+
+/* ---------- layout ---------- */
+function layout(){
+  vh=innerHeight;vw=innerWidth;
+  for(const b of blocks){
+    b.cw=b.box.clientWidth;b.ch=b.box.clientHeight;
+    const iw=b.aspect[0],ih=b.aspect[1],s=Math.max(b.cw/iw,b.ch/ih);b.Bw=iw*s;b.Bh=ih*s;
+    for(const L of[b.cam,b.att,b.glw])if(L){L.style.width=b.Bw+'px';L.style.height=b.Bh+'px'}
+    b.tf='';sizeCanvas(b);
+    for(const cp of b.caps)fitCap(b,cp);
+  }
+  sizeRain();
+}
+
+/* ---------- camera ---------- */
+function camera(b,r){
+  let z,cx,cy,ox=0,oy=0,dz=0,dark=1,dc=[.5,.5];const C=b.camcfg;
+  b.fz=1;b.fc=[.5,.5];b.fo=[0,0];b.bl=0;b.dv=0;b.lid=9;
+  if(b.stage){
+    const p=clamp(-r.top/Math.max(1,r.height-b.ch),0,1);b.p=p;
+    if(b.script==='crane'){ // crane: maze plate drifts slowly, cliff + climber layer rises and grows past it
+      const e=ss(0,1,p);z=lerp(1,1.1,e);cx=lerp(.54,.57,e);cy=lerp(.45,.53,e);oy=RM?0:.025*(1-2*p);
+      b.fz=RM?1.14:lerp(1.08,1.24,e);b.fc=[.77,.5];b.fo=[0,RM?.01:lerp(-.03,.055,e)];
+    }else if(b.script==='push'){ // slow push toward a target, background slides behind
+      const P=b.push||[1.2,.5,.4];const e=ss(0,1,p);z=lerp(1.0,P[0],e);cx=lerp(.5,P[1],e);cy=lerp(.5,P[2],e);oy=RM?0:.022*(1-2*p);ox=RM?0:.006*(1-2*p);
+    }else if(b.script==='wake'){ // eyes open: lids part, blink, double vision settles
+      const o1=.55*ss(.02,.16,p),bk=ss(.18,.22,p)-ss(.24,.32,p),o2=.85*ss(.3,.5,p);
+      b.lid=RM?9:Math.max(0,o1*(1-.92*bk))+o2;b.bl=RM?0:.02*(1-ss(.08,.56,p));b.dv=RM?0:.04*(1-ss(.12,.6,p));
+      z=lerp(1.03,1.1,ss(0,1,p));cx=.5;cy=lerp(.52,.48,p);oy=RM?0:.012*(1-2*p);
+      if(b.glw){const go=clamp(b.lid*1.15-.25,0,1).toFixed(3);if(b.glw.style.opacity!==go)b.glw.style.opacity=go}
+    }else{ // vertigo: hold on Arden, then dive into the dark below
+      const a=ss(0,.12,p),v=RM?0:ss(.14,.62,p),q=RM?0:ss(.68,.96,p);
+      z=lerp(1,1.04,a);z=lerp(z,1.22,v);cx=lerp(.5,.54,v);cy=lerp(.5,.44,v);dz=.26*v*(1-q);dc=[.54,.42];
+      z*=Math.pow(4.2,q);cx=lerp(cx,.2,q);cy=lerp(cy,.88,q);dark=1-ss(.8,.97,p);oy=RM?0:.02*(1-2*p)*(1-q);
+    }
+    const fade=Math.min(b.cw*.178,Math.max(0,b.box.getBoundingClientRect().top));b.media.style.setProperty('--fade',fade.toFixed(1)+'px');
+  }else{
+    const t=b.hero?clamp(-r.top/r.height,0,1):clamp((vh-r.top)/(vh+r.height),0,1);b.p=t;
+    z=RM?(C.z[0]+C.z[1])/2:lerp(C.z[0],C.z[1],t);cx=lerp(C.c0[0],C.c1[0],RM?.5:t);cy=lerp(C.c0[1],C.c1[1],RM?.5:t);
+    if(!RM){ox=C.off[0]*(1-2*t);oy=C.off[1]*(1-2*t)}
+  }
+  if(b.shakeT&&!RM){const e=performance.now()-b.shakeT;if(e<520){const a=Math.pow(1-e/520,2)*.016;cx+=Math.sin(e*.083)*a;cy+=Math.cos(e*.117)*a*.6;z*=1+a*.6}}
+  const sx=b.cw/(b.Bw*z),sy=b.ch/(b.Bh*z);cx=clamp(cx,sx/2,1-sx/2);cy=clamp(cy,sy/2,1-sy/2);
+  b.view=[sx,sy,cx,cy];b.off=[ox,oy];b.dz=dz;b.dark=dark;b.dc=dc;b.z=z;
+  const tf=`translate(${(b.cw/2-cx*b.Bw*z).toFixed(2)}px,${(b.ch/2-cy*b.Bh*z).toFixed(2)}px) scale(${z.toFixed(5)})`;
+  if(tf!==b.tf){b.tf=tf;for(const L of[b.cam,b.att,b.glw])if(L)L.style.transform=tf}
+  if(b.stage&&b.fogs.length)b.el.style.setProperty('--fo',((b.fog||.07)*dark).toFixed(3));
+}
+function updateCaps(b,r){
+  for(const cp of b.caps){
+    if(!cp.box)continue;const [x,y,w,h]=cp.box;
+    // nudge into view horizontally
+    const sl=b.cw/2+(x/b.Bw-b.view[2])*b.Bw*b.z,sr=sl+w*b.z,m=6;let dx=0;
+    if(sl<m)dx=(m-sl)/b.z;else if(sr>b.cw-m)dx=-(sr-(b.cw-m))/b.z;
+    const nt=dx?`translateX(${dx.toFixed(1)}px)`:'';if(cp.nt!==nt){cp.nt=nt;cp.el.style.transform=nt}
+    let pop,typ;
+    if(RM){pop=1;typ=1}
+    else if(b.stage){const p=b.p,S=cp.cfg.sched||b.sched||[.03,.1,.1,.32,2,3];pop=ss(S[0],S[1],p);typ=clamp((p-S[2])/(S[3]-S[2]),0,1);const out=1-ss(S[4],S[5],p);const o=out.toFixed(3);if(cp.el.style.opacity!==o)cp.el.style.opacity=o}
+    else{const boxTop=r.top+(b.stage?0:0);const top=boxTop+b.ch/2+(y/b.Bh-b.view[3])*b.Bh*b.z,ctr=top+h*b.z/2;
+      pop=clamp((vh*.97-top)/(vh*.08),0,1);typ=clamp((vh*.9-ctr)/(vh*.36),0,1);}
+    cp.typ=typ;popCap(cp,pop);typeCap(cp,typ,cp.cfg.type==='b'?'#55640a':'#ffcf7a');
+  }
+}
+
+/* ---------- rain ---------- */
+const rc=document.getElementById('rain'),rx=rc.getContext('2d');let drops=[],rainOn=false,RW=0,RH=0;const RD=Math.min(1.5,DPR);
+function sizeRain(){RW=rc.clientWidth;RH=rc.clientHeight;rc.width=Math.round(RW*RD);rc.height=Math.round(RH*RD)}
+function rain(dt,str){
+  if(RM||str<.02){if(rainOn){rx.clearRect(0,0,rc.width,rc.height);rainOn=false}return}
+  rainOn=true;const want=Math.round(str*170*(RW*RH)/(400*800));
+  while(drops.length<want)drops.push(newDrop(true));if(drops.length>want)drops.length=want;
+  rx.setTransform(RD,0,0,RD,0,0);rx.clearRect(0,0,RW,RH);rx.lineCap='round';
+  for(const d of drops){d.y+=d.v*dt;d.x+=d.v*.11*dt;if(d.y-d.l>RH||d.x>RW+20)Object.assign(d,newDrop(false));
+    rx.strokeStyle=`rgba(196,212,226,${(d.a*str).toFixed(3)})`;rx.lineWidth=d.w;rx.beginPath();rx.moveTo(d.x,d.y);rx.lineTo(d.x-d.l*.11,d.y-d.l);rx.stroke()}
+}
+function newDrop(any){const z=Math.random();return{x:Math.random()*(RW+40)-30,y:any?Math.random()*RH:-Math.random()*60,v:900+z*900,l:10+z*22,w:.6+z*.8,a:.12+z*.22}}
+
+/* ---------- dust motes (scene 4 window light) ---------- */
+const dust=[];
+function setupDust(){
+  for(const b of blocks)if(b.dust){const cv=document.createElement('canvas');cv.className='dust';cv.style.position='absolute';
+    const [x,y,w,h]=b.dust;Object.assign(cv.style,{left:x*100+'%',top:y*100+'%',width:w*100+'%',height:h*100+'%'});b.glw.appendChild(cv);
+    const ps=[];for(let i=0;i<54;i++)ps.push({x:Math.random(),y:Math.random(),s:.5+Math.random()*1.4,ph:Math.random()*6.28,sp:.4+Math.random()*.8,vx:(Math.random()-.5)*.006,vy:-(.002+Math.random()*.006)});
+    dust.push({b,cv,cx:cv.getContext('2d'),ps});}
+}
+function drawDust(t,dt){
+  for(const D of dust){const b=D.b;if(!b.vis||RM){continue}const cv=D.cv,W=cv.clientWidth,H=cv.clientHeight;if(!W)continue;
+    const k=Math.min(2,DPR);if(cv.width!==Math.round(W*k)){cv.width=Math.round(W*k);cv.height=Math.round(H*k)}
+    const x=D.cx;x.setTransform(k,0,0,k,0,0);x.clearRect(0,0,W,H);
+    for(const p of D.ps){p.x+=(p.vx+.004*Math.sin(t*.3*p.sp+p.ph))*dt;p.y+=p.vy*dt;if(p.y<-.02){p.y=1.02;p.x=Math.random()}if(p.x<-.02)p.x=1.02;if(p.x>1.02)p.x=-.02;
+      const shaft=.35+.65*Math.pow(Math.max(0,Math.sin((p.x*.74+.13)*Math.PI*4)),2);const a=(.25+.35*Math.sin(t*p.sp+p.ph))*shaft*(1-p.y*.6);
+      if(a<=0)continue;x.fillStyle=`rgba(255,246,220,${a.toFixed(3)})`;x.beginPath();x.arc(p.x*W,p.y*H,p.s,0,6.283);x.fill()}}
+}
+
+/* ---------- sound (opt-in; everything synthesized except the music bed) ---------- */
+const SND=(()=>{
+  const S={on:false,ctx:null};
+  const rng=()=>Math.random();
+  // ---- shared building blocks (work with AudioContext and OfflineAudioContext) ----
+  function noiseBuf(ctx,kind,secs){
+    const n=Math.floor(ctx.sampleRate*secs),b=ctx.createBuffer(2,n,ctx.sampleRate);
+    for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);let last=0,b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+      for(let i=0;i<n;i++){const w=rng()*2-1;
+        if(kind==='white')d[i]=w*.5;
+        else if(kind==='brown'){last=(last+.02*w)/1.02;d[i]=last*3.2}
+        else{b0=.99886*b0+w*.0555179;b1=.99332*b1+w*.0750759;b2=.969*b2+w*.153852;b3=.8665*b3+w*.3104856;b4=.55*b4+w*.5329522;b5=-.7616*b5-w*.016898;d[i]=(b0+b1+b2+b3+b4+b5+b6+w*.5362)*.11;b6=w*.115926}}
+      // crossfade the loop seam
+      const f=Math.floor(ctx.sampleRate*.05);for(let i=0;i<f;i++){const a=i/f;d[i]=d[i]*a+d[n-f+i]*(1-a)}}
+    return b}
+  function reverb(ctx,secs,decay){
+    const n=Math.floor(ctx.sampleRate*secs),b=ctx.createBuffer(2,n,ctx.sampleRate);
+    for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<n;i++)d[i]=(rng()*2-1)*Math.pow(1-i/n,decay)}
+    const c=ctx.createConvolver();c.buffer=b;return c}
+  function engine(ctx,dest){
+    const E={ctx,buf:{white:noiseBuf(ctx,'white',7),brown:noiseBuf(ctx,'brown',7),pink:noiseBuf(ctx,'pink',7)}};
+    E.comp=ctx.createDynamicsCompressor();E.comp.threshold.value=-16;E.comp.ratio.value=3.5;E.comp.attack.value=.01;E.comp.release.value=.25;
+    E.master=ctx.createGain();E.master.gain.value=.9;E.master.connect(E.comp);E.comp.connect(dest);
+    E.rev=reverb(ctx,3.2,2.6);E.revIn=ctx.createGain();E.revIn.gain.value=.5;E.revIn.connect(E.rev);E.rev.connect(E.master);
+    E.bus=ctx.createGain();E.lp=ctx.createBiquadFilter();E.lp.type='lowpass';E.lp.frequency.value=18000;E.lp.Q.value=.5;
+    E.bus.connect(E.lp);E.lp.connect(E.master);
+    E.src=(kind,off)=>{const s=ctx.createBufferSource();s.buffer=E.buf[kind];s.loop=true;s.start(ctx.currentTime,(off==null?rng()*6:off));return s};
+    E.filt=(type,f,q)=>{const b=ctx.createBiquadFilter();b.type=type;b.frequency.value=f;if(q!=null)b.Q.value=q;return b};
+    E.gain=v=>{const g=ctx.createGain();g.gain.value=v;return g};
+    E.osc=(type,f)=>{const o=ctx.createOscillator();o.type=type;o.frequency.value=f;o.start();return o};
+    E.lfo=(f,depth,param)=>{const o=E.osc('sine',f),g=E.gain(depth);o.connect(g);g.connect(param);return o};
+    E.chain=(...n)=>{for(let i=0;i<n.length-1;i++)n[i].connect(n[i+1]);return n[n.length-1]};
+    // one-shot noise burst
+    E.burst=(t,kind,type,f,q,peak,att,dec,out,pan)=>{const s=ctx.createBufferSource();s.buffer=E.buf[kind];const fl=E.filt(type,f,q),g=E.gain(0);
+      s.connect(fl);fl.connect(g);let o=g;if(pan){const p=ctx.createStereoPanner();p.pan.value=pan;g.connect(p);o=p}o.connect(out||E.master);
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+att);g.gain.setTargetAtTime(0,t+att,dec/4);s.start(t,rng()*5);s.stop(t+att+dec*1.6+.05);return g};
+    E.tone=(t,type,f0,f1,peak,att,dec,out,glide)=>{const o=ctx.createOscillator();o.type=type;o.frequency.setValueAtTime(f0,t);if(f1!==f0)o.frequency.exponentialRampToValueAtTime(f1,t+(glide||dec));
+      const g=E.gain(0);o.connect(g);g.connect(out||E.master);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+att);g.gain.setTargetAtTime(0,t+att,dec/4);o.start(t);o.stop(t+att+dec*1.6+.05);return g};
+    return E}
+
+  // ---- scene beds: each returns {g} with g.gain at 0; level 1 = intended loudness ----
+  const BEDS={
+    ruins(E){const g=E.gain(0),c=E.ctx;
+      const bp=E.filt('bandpass',380,.7),w=E.gain(.3);E.chain(E.src('brown'),bp,w,g);E.lfo(.07,220,bp.frequency);E.lfo(.13,.22,w.gain);
+      const lp=E.filt('lowpass',380);const d1=E.osc('sine',55),d2=E.osc('sine',82.9);const dg=E.gain(.05);d1.connect(dg);d2.connect(dg);E.chain(dg,lp,g);
+      return {g,tick:(t)=>{if(rng()<.012){E.tone(t,'sine',1500,880,.05,.004,.09,E.revIn)}}}},
+    city(E){const g=E.gain(0);
+      E.chain(E.src('white'),E.filt('highpass',700),E.filt('lowpass',6000),E.gain(.16),g);
+      E.chain(E.src('white'),E.filt('bandpass',2500,.8),E.gain(.07),g);
+      const hl=E.filt('lowpass',140);E.chain(E.osc('sawtooth',46),hl,E.gain(.05),g);E.chain(E.osc('sine',92),E.gain(.018),g);
+      return {g,tick:(t)=>{if(rng()<.006)E.burst(t,'white','bandpass',900+rng()*900,4,.05,.002,.25,E.revIn)}}},
+    office(E){const g=E.gain(0);let next=0,tk=0;
+      E.chain(E.src('brown'),E.filt('lowpass',250),E.gain(.12),g);
+      E.chain(E.src('white'),E.filt('lowpass',700),E.gain(.07),g);
+      return {g,tick:(t)=>{if(t>=next){next=t+1;tk^=1;const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',tk?2700:2200,6,.5,.001,.02,o)}}}},
+    alley(E){const g=E.gain(0);
+      E.chain(E.src('white'),E.filt('highpass',900),E.filt('lowpass',7500),E.gain(.26),g);
+      E.chain(E.src('white'),E.filt('bandpass',1800,1.2),E.gain(.12),g);
+      const gl=E.gain(.22);E.chain(E.src('brown'),E.filt('lowpass',180),gl,g);E.lfo(.2,.08,gl.gain);
+      return {g,tick:(t)=>{if(rng()<.05){const o=E.gain(1);o.connect(g);E.tone(t,'sine',1300+rng()*900,700,.04,.003,.07,o)}}}},
+    hall(E){const g=E.gain(0);
+      const hush=E.chain(E.src('pink'),E.filt('lowpass',450),E.gain(.22));hush.connect(g);
+      const hs=E.gain(.25);hush.connect(hs);hs.connect(E.revIn);
+      E.chain(E.src('white'),E.filt('lowpass',500),E.gain(.05),g);
+      const bp=E.filt('bandpass',320,6);E.chain(E.src('brown'),bp,E.gain(.12),g);E.lfo(.05,60,bp.frequency);
+      return {g,tick:()=>{}}},
+    study(E){const g=E.gain(0);
+      const roar=E.gain(.16);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.3,.05,roar.gain);
+      E.chain(E.src('white'),E.filt('bandpass',1400,.6),E.gain(.035),g);
+      return {g,tick:(t)=>{if(rng()<.22){const o=E.gain(1);o.connect(g);E.burst(t,'white','highpass',1500+rng()*2500,.7,.04+rng()*.1,.001,.006+rng()*.02,o,(rng()-.5)*.6)}}}},
+  };
+  // ---- hits ----
+  const HITS={
+    boom(E,t,k){k=k||1;E.tone(t,'sine',72,30,.75*k,.01,2.2,E.master,1.6);E.burst(t,'brown','lowpass',120,.7,.5*k,.01,1.6);const s=E.gain(.35*k);s.connect(E.revIn);E.tone(t,'sine',72,30,1,.01,1.8,s,1.6)},
+    end(E,t){HITS.boom(E,t,.55)},
+    thunder(E,t){E.burst(t,'white','highpass',1500,.7,.45,.004,.3);E.burst(t+.02,'brown','lowpass',200,.7,1.1,.06,4.6);E.burst(t+.05,'brown','lowpass',90,.7,.9,.15,3.8);
+      const s=E.gain(.4);s.connect(E.revIn);E.burst(t,'white','bandpass',800,.6,.6,.004,.8,s)},
+    punch(E,t){E.tone(t,'sine',120,42,1,.003,.4,E.master,.16);E.burst(t,'white','lowpass',2600,.7,.55,.002,.1);E.burst(t,'white','bandpass',4200,1.5,.25,.001,.05);HITS.thunder(E,t+.08)},
+    vertigo(E,t){const g=E.gain(0);g.connect(E.master);const s=E.gain(.5);g.connect(s);s.connect(E.revIn);
+      const a=E.ctx.createOscillator(),b=E.ctx.createOscillator();a.frequency.value=196;b.frequency.value=207.6;a.connect(g);b.connect(g);a.start(t);b.start(t);a.stop(t+4.5);b.stop(t+4.5);
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.14,t+2.2);g.gain.setTargetAtTime(0,t+2.4,.5);
+      const s2=E.ctx.createBufferSource();s2.buffer=E.buf.white;const bp=E.filt('bandpass',300,1.2),wg=E.gain(0);s2.connect(bp);bp.connect(wg);wg.connect(E.master);
+      bp.frequency.setValueAtTime(300,t);bp.frequency.exponentialRampToValueAtTime(1900,t+2.4);wg.gain.setValueAtTime(0,t);wg.gain.linearRampToValueAtTime(.2,t+2.3);wg.gain.linearRampToValueAtTime(0,t+2.5);s2.start(t,rng()*4);s2.stop(t+2.6)},
+    dive(E,t){const s=E.ctx.createBufferSource();s.buffer=E.buf.white;const bp=E.filt('bandpass',2400,1),g=E.gain(0);s.connect(bp);bp.connect(g);g.connect(E.master);
+      bp.frequency.setValueAtTime(2400,t);bp.frequency.exponentialRampToValueAtTime(160,t+1.7);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.3,t+.35);g.gain.linearRampToValueAtTime(0,t+1.8);s.start(t,rng()*4);s.stop(t+1.9);
+      E.tone(t+.2,'sine',70,38,.35,.6,1.6,E.master,1.8)},
+    sting(E,t){const g=E.gain(0),lp=E.filt('lowpass',700);g.connect(lp);lp.connect(E.master);const s=E.gain(.4);lp.connect(s);s.connect(E.revIn);
+      for(const f of [73.4,77.8,110,116.5]){const o=E.ctx.createOscillator();o.type='sawtooth';o.frequency.value=f;o.connect(g);o.start(t);o.stop(t+4.2)}
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.11,t+.5);g.gain.setTargetAtTime(0,t+.7,.9);
+      E.tone(t+.05,'sine',1244,1244,.025,.3,2.5,s)},
+    run(E,t){for(let i=0;i<9;i++){const tt=t+i*.23,k=1-i*.08,pan=i%2?.25:-.25;E.burst(tt,'white','bandpass',650,1,.38*k,.002,.09,E.master,pan);E.burst(tt+.01,'white','highpass',2600,.7,.14*k,.002,.15,E.master,pan);E.tone(tt,'sine',90,50,.25*k,.002,.08)}},
+    gate(E,t){const clank=(tt,k)=>{const s=E.gain(.3);s.connect(E.revIn);[523,1287,2093,3170,4400].forEach((f,i)=>{E.tone(tt,'sine',f,f,.12*k/(i+1),.001,.5+rng()*.7);E.tone(tt,'sine',f,f,.12*k/(i+1),.001,.4,s)});E.burst(tt,'white','highpass',3000,.7,.3*k,.001,.02)};
+      clank(t,1);clank(t+.32,.7);const o=E.ctx.createOscillator();o.type='sawtooth';const bp=E.filt('bandpass',380,8),g=E.gain(0);o.connect(bp);bp.connect(g);g.connect(E.master);
+      bp.frequency.setValueAtTime(380,t+.6);bp.frequency.linearRampToValueAtTime(290,t+1.5);o.frequency.value=70;g.gain.setValueAtTime(0,t+.6);g.gain.linearRampToValueAtTime(.12,t+.9);g.gain.linearRampToValueAtTime(0,t+1.6);o.start(t+.6);o.stop(t+1.7)},
+    bloom(E,t){const s=E.gain(.8);s.connect(E.revIn);[1046.5,1318.5,1568,1975.5,2637].forEach((f,i)=>{const tt=t+i*.07;const g=E.tone(tt,'sine',f,f,.045,.35,3.6,E.master);E.tone(tt,'sine',f,f,.045,.35,3.6,s);E.tone(tt,'sine',f*1.003,f*1.003,.02,.5,3.2,E.master)});
+      E.burst(t,'white','highpass',6000,.7,.04,.4,2.2,s)},
+  };
+  const BED_NAMES=Object.keys(BEDS);
+  // ---- live state ----
+  let E=null,beds={},ring=null,music=null,mg=null,cool={},lastTick=0,targets={};
+  const MUSIC_LEVEL=.42,VO_GAIN=1;
+  function start(){
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;
+    try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+    S.ctx=new AC();E=engine(S.ctx,S.ctx.destination);
+    for(const n of BED_NAMES){const b=BEDS[n](E);b.g.connect(E.bus);beds[n]=b;targets[n]=0}
+    // tinnitus voice for the wake-up stage
+    ring=E.gain(0);ring.connect(E.master);E.chain(E.osc('sine',3900),ring);E.chain(E.osc('sine',3907),ring);
+    // music: streamed, never decoded whole
+    try{music=new Audio();music.src='assets/music.mp3';music.loop=true;music.preload='auto';music.crossOrigin='anonymous';
+      const src=S.ctx.createMediaElementSource(music);mg=E.gain(0);src.connect(mg);mg.connect(E.master)}catch(e){music=null}
+    return true}
+  // ---- narration: one clip per panel, starts as the panel reaches the top of the screen ----
+  const VO_AT=.18;const VO={buf:{},loading:{},cur:null,want:null,wantT:0};
+  function voLoad(b){if(!b.vo||!S.ctx||VO.buf[b.k]||VO.loading[b.k])return;VO.loading[b.k]=1;
+    fetch(b.vo).then(r=>r.arrayBuffer()).then(a=>new Promise((res,rej)=>S.ctx.decodeAudioData(a,res,rej)))
+      .then(buf=>{VO.buf[b.k]=buf;delete VO.loading[b.k];if(VO.want===b&&performance.now()-VO.wantT<4000)voPlay(b)}).catch(()=>{delete VO.loading[b.k]})}
+  function voStop(f){if(!VO.cur)return;const c=VO.cur;VO.cur=null;const t=S.ctx.currentTime;c.g.gain.cancelScheduledValues(t);c.g.gain.setValueAtTime(c.g.gain.value,t);c.g.gain.linearRampToValueAtTime(0,t+f);try{c.s.stop(t+f+.05)}catch(e){}}
+  function duck(on){if(!E)return;const t=S.ctx.currentTime;E.bus.gain.setTargetAtTime(on?.6:1,t,on?.12:.6);if(mg&&S.on)mg.gain.setTargetAtTime(MUSIC_LEVEL*(on?.5:1),t,on?.12:.8)}
+  function voPlay(b){if(!S.on||!E)return;const buf=VO.buf[b.k];if(!buf){VO.want=b;VO.wantT=performance.now();voLoad(b);return}
+    VO.want=null;voStop(.35);const t=S.ctx.currentTime+.06;const s=S.ctx.createBufferSource();s.buffer=buf;const g=E.gain(VO_GAIN);s.connect(g);g.connect(E.master);s.start(t);
+    const c={s,g,k:b.k};VO.cur=c;(S.vlog||(S.vlog=[])).push(b.k);duck(true);s.onended=()=>{if(VO.cur===c){VO.cur=null;duck(false)}}}
+  function voFrame(blocks,vh){
+    for(const b of blocks){if(!b.vo)continue;const top=b.el.getBoundingClientRect().top,thr=vh*VO_AT;
+      if(top<vh*2.6&&top>-vh*1.5)voLoad(b);
+      if(S.justOn){if(top<=thr&&b.el.getBoundingClientRect().bottom>vh*.55){S.justOn=false;voPlay(b)}}
+      else if(b._vt!=null&&b._vt>thr&&top<=thr)voPlay(b);
+      b._vt=top}
+    S.justOn=false}
+  function setOn(v){
+    if(v&&!E&&!start())return;
+    S.on=v;const t=S.ctx.currentTime;
+    if(v){S.justOn=true;S.ctx.resume();E.master.gain.cancelScheduledValues(t);E.master.gain.setTargetAtTime(.9,t,.25);
+      if(music){music.play().catch(()=>{});mg.gain.cancelScheduledValues(t);mg.gain.setValueAtTime(0,t);mg.gain.linearRampToValueAtTime(MUSIC_LEVEL,t+3)}}
+    else{voStop(.2);duck(false);E.master.gain.setTargetAtTime(0,t,.15);setTimeout(()=>{if(!S.on){S.ctx.suspend();music&&music.pause()}},700)}
+  }
+  function hit(name,k){if(!S.on||!E||!HITS[name])return;const now=performance.now();if(cool[name]&&now-cool[name]<2500)return;cool[name]=now;(S.log||(S.log=[])).push(name);HITS[name](E,S.ctx.currentTime+.02,k)}
+  function frame(blocks,vh,now,endEl){
+    if(!S.on||!E)return;voFrame(blocks,vh);const t=S.ctx.currentTime;const w={};for(const n of BED_NAMES)w[n]=0;
+    let best=null,bestCov=0,lp=18000,ringLv=0;
+    for(const b of blocks){const r=b.el.getBoundingClientRect();const cov=clamp((Math.min(vh,r.bottom)-Math.max(0,r.top))/vh,0,1);
+      if(b.bed&&cov>0)w[b.bed]=Math.max(w[b.bed],clamp(cov*1.4,0,1)*(b.bedLv||1));
+      if(cov>bestCov){bestCov=cov;best=b}
+      // scroll-triggered hits
+      if(b.sfx&&cov>0)for(const s of b.sfx){const [mode,thr,name]=s;let v;
+        if(mode==='p')v=b.p;else if(mode==='t')v=b.caps.length?b.caps[0].typ||0:0;else v=1-((r.top+r.bottom)/2)/vh;
+        const key=b.k+name;if(v>=thr&&!s.fired){s.fired=true;hit(name)}else if(v<thr-.15)s.fired=false}}
+    if(best){if(best.k==='s20')lp=900;if(best.k==='s21')lp=lerp(380,18000,ss(.3,.62,best.p))}
+    const w21=blocks.find(b=>b.k==='s21');if(w21&&w21===best)ringLv=.05*(1-ss(.2,.58,w21.p))*ss(0,.04,w21.p);
+    if(endEl){const er=endEl.getBoundingClientRect();if(er.top<vh*.45&&!endEl._f){endEl._f=1;hit('end')}else if(er.top>vh*.9)endEl._f=0;
+      const ecov=clamp((vh-er.top)/vh,0,1);for(const n of BED_NAMES)w[n]*=1-.6*ecov}
+    for(const n of BED_NAMES){if(Math.abs(w[n]-targets[n])>.01){targets[n]=w[n];beds[n].g.gain.setTargetAtTime(w[n],t,1.1)}}
+    if(Math.abs(E.lp.frequency.value-lp)>20)E.lp.frequency.setTargetAtTime(lp,t,.35);
+    ring.gain.setTargetAtTime(ringLv,t,.2);
+    if(now-lastTick>45){lastTick=now;for(const n of BED_NAMES)if(targets[n]>.05)beds[n].tick(t+.05)}
+  }
+  document.addEventListener('visibilitychange',()=>{if(!music||!S.on)return;if(document.hidden)music.pause();else music.play().catch(()=>{})});
+  // offline level check (used by the test harness only)
+  async function measure(name,kind,secs){
+    const oc=new OfflineAudioContext(2,44100*secs,44100);const X=engine(oc,oc.destination);
+    if(kind==='bed'){const b=BEDS[name](X);b.g.connect(X.bus);b.g.gain.value=1;for(let tt=.05;tt<secs;tt+=.045)b.tick(tt)}
+    else HITS[name](X,.05);
+    const buf=await oc.startRendering();let pk=0,ss2=0;const L=buf.getChannelData(0),R=buf.getChannelData(1);
+    for(let i=0;i<L.length;i++){const a=Math.max(Math.abs(L[i]),Math.abs(R[i]));if(a>pk)pk=a;ss2+=(L[i]*L[i]+R[i]*R[i])/2}
+    const db=x=>Math.round(20*Math.log10(Math.max(1e-9,x))*10)/10;return{name,kind,rms:db(Math.sqrt(ss2/L.length)),peak:db(pk)}}
+  return Object.assign(S,{setOn,hit,frame,measure,BED_NAMES,HIT_NAMES:Object.keys(HITS)});
+})();
+
+/* ---------- thunder ---------- */
+const flashEl=document.getElementById('flash');let flashT=-1,lastThunder=-1e9;
+function thunder(now,b){if(now-lastThunder<1500)return;lastThunder=now;flashT=now;if(b&&b.shake)b.shakeT=now;SND.hit(b&&b.shake?'punch':'thunder')}
+
+/* ---------- sparkles: tiny green glints that bloom and fade over the illustration ---------- */
+const sparkSets=[];
+function setupSparks(){
+  for(const b of blocks)if(b.sparks){const S=b.sparks;const cv=document.createElement('canvas');cv.className='sparks';cv.setAttribute('aria-hidden','true');cv.style.position='absolute';
+    const [x,y,w,h]=S.rect;Object.assign(cv.style,{left:x*100+'%',top:y*100+'%',width:w*100+'%',height:h*100+'%'});b.glw.appendChild(cv);
+    sparkSets.push({b,S,cv,cx:cv.getContext('2d'),act:[],next:0});}
+}
+function drawSparks(now){
+  for(const P of sparkSets){const b=P.b,S=P.S;if(!b.vis||RM)continue;const cv=P.cv,W=cv.clientWidth,H=cv.clientHeight;if(!W)continue;
+    const k=Math.min(2.5,DPR*(b.z||1)),bw=Math.round(W*k),bh=Math.round(H*k);if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh}
+    const [rx,ry,rw,rh]=S.rect,s=b.Bw/400;
+    while(P.act.length<S.n&&now>=P.next){
+      let px,py;if(Math.random()<.7){const q=S.pts[(Math.random()*S.pts.length)|0];px=q[0]+(Math.random()-.5)*.03;py=q[1]+(Math.random()-.5)*.02}
+      else{const a=Math.random()*6.283,r=Math.sqrt(Math.random());px=S.c[0]+Math.cos(a)*S.c[2]*r;py=S.c[1]+Math.sin(a)*S.c[3]*r}
+      P.act.push({x:px,y:py,t0:now,life:1300+Math.random()*1500,sz:(.55+Math.random()*.85)*s,dy:-(3+Math.random()*9)*s,star:Math.random()<.3});
+      P.next=now+110+Math.random()*170}
+    const x=P.cx;x.setTransform(k,0,0,k,0,0);x.clearRect(0,0,W,H);x.globalCompositeOperation='lighter';
+    P.act=P.act.filter(p=>{const u=(now-p.t0)/p.life;if(u>=1)return false;const a=Math.pow(Math.sin(Math.PI*u),1.6)*.9;
+      const X=(p.x-rx)/rw*W,Y=(p.y-ry)/rh*H+p.dy*u,R=p.sz*5;
+      const g=x.createRadialGradient(X,Y,0,X,Y,R);g.addColorStop(0,`rgba(140,255,160,${(a*.38).toFixed(3)})`);g.addColorStop(1,'rgba(90,255,120,0)');
+      x.fillStyle=g;x.beginPath();x.arc(X,Y,R,0,6.283);x.fill();
+      x.fillStyle=`rgba(220,255,225,${a.toFixed(3)})`;x.beginPath();x.arc(X,Y,p.sz*.85,0,6.283);x.fill();
+      if(p.star){x.strokeStyle=`rgba(190,255,200,${(a*.65).toFixed(3)})`;x.lineWidth=.6;const L=p.sz*6;x.beginPath();x.moveTo(X-L,Y);x.lineTo(X+L,Y);x.moveTo(X,Y-L);x.lineTo(X,Y+L);x.stroke()}
+      return true});
+    x.globalCompositeOperation='source-over';}
+}
+
+/* ---------- loop ---------- */
+let last=performance.now();const endEl=document.querySelector('.end');const ttl=document.querySelector('.ttl');
+function frame(now){
+  const dt=Math.min(.05,(now-last)/1000);last=now;const t=RM?0:now/1000;
+  let rainStr=0;
+  for(const b of blocks){
+    const r=b.el.getBoundingClientRect();b.near=r.bottom>-vh*.5&&r.top<vh*1.5;b.vis=r.bottom>0&&r.top<vh;
+    if(r.top<vh*2.5&&r.bottom>-vh)loadImgs(b);
+    const br=b.stage?b.box.getBoundingClientRect():r;b.dist=Math.abs((br.top+br.bottom)/2-vh/2);
+    if(b.near){camera(b,r);updateCaps(b,r)}
+    if(b.thunder){
+      if(b.vis&&!b.fired&&b.caps.length&&b.caps[0].typ>=.8&&!RM){b.fired=true;thunder(now,b)}
+      if(b.fired&&r.top>vh*.9)b.fired=false;
+      b.rainNow=lerp(b.rainNow==null?b.rain:b.rainNow,b.fired?b.rain2:b.rain,clamp(dt*1.6,0,1));
+    }
+    const rv=b.rainNow!=null?b.rainNow:b.rain;
+    if(rv&&b.vis){const cov=(Math.min(vh,r.bottom)-Math.max(0,r.top))/vh;rainStr=Math.max(rainStr,rv*clamp(cov*1.6,0,1))}
+  }
+  managePool();
+  SND.frame(blocks,vh,now,endEl);
+  for(const b of blocks)if(b.slot&&b.vis)draw(b,t);
+  rain(dt,rainStr);drawDust(t,dt);drawSparks(now);
+  if(flashT>=0){const e=now-flashT;let f=0;for(const[t0,a]of[[0,1],[150,.55],[310,.85]])if(e>=t0)f+=a*Math.exp(-(e-t0)/120);
+    if(e>1400){flashT=-1;f=0}flashEl.style.opacity=clamp(f*.8,0,.9).toFixed(3)}
+  if(ttl){const h=B.title;const k=clamp(-h.el.getBoundingClientRect().top/(h.ch*.6),0,1);ttl.style.opacity=(1-k).toFixed(3)}
+  if(endEl){const er=endEl.getBoundingClientRect();const k=ss(vh*.98,vh*.5,er.top);for(const c of endEl.children)c.style.opacity=k.toFixed(3)}
+  requestAnimationFrame(frame);
+}
+
+/* ---------- init ---------- */
+buildCaps();setupDust();setupSparks();layout();
+for(const b of blocks)if(b.hero)loadImgs(b);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(layout,80)});
+requestAnimationFrame(()=>{ttl&&ttl.classList.add('on')});
+const sndBtn=document.getElementById('snd'),sndCue=document.querySelector('.sndcue');let sndFirst=true;
+function toggleSound(){SND.setOn(!SND.on);sndBtn.setAttribute('aria-pressed',String(SND.on));sndBtn.setAttribute('aria-label',SND.on?'Turn sound off':'Turn sound on');
+  if(sndCue)sndCue.classList.add('hide');if(SND.on&&sndFirst){sndFirst=false;const h=B.title.el.getBoundingClientRect();if(h.bottom>vh*.35)SND.hit('boom')}}
+sndBtn.addEventListener('click',toggleSound);if(sndCue)sndCue.addEventListener('click',toggleSound);
+requestAnimationFrame(frame);
+window.__construct={snd:SND,pool:POOL,live:()=>slots.filter(s=>!s.dead).length+(heroSlot&&!heroSlot.dead?1:0),canvases:()=>document.querySelectorAll('canvas.gl').length,
+  lose:k=>{const b=B[k];if(b&&b.slot){const e=b.slot.gl.getExtension('WEBGL_lose_context');if(e){e.loseContext();return true}}return false},
+  state:k=>{const b=B[k];return b&&{slot:!!b.slot,noGL:b.noGL,still:b.still.style.visibility||'visible'}}};
+})();
+</script>
+</body>
+</html>

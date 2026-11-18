@@ -1,6 +1,7 @@
 # Lore Machine — loremachine.info
 
-Plain HTML/CSS/JS. No build step: upload the folder to any static host (or open `index.html` locally).
+Plain HTML/CSS/JS, no build step. Deployed by Netlify from this repo: every push to `main` goes live on loremachine.info within a minute or so.
+To roll back, open Netlify → Deploys and publish an earlier deploy.
 
 ## Pages
 - `index.html` — homepage: "The Story Visualization Company", English/Japanese/Korean/Mandarin cycling subline, Software + Studio buttons (hover shows description; click opens the page).

@@ -242,10 +242,9 @@ h1,.pitch .big,.about .big,.lead .hl,.contact-card h2{font-family:'Inter Tight',
 .press-strip:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 @media (min-width:761px){ .page > .press-strip{grid-row:5;align-self:center} }
 @media (max-width:760px){
-  .page{grid-template-rows:auto auto 1fr auto auto auto}
-  .page > .press-strip{grid-row:4;flex-wrap:wrap;gap:12px 22px;max-width:340px;margin:2px auto 10px}
-  .page > .util{grid-row:5} .page > .ticker{grid-row:6}
-  .press-strip img{height:calc(var(--h) * .72)}
+  .page{grid-template-rows:auto auto 1fr auto auto}
+  .page > .press-strip{display:none}
+  .page > .util{grid-row:4} .page > .ticker{grid-row:5}
 }
 </style>
 </head>

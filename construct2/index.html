@@ -275,6 +275,9 @@ function buildCaps(){
     b.caps.push({cfg:c,el,pz:el.querySelector('.pz'),bx:el.querySelector('.bx'),tx,spans,spark,n:spans.length,r:-1,pop:-1,prev:new Float32Array(spans.length).fill(-1),box:null,tails:[...el.querySelectorAll('svg.tail')]});
   }
 }
+// does any glyph spill past the text box's padding? (transform-proof: offsets, not screen rects)
+function inkOver(cp){const tx=cp.tx,pl=parseFloat(tx.style.paddingLeft)||0,pr=parseFloat(tx.style.paddingRight)||0,lim=tx.clientWidth-pr+.5;
+  for(const s of cp.spans){if(!s.textContent.trim())continue;const l=s.offsetLeft;if(l+s.offsetWidth>lim||l<pl-.5)return true}return false}
 function fitCap(b,cp){
   const c=cp.cfg,Bw=b.Bw,Bh=b.Bh;let x,y,w,h;
   const bw=Math.max(1.5,Bw*.0019);cp.el.style.setProperty('--bw',bw.toFixed(2)+'px');
@@ -282,10 +285,10 @@ function fitCap(b,cp){
   const pv=Math.max(5,10*base*k),ph=Math.max(5,10*base*k)+(c.type==='b'?Math.max(2,4*base*k):0);
   cp.tx.style.padding=`0 ${ph.toFixed(1)}px`;cp.tx.style.fontSize=f.toFixed(2)+'px';
   // start at the creator's width (scaled with the type), then shrink-wrap without adding lines
-  const Wm=Math.min(c.auto[2]*Bw*k,Bw*.92);cp.el.style.width=Wm+'px';const H0=cp.tx.offsetHeight;
+  let Wm=Math.min(c.auto[2]*Bw*k,Bw*.92);cp.el.style.width=Wm+'px';while(inkOver(cp)&&Wm<Bw*.92){Wm=Math.min(Wm*1.06+2,Bw*.92);cp.el.style.width=Wm+'px'}const H0=cp.tx.offsetHeight;
   let lo=Math.min(Wm,f*2.5+2*ph),hi=Wm;
-  for(let i=0;i<14;i++){const m=(lo+hi)/2;cp.el.style.width=m+'px';if(cp.tx.offsetHeight<=H0+.5&&cp.tx.scrollWidth<=cp.tx.clientWidth+1)hi=m;else lo=m}
-  w=Math.ceil(hi)+1;cp.el.style.width=w+'px';h=cp.tx.offsetHeight+2*pv+2*bw;
+  for(let i=0;i<14;i++){const m=(lo+hi)/2;cp.el.style.width=m+'px';if(cp.tx.offsetHeight<=H0+.5&&cp.tx.scrollWidth<=cp.tx.clientWidth+1&&!inkOver(cp))hi=m;else lo=m}
+  w=Math.ceil(hi)+1;cp.el.style.width=w+'px';h=cp.tx.offsetHeight+2*pv*(c.type==='b'?1.25:1)+2*bw;
   x=clamp(c.auto[0]*Bw-w/2,Bw*.02,Bw*.98-w);y=clamp(c.auto[1]*Bh-h/2,0,Bh-h);
   if(c.avoid){ // keep the bubble off faces: move it the shortest way out of each avoid rect
     for(const A of c.avoid){const ax=A[0]*Bw,ay=A[1]*Bh,aw=A[2]*Bw,ah=A[3]*Bh,m=Bw*.012;

@@ -256,16 +256,19 @@ function buildCaps(){
     b.caps.push({cfg:c,el,pz:el.querySelector('.pz'),bx:el.querySelector('.bx'),tx,spans,spark,n:spans.length,r:-1,pop:-1,prev:new Float32Array(spans.length).fill(-1),box:null,tails:[...el.querySelectorAll('svg.tail')]});
   }
 }
+// does any glyph spill past the text box's padding? (transform-proof: offsets, not screen rects)
+function inkOver(cp){const tx=cp.tx,pl=parseFloat(tx.style.paddingLeft)||0,pr=parseFloat(tx.style.paddingRight)||0,lim=tx.clientWidth-pr+.5;
+  for(const s of cp.spans){if(!s.textContent.trim())continue;const l=s.offsetLeft;if(l+s.offsetWidth>lim||l<pl-.5)return true}return false}
 function fitCap(b,cp){
   const c=cp.cfg,Bw=b.Bw,Bh=b.Bh;let x=c.box[0]*Bw,y=c.box[1]*Bh,w=c.box[2]*Bw,h=c.box[3]*Bh;
   const bw=Math.max(1.5,Bw*.0019);cp.el.style.setProperty('--bw',bw.toFixed(2)+'px');
   const pad=clamp(Bw*.014,4,16)+(c.type==='b'?clamp(Bw*.012,4,10):2);cp.tx.style.padding=`0 ${pad}px`;
   const zmin=b.zmin||1.02,fk=(CFG.fsk&&CFG.fsk[c.type])||1,fmin=12.5*fk/zmin;
-  const fits=(f,W,H)=>{cp.tx.style.fontSize=f+'px';cp.el.style.width=W+'px';return cp.tx.offsetHeight<=H-2*bw-pad*.6&&cp.tx.scrollWidth<=cp.tx.clientWidth+1};
+  const fits=(f,W,H)=>{cp.tx.style.fontSize=f+'px';cp.el.style.width=W+'px';return cp.tx.offsetHeight<=H-2*bw-pad*(c.type==='b'?1.3:.6)&&cp.tx.scrollWidth<=cp.tx.clientWidth+1&&!inkOver(cp)};
   let lo=4,hi=Math.min(64,h);for(let i=0;i<18;i++){const m=(lo+hi)/2;if(fits(m,w,h))lo=m;else hi=m}
   let f=lo*.97;
   if(f<fmin){f=fmin;const cx=x+w/2,cy=y+h/2;let W=Math.min(w*1.35,Bw*.94);
-    cp.tx.style.fontSize=f+'px';cp.el.style.width=W+'px';let need=cp.tx.offsetHeight+2*bw+pad*.9;
+    cp.tx.style.fontSize=f+'px';cp.el.style.width=W+'px';while(inkOver(cp)&&W<Bw*.94){W=Math.min(W*1.06+2,Bw*.94);cp.el.style.width=W+'px'}let need=cp.tx.offsetHeight+2*bw+pad*(c.type==='b'?1.5:.9);
     let H=Math.max(h,need);x=clamp(cx-W/2,Bw*.02,Bw*.98-W);y=clamp(cy-H/2,0,Bh-H);w=W;h=H;}
   cp.tx.style.fontSize=f+'px';
   if(c.avoid){ // keep the bubble off faces: move it the shortest way out of each avoid rect

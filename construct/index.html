@@ -486,10 +486,14 @@ const SND=(()=>{
 
   // ---- scene beds: each returns {g} with g.gain at 0; level 1 = intended loudness ----
   const BEDS={
-    ruins(E){const g=E.gain(0),c=E.ctx;
-      const bp=E.filt('bandpass',380,.7),w=E.gain(.3);E.chain(E.src('brown'),bp,w,g);E.lfo(.07,220,bp.frequency);E.lfo(.13,.22,w.gain);
-      const lp=E.filt('lowpass',380);const d1=E.osc('sine',55),d2=E.osc('sine',82.9);const dg=E.gain(.05);d1.connect(dg);d2.connect(dg);E.chain(dg,lp,g);
-      return {g,tick:(t)=>{if(rng()<.012){E.tone(t,'sine',1500,880,.05,.004,.09,E.revIn)}}}},
+    ruins(E){const g=E.gain(0);
+      // open-air wind: a steady breath plus irregular gusts. No slow regular swell and no low rumble (those read as surf).
+      const bp=E.filt('bandpass',650,.9),w=E.gain(.21);E.chain(E.src('pink'),bp,w,g);E.lfo(.037,90,bp.frequency);E.lfo(.11,.025,w.gain);E.lfo(.029,.03,w.gain);
+      const hi=E.filt('bandpass',1900,4),hg=E.gain(.03);E.chain(E.src('white'),hi,hg,g);E.lfo(.053,300,hi.frequency);
+      const lp=E.filt('lowpass',300);const d1=E.osc('sine',55),d2=E.osc('sine',82.9);const dg=E.gain(.035);d1.connect(dg);d2.connect(dg);E.chain(dg,lp,g);
+      return {g,tick:(t)=>{
+        if(rng()<.005){const o=E.gain(1);o.connect(g);E.burst(t,'pink','bandpass',600+rng()*700,1.4,.2+rng()*.12,.55+rng()*.3,.7,o,(rng()-.5)*.8)}
+        if(rng()<.01){E.tone(t,'sine',1500,880,.04,.004,.09,E.revIn)}}}},
     city(E){const g=E.gain(0);
       E.chain(E.src('white'),E.filt('highpass',700),E.filt('lowpass',6000),E.gain(.16),g);
       E.chain(E.src('white'),E.filt('bandpass',2500,.8),E.gain(.07),g);
@@ -511,10 +515,13 @@ const SND=(()=>{
       const bp=E.filt('bandpass',320,6);E.chain(E.src('brown'),bp,E.gain(.12),g);E.lfo(.05,60,bp.frequency);
       return {g,tick:()=>{}}},
     study(E){const g=E.gain(0);
-      const roar=E.gain(.16);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.3,.05,roar.gain);
-      E.chain(E.src('white'),E.filt('bandpass',1400,.6),E.gain(.035),g);
-      return {g,tick:(t)=>{if(rng()<.22){const o=E.gain(1);o.connect(g);E.burst(t,'white','highpass',1500+rng()*2500,.7,.04+rng()*.1,.001,.006+rng()*.02,o,(rng()-.5)*.6)}}}},
-  };
+      // fireplace: low roar + soft flame breath; crackles come in short irregular clusters with silence between (steady patter reads as rain)
+      const roar=E.gain(.17);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.3,.05,roar.gain);
+      const br=E.gain(.03);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);E.lfo(.17,.02,br.gain);
+      const cb=E.gain(1);cb.connect(g);
+      return {g,tick:(t)=>{
+        if(rng()<.05){const n=1+Math.floor(rng()*4),pan=(rng()-.5)*.5;let tt=t;for(let i=0;i<n;i++){tt+=.012+rng()*.05;E.burst(tt,'white','bandpass',1800+rng()*2400,1.2,.06+rng()*.12,.0005,.003+rng()*.009,cb,pan)}}
+        if(rng()<.012){const pan=(rng()-.5)*.4;E.burst(t,'white','bandpass',700+rng()*400,1.5,.17,.001,.03,cb,pan);E.burst(t+.002,'white','highpass',3000,.7,.12,.0005,.006,cb,pan)}}}},  };
   // ---- hits ----
   const HITS={
     boom(E,t,k){k=k||1;E.tone(t,'sine',72,30,.75*k,.01,2.2,E.master,1.6);E.burst(t,'brown','lowpass',120,.7,.5*k,.01,1.6);const s=E.gain(.35*k);s.connect(E.revIn);E.tone(t,'sine',72,30,1,.01,1.8,s,1.6)},

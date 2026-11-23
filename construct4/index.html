@@ -608,10 +608,14 @@ const SND=(()=>{
       const rn=E.gain(.22);E.chain(E.src('white'),E.filt('highpass',1100),E.filt('lowpass',8000),rn,g);E.lfo(.21,.05,rn.gain);
       E.chain(E.src('white'),E.filt('bandpass',2600,1.1),E.gain(.08),g);
       return {g,tick:(t)=>{if(rng()<.08){const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',3000+rng()*3000,4,.035+rng()*.04,.001,.012,o,(rng()-.5)*.8)}if(rng()<.008)creak(E,t,g)}}},
-    ruins(E){const g=E.gain(0),c=E.ctx;
-      const bp=E.filt('bandpass',380,.7),w=E.gain(.3);E.chain(E.src('brown'),bp,w,g);E.lfo(.07,220,bp.frequency);E.lfo(.13,.22,w.gain);
-      const lp=E.filt('lowpass',380);const d1=E.osc('sine',55),d2=E.osc('sine',82.9);const dg=E.gain(.05);d1.connect(dg);d2.connect(dg);E.chain(dg,lp,g);
-      return {g,tick:(t)=>{if(rng()<.012){E.tone(t,'sine',1500,880,.05,.004,.09,E.revIn)}}}},
+    ruins(E){const g=E.gain(0);
+      // open-air wind: a steady breath plus irregular gusts. No slow regular swell and no low rumble (those read as surf).
+      const bp=E.filt('bandpass',650,.9),w=E.gain(.21);E.chain(E.src('pink'),bp,w,g);E.lfo(.037,90,bp.frequency);E.lfo(.11,.025,w.gain);E.lfo(.029,.03,w.gain);
+      const hi=E.filt('bandpass',1900,4),hg=E.gain(.03);E.chain(E.src('white'),hi,hg,g);E.lfo(.053,300,hi.frequency);
+      const lp=E.filt('lowpass',300);const d1=E.osc('sine',55),d2=E.osc('sine',82.9);const dg=E.gain(.035);d1.connect(dg);d2.connect(dg);E.chain(dg,lp,g);
+      return {g,tick:(t)=>{
+        if(rng()<.005){const o=E.gain(1);o.connect(g);E.burst(t,'pink','bandpass',600+rng()*700,1.4,.2+rng()*.12,.55+rng()*.3,.7,o,(rng()-.5)*.8)}
+        if(rng()<.01){E.tone(t,'sine',1500,880,.04,.004,.09,E.revIn)}}}},
     shore(E){const g=E.gain(0);
       const surf=E.gain(.28);E.chain(E.src('pink'),E.filt('lowpass',1400),E.filt('highpass',120),surf,g);E.lfo(.09,.2,surf.gain);
       const wash=E.gain(.08);E.chain(E.src('white'),E.filt('bandpass',3200,.6),wash,g);E.lfo(.09,.07,wash.gain);
@@ -662,10 +666,13 @@ const SND=(()=>{
       const sv=E.gain(.6);g.connect(sv);sv.connect(E.revIn);
       return {g,tick:(t)=>{if(rng()<.025){const f=1100+rng()*1500,o=E.gain(1);o.connect(g);E.tone(t,'sine',f*1.6,f,.07,.001,.06,o,.03)}}}},
     camp(E){const g=E.gain(0);
-      const roar=E.gain(.14);E.chain(E.src('brown'),E.filt('lowpass',320),roar,g);E.lfo(.4,.05,roar.gain);
-      E.chain(E.src('pink'),E.filt('lowpass',600),E.gain(.06),g);
-      return {g,tick:(t)=>{if(rng()<.28){const o=E.gain(1);o.connect(g);E.burst(t,'white','highpass',1500+rng()*2500,.7,.05+rng()*.12,.001,.006+rng()*.02,o,(rng()-.5)*.6)}
-        if(rng()<.01){const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',900,2,.12,.002,.05,o)}}}},
+      // outdoor fire: roar + soft breath; crackles in short irregular clusters with gaps, the odd louder pop (a steady patter reads as rain)
+      const roar=E.gain(.18);E.chain(E.src('brown'),E.filt('lowpass',320),roar,g);E.lfo(.4,.05,roar.gain);
+      const br=E.gain(.035);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);E.lfo(.21,.02,br.gain);
+      const cb=E.gain(1);cb.connect(g);
+      return {g,tick:(t)=>{
+        if(rng()<.06){const n=1+Math.floor(rng()*4),pan=(rng()-.5)*.5;let tt=t;for(let i=0;i<n;i++){tt+=.012+rng()*.05;E.burst(tt,'white','bandpass',1800+rng()*2400,1.2,.07+rng()*.13,.0005,.003+rng()*.009,cb,pan)}}
+        if(rng()<.014){const pan=(rng()-.5)*.4;E.burst(t,'white','bandpass',700+rng()*400,1.5,.19,.001,.03,cb,pan);E.burst(t+.002,'white','highpass',3000,.7,.13,.0005,.006,cb,pan)}}}},
     deep(E){const g=E.gain(0),lp=E.filt('lowpass',420);lp.connect(g);
       const bub=E.gain(.18);E.chain(E.src('brown'),E.filt('lowpass',300),bub,lp);E.lfo(.07,.06,bub.gain);
       for(const f of [55,82.4]){E.chain(E.osc('sine',f),E.gain(.03),lp)}

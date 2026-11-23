@@ -640,7 +640,7 @@ const SND=(()=>{
     fetch(b.vo).then(r=>r.arrayBuffer()).then(a=>new Promise((res,rej)=>S.ctx.decodeAudioData(a,res,rej)))
       .then(buf=>{VO.buf[b.k]=buf;delete VO.loading[b.k];if(VO.want===b&&performance.now()-VO.wantT<4000)voPlay(b)}).catch(()=>{delete VO.loading[b.k]})}
   function voStop(f){if(!VO.cur)return;const c=VO.cur;VO.cur=null;const t=S.ctx.currentTime;c.g.gain.cancelScheduledValues(t);c.g.gain.setValueAtTime(c.g.gain.value,t);c.g.gain.linearRampToValueAtTime(0,t+f);try{c.s.stop(t+f+.05)}catch(e){}}
-  function duck(on){if(!E)return;const t=S.ctx.currentTime;E.bus.gain.setTargetAtTime(on?.6:1,t,on?.12:.6);if(mg&&S.music)mg.gain.setTargetAtTime(MUSIC_LEVEL*(on?.5:1),t,on?.12:.8)}
+  function duck(on){if(!E)return;const t=S.ctx.currentTime;E.bus.gain.setTargetAtTime(on?.78:1,t,on?.25:2.5);if(mg&&S.music)mg.gain.setTargetAtTime(MUSIC_LEVEL*(on?.5:1),t,on?.12:.8)}
   function voPlay(b){if(!S.voice||!E)return;const buf=VO.buf[b.k];if(!buf){VO.want=b;VO.wantT=performance.now();voLoad(b);return}
     VO.want=null;voStop(.35);const t=S.ctx.currentTime+.06;const s=S.ctx.createBufferSource();s.buffer=buf;const g=E.gain(VO_GAIN);s.connect(g);g.connect(E.voice);s.start(t);
     const c={s,g,k:b.k};VO.cur=c;(S.vlog||(S.vlog=[])).push(b.k);duck(true);s.onended=()=>{if(VO.cur===c){VO.cur=null;duck(false)}}}
@@ -693,7 +693,10 @@ const SND=(()=>{
     if(Math.abs(E.lp.frequency.value-lp)>20)E.lp.frequency.setTargetAtTime(lp,t,.35);
     if(now-lastTick>45){lastTick=now;for(const n of BED_NAMES)if(targets[n]>.05)beds[n].tick(t+.05)}
   }
-  document.addEventListener('visibilitychange',()=>{if(!music||!S.music)return;if(document.hidden)music.pause();else music.play().catch(()=>{})});
+  // leaving the page silences everything (music, ambience, hits, narration); coming back resumes it
+  document.addEventListener('visibilitychange',()=>{if(!S.ctx)return;
+    if(document.hidden){S._wasRunning=S.ctx.state==='running';if(music&&S.music)music.pause();if(S._wasRunning)S.ctx.suspend().catch(()=>{})}
+    else{if(S._wasRunning)S.ctx.resume().catch(()=>{});if(music&&S.music)music.play().catch(()=>{})}});
   // offline level check (used by the test harness only)
   async function measure(name,kind,secs){
     const oc=new OfflineAudioContext(2,44100*secs,44100);const X=engine(oc,oc.destination);
@@ -701,7 +704,7 @@ const SND=(()=>{
     else HITS[name](X,.05);
     const buf=await oc.startRendering();let pk=0,ss2=0;const L=buf.getChannelData(0),R=buf.getChannelData(1);
     for(let i=0;i<L.length;i++){const a=Math.max(Math.abs(L[i]),Math.abs(R[i]));if(a>pk)pk=a;ss2+=(L[i]*L[i]+R[i]*R[i])/2}
-    const db=x=>Math.round(20*Math.log10(Math.max(1e-9,x))*10)/10;return{name,kind,rms:db(Math.sqrt(ss2/L.length)),peak:db(pk)}}
+    const db=x=>Math.round(20*Math.log10(Math.max(1e-9,x))*10)/10;const W=11025,env=[];for(let i=0;i+W<=L.length;i+=W){let e=0;for(let k=i;k<i+W;k++)e+=(L[k]*L[k]+R[k]*R[k])/2;env.push(db(Math.sqrt(e/W)))}return{name,kind,rms:db(Math.sqrt(ss2/L.length)),peak:db(pk),env}}
   return Object.assign(S,{clip,clipLoad,clipStop,setMusic,setVoice,setOn:v=>{setMusic(v);setVoice(v)},hit,frame,measure,BED_NAMES,HIT_NAMES:Object.keys(HITS)});
 })();
 

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="data:,">
+<link rel="icon" href="assets/favicon.ico" sizes="32x32"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <title>The Construct · Episode 5 · Wood and Fire</title><meta name="description" content="New Halycon is a grimy reminder of what industry takes from the lush natural land that once was home to druids and mystics. The land has become a resource for progress as humans have spread across the planet, vying for control over that which generates the most capital. It is here we find Arden Payn, an accountant who is obsessed with balancing the sheets. He is a perfect cog in a well-oiled machine, making sure that each number entered keeps the system fed on its draconic desire for order. Little does Arden know that this order has a very powerful antagonist in the chaotic unfolding of the universe. It is at his simple wooden desk here in the dimly lit offices of Halversham &amp; Fisk that a letter from his Uncle will change everything.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Lore Machine">
@@ -703,7 +703,10 @@ const SND=(()=>{
     VO.want=null;voStop(.35);const t=S.ctx.currentTime+.06;const s=S.ctx.createBufferSource();s.buffer=buf;const g=E.gain(VO_GAIN);s.connect(g);g.connect(E.voice);s.start(t);
     const c={s,g,k:b.k};VO.cur=c;(S.vlog||(S.vlog=[])).push(b.k);duck(true);s.onended=()=>{if(VO.cur===c){VO.cur=null;duck(false)}}}
   function voFrame(blocks,vh){
-    for(const b of blocks){if(!b.vo)continue;const top=b.el.getBoundingClientRect().top,thr=vh*VO_AT;
+    for(const b of blocks){if(!b.vo)continue;
+      // held opener carrying a scene's narration: start when its caption appears (stage progress), not on load
+      if(b.vop!=null){voLoad(b);const on=b.vis&&b.p>=b.vop;if(S.justOn){if(on){S.justOn=false;voPlay(b)}}else if(b._vp!=null&&b._vp<b.vop&&on)voPlay(b);b._vp=b.p;continue}
+      const top=b.el.getBoundingClientRect().top,thr=vh*VO_AT;
       if(top<vh*2.6&&top>-vh*1.5)voLoad(b);
       if(S.justOn){if(top<=thr&&b.el.getBoundingClientRect().bottom>vh*.55){S.justOn=false;voPlay(b)}}
       else if(b._vt!=null&&b._vt>thr&&top<=thr)voPlay(b);

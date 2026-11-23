@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="data:,">
+<link rel="icon" href="assets/favicon.ico" sizes="32x32"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <title>The Construct · Episode 9 · Enter the Construct</title><meta name="description" content="Arden finds that the Construct is far more deadly than he ever could have imagined and his curiosity will most likely be the death of him.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Lore Machine">
@@ -57,6 +57,8 @@ canvas.gl{position:absolute;inset:0;width:100%;height:100%;display:block;opacity
 .glint{position:absolute;width:7%;aspect-ratio:1;transform:translate(-50%,-50%) scale(.3);opacity:0;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.95) 0,rgba(220,235,255,.5) 18%,rgba(200,220,255,0) 45%),linear-gradient(90deg,transparent 0,transparent 47%,rgba(255,255,255,.9) 50%,transparent 53%,transparent 100%),linear-gradient(0deg,transparent 0,transparent 47%,rgba(255,255,255,.8) 50%,transparent 53%,transparent 100%);border-radius:50%;animation:glint 6.5s ease-in-out infinite;animation-delay:var(--dl,0s)}
 @keyframes glint{0%,80%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(0)}86%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(20deg)}94%,100%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(40deg)}}
 @keyframes smoulder{0%,100%{opacity:.5}50%{opacity:.82}}
+.lamp.orb{background:radial-gradient(circle,rgba(222,170,255,.62) 0,rgba(170,90,255,.26) 34%,rgba(140,60,255,.08) 55%,rgba(120,40,255,0) 70%);opacity:.7;animation:orbglow var(--d,3s) ease-in-out infinite;animation-delay:var(--dl,0s)}
+@keyframes orbglow{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(.9)}50%{opacity:.95;transform:translate(-50%,-50%) scale(1.12)}}
 .cap{position:absolute}
 .pz{position:absolute;inset:0;transform-origin:50% 50%;will-change:transform}
 .bx{position:absolute;inset:0;box-sizing:border-box;display:flex;align-items:center;justify-content:center}
@@ -183,7 +185,12 @@ const ok=i=>!i||(i.complete&&i.naturalWidth>0);const ready=b=>b.imgs&&ok(b.imgs.
 
 /* ---------- WebGL ---------- */
 const VS='attribute vec2 a;varying vec2 v;void main(){v=vec2(a.x*.5+.5,.5-a.y*.5);gl_Position=vec4(a,0.,1.);}';
-const FS=`precision mediump float;varying vec2 v;uniform sampler2D tc,td,tf;uniform vec4 view;uniform vec2 off,dc,fc,fo;uniform float focus,t,dz,dark,gmode,gamt,fgOn,fz,bl,dv,lid;uniform vec3 gtint;uniform vec4 tw;uniform float wat;uniform vec2 wdir;
+const FS=`#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+varying vec2 v;uniform sampler2D tc,td,tf;uniform vec4 view;uniform vec2 off,dc,fc,fo;uniform float focus,t,dz,dark,gmode,gamt,fgOn,fz,bl,dv,lid;uniform vec3 gtint;uniform vec4 tw;uniform float wat;uniform vec2 wdir;uniform float fire,gsp;uniform vec4 spc;uniform vec3 spp;
 float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}
 void main(){vec2 uv=(v-.5)*view.xy+view.zw;vec2 p=uv;float d;
@@ -192,17 +199,31 @@ vec3 c=texture2D(tc,p).rgb;
 if(bl>.0005){vec3 a=c;for(int i=0;i<8;i++){float an=float(i)*.7854;a+=texture2D(tc,p+vec2(cos(an),sin(an)*.5625)*bl).rgb+texture2D(tc,p+vec2(cos(an+.39),sin(an+.39)*.5625)*bl*.5).rgb;}c=a/17.;}
 if(dv>.0005){c=mix(c,texture2D(tc,p+vec2(dv,dv*.25)).rgb,.42);}
 vec4 mp=texture2D(td,p);float fb=mp.b*gamt;float sm=(1.-mp.a)*2.*gamt;
+if(spp.z>.5&&mp.g>.01&&gamt>.5){float sg=mp.g;vec2 d=(p-spc.xy)*vec2(1.,1.7778);float ca=cos(spp.x),sa=sin(spp.x);
+ vec2 q=vec2(ca*d.x+sa*d.y,-sa*d.x+ca*d.y)/spc.zw;float w=sqrt(max(1.-q.y*q.y,.05));float ph=asin(clamp(q.x/w,-.995,.995));
+ float D=.7,r=t*spp.y/D,f1=fract(r),f2=fract(r+.5);float qy=q.y*spc.w;
+ float s1=sin(clamp(ph-(f1-.5)*D,-1.5,1.5))*w*spc.z,s2=sin(clamp(ph-(f2-.5)*D,-1.5,1.5))*w*spc.z;
+ vec2 d1=vec2(ca*s1-sa*qy,sa*s1+ca*qy),d2=vec2(ca*s2-sa*qy,sa*s2+ca*qy);
+ vec2 u1=spc.xy+d1/vec2(1.,1.7778),u2=spc.xy+d2/vec2(1.,1.7778);vec3 c1=texture2D(tc,u1).rgb,c2=texture2D(tc,u2).rgb;
+ float w1=(1.-abs(2.*f1-1.))*smoothstep(.15,.6,texture2D(td,u1).g),w2=abs(2.*f1-1.)*smoothstep(.15,.6,texture2D(td,u2).g);vec3 cs=(c1*w1+c2*w2+c*.02)/(w1+w2+.02);
+ float A=ph-t*spp.y;vec2 nq=vec2(cos(A)*2.4+q.y*2.6,sin(A)*2.4-q.y*1.9);float e=vn(nq*1.7)*.6+vn(nq*3.9+7.)*.4;float stk=smoothstep(.56,.9,e);
+ float sk=smoothstep(.35,1.,sg);cs=cs*(1.+stk*.6*sk)+gtint*stk*.32*sk;c=mix(c,cs,sk);}
 if(sm>.01&&wat>.5){vec2 dr=normalize(wdir),nr=vec2(-dr.y,dr.x);float fa=dot(p,dr),fb2=dot(p,nr);
  float n1=vn(vec2(fb2*150.,fa*8.-t*2.4)),n2=vn(vec2(fb2*290.,fa*15.-t*3.9));
  vec2 ds=dr*(n1-.5)*.014*sm+nr*(n2-.5)*.004*sm;vec3 ac=vec3(0.);
  for(int i=0;i<5;i++){ac+=texture2D(tc,p+ds+dr*(float(i)-2.)*.0045*sm).rgb;}
  float st=smoothstep(.6,.92,n1*.55+n2*.45);c=mix(c,ac/5.,clamp(sm*1.1,0.,1.))+sm*st*vec3(.09,.12,.15);}
+else if(sm>.01&&fire>.5){float fm=clamp(sm,0.,1.);vec2 q=vec2(p.x*46.,p.y*26.+t*3.4);float n1=vn(q),n2=vn(q*2.2+vec2(5.2,t*2.3));float sw=sin(t*2.7+p.y*55.)*.5+sin(t*1.7+p.y*31.+1.3)*.5;
+ vec2 ds=vec2((n1-.5)*.016+(n2-.5)*.008+sw*.0035,(vn(q*1.6+3.1)-.5)*.01+.002)*fm;vec3 cf=texture2D(tc,p+ds).rgb;
+ float fl=vn(vec2(p.x*16.,p.y*9.+t*5.2))*.6+vn(vec2(t*3.3,p.x*2.))*.4;c=mix(c,cf,clamp(fm*1.4,0.,1.));c*=1.+fm*(fl-.42)*.45;}
 else if(sm>.01){vec2 q=p*vec2(16.,10.)+vec2(-t*.06,t*.35);vec2 ds=vec2(vn(q)-.5,vn(q*1.9+5.3)-.5)*.011*sm;vec3 c2=texture2D(tc,p+ds).rgb;float dn=vn(p*vec2(11.,7.)+vec2(-t*.05,t*.28))*.65+vn(p*vec2(23.,15.)+vec2(-t*.08,t*.5))*.35;c=mix(c,c2,clamp(sm*1.2,0.,1.));c*=1.+sm*(dn-.5)*.55;}
 float inT=step(tw.x,p.x)*step(p.x,tw.z)*step(tw.y,p.y)*step(p.y,tw.w);
 if(fb>.01&&inT>.5){float s=vn(p*vec2(210.,118.)+vec2(t*1.1,-t*.8));s=s*s*s*s;float br=.5+.5*sin(t*.9);c*=1.+fb*(s*1.6+br*.18);c+=fb*gtint*(s*.75+br*.1);}
 else if(fb>.01){
  if(gmode<.5){float n=vn(vec2(p.x*90.,p.y*50.+t*2.2))*.62+vn(vec2(p.x*190.,p.y*105.+t*4.3))*.38;float k=(n-.5)*1.5+.1*sin(t*7.+p.x*30.);c*=1.+fb*k*.42;c+=fb*max(k,0.)*vec3(.15,.07,0.);}
- else{float k=.5+.35*sin(t*1.05+p.x*7.)+.15*sin(t*.61+p.y*11.);c*=1.+fb*(k-.5)*.55;c+=fb*max(k-.45,0.)*gtint*.4;}
+ else if(gmode<1.5){float k=.5+.35*sin(t*1.05+p.x*7.)+.15*sin(t*.61+p.y*11.);c*=1.+fb*(k-.5)*.55;c+=fb*max(k-.45,0.)*gtint*.4;}
+ else if(gmode<2.5){float k=.5+.5*sin(t*gsp);k=k*k*(3.-2.*k);c*=1.+fb*(.1+k*.6);c+=fb*gtint*(.04+k*.42);}
+ else{float fk=vn(vec2(t*4.7,p.x*3.+p.y*2.))*.6+vn(vec2(t*10.3,p.x*7.))*.4;float k=.75+.6*(fk-.5);c*=1.+fb*k*.55;c+=fb*gtint*k*.42;}
 }
 if(fgOn>.5){vec2 pf=fc+(uv-fc)/fz+fo;float a=texture2D(td,pf).g*step(0.,pf.x)*step(pf.x,1.)*step(0.,pf.y)*step(pf.y,1.);c=mix(c,texture2D(tf,pf).rgb,a);}
 if(lid<5.){float e=abs(v.y-.5)*2.+2.4*(v.x-.5)*(v.x-.5);c*=1.-smoothstep(lid-.14,lid,e);}
@@ -218,7 +239,7 @@ function makeSlot(){
   gl.useProgram(pr);
   const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
   const al=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);
-  const U={};for(const n of['tc','td','tf','view','off','dc','focus','t','dz','dark','gmode','gamt','gtint','fgOn','fz','fc','fo','bl','dv','lid','tw','wat','wdir'])U[n]=gl.getUniformLocation(pr,n);
+  const U={};for(const n of['tc','td','tf','view','off','dc','focus','t','dz','dark','gmode','gamt','gtint','fgOn','fz','fc','fo','bl','dv','lid','tw','wat','wdir','fire','gsp','spc','spp'])U[n]=gl.getUniformLocation(pr,n);
   gl.uniform1i(U.tc,0);gl.uniform1i(U.td,1);gl.uniform1i(U.tf,2);
   const tex=()=>{const x=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,x);
     for(const[k,v]of[[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]])gl.texParameteri(gl.TEXTURE_2D,k,v);return x};
@@ -254,7 +275,7 @@ function draw(b,t){
   gl.viewport(0,0,s.cv.width,s.cv.height);
   gl.uniform4f(U.view,b.view[0],b.view[1],b.view[2],b.view[3]);gl.uniform2f(U.off,b.off[0],b.off[1]);gl.uniform2f(U.dc,b.dc[0],b.dc[1]);
   gl.uniform1f(U.focus,b.focus);gl.uniform1f(U.t,t);gl.uniform1f(U.dz,b.dz);gl.uniform1f(U.dark,b.dark);
-  gl.uniform1f(U.bl,b.bl||0);gl.uniform1f(U.dv,b.dv||0);gl.uniform1f(U.lid,b.lid==null?9:b.lid);const T=b.tw||[2,2,-1,-1];gl.uniform4f(U.tw,T[0],T[1],T[2],T[3]);gl.uniform1f(U.fgOn,b.imgs.f?1:0);gl.uniform1f(U.fz,b.fz||1);gl.uniform2f(U.fc,b.fc[0],b.fc[1]);gl.uniform2f(U.fo,b.fo[0],b.fo[1]);gl.uniform1f(U.gmode,b.gmode||0);gl.uniform1f(U.wat,b.water?1:0);const WD=b.water||[0,1];gl.uniform2f(U.wdir,WD[0],WD[1]);gl.uniform1f(U.gamt,RM?0:1);const g=b.gtint||[1,.6,.3];gl.uniform3f(U.gtint,g[0],g[1],g[2]);
+  gl.uniform1f(U.bl,b.bl||0);gl.uniform1f(U.dv,b.dv||0);gl.uniform1f(U.lid,b.lid==null?9:b.lid);const T=b.tw||[2,2,-1,-1];gl.uniform4f(U.tw,T[0],T[1],T[2],T[3]);gl.uniform1f(U.fgOn,b.imgs.f?1:0);gl.uniform1f(U.fz,b.fz||1);gl.uniform2f(U.fc,b.fc[0],b.fc[1]);gl.uniform2f(U.fo,b.fo[0],b.fo[1]);gl.uniform1f(U.gmode,b.gmode||0);gl.uniform1f(U.wat,b.water?1:0);const WD=b.water||[0,1];gl.uniform2f(U.wdir,WD[0],WD[1]);gl.uniform1f(U.fire,b.fire?1:0);gl.uniform1f(U.gsp,b.gsp||2);const SP=b.spin;gl.uniform4f(U.spc,SP?SP[0]:0,SP?SP[1]:0,SP?SP[2]:1,SP?SP[3]:1);gl.uniform3f(U.spp,SP?SP[4]:0,SP?SP[5]:0,SP?1:0);gl.uniform1f(U.gamt,RM?0:1);const g=b.gtint||[1,.6,.3];gl.uniform3f(U.gtint,g[0],g[1],g[2]);
   gl.drawArrays(gl.TRIANGLES,0,3);
   if(!s.shown){s.shown=true;requestAnimationFrame(()=>{if(b.slot===s)s.cv.style.opacity=1});
     clearTimeout(b.hideT);b.hideT=setTimeout(()=>{if(b.slot===s&&!s.dead)b.still.style.visibility='hidden'},950);}
@@ -335,7 +356,7 @@ function placeCaps(b){
     placed.push([x,y,w,h]);
   }
   // keep tails short: if a speaker sits far from their bubble, slide the bubble toward them (never onto a face or another caption)
-  for(const cp of order){const c=cp.cfg;if(!c.spk)continue;const G=tailGeom(b,c,cp.box),Lm=Bw*TAIL_MAX;if(!G||G.L<=Lm)continue;
+  for(const cp of order){const c=cp.cfg;if(!c.spk)continue;const G=tailGeom(b,c,cp.box),Lm=Bw*(c.tmax||TAIL_MAX);if(!G||G.L<=Lm)continue;
     const need=G.L-Lm*.7,obs=b.caps.filter(o=>o!==cp&&o.box).map(o=>o.box).concat((c.avoid||[]).map(A=>[A[0]*Bw,A[1]*Bh,A[2]*Bw,A[3]*Bh]));
     const [x,y,w,h]=cp.box;
     for(const f of [1,.8,.6,.4,.2]){const X=clamp(x-G.dx*need*f,Bw*.02,Bw*.98-w),Y=clamp(y-G.dy*need*f,top,Math.max(top,bot-h));
@@ -350,7 +371,7 @@ function tailGeom(b,c,box){const s=c.spk;if(!s)return null;const [x,y,w,h]=box,B
   const px=clamp(mx,x,x+w),py=clamp(my,y,y+h);let dx=px-mx,dy=py-my;const D=Math.hypot(dx,dy);if(D<1)return{px,py,dx:0,dy:-1,L:0};dx/=D;dy/=D;
   const ax=(mx-ex)/rx,ay=(my-ey)/ry,bx=dx/rx,by=dy/ry,A=bx*bx+by*by,B2=2*(ax*bx+ay*by),C=ax*ax+ay*ay-1,disc=B2*B2-4*A*C;
   const te=(C<0&&disc>0)?(-B2+Math.sqrt(disc))/(2*A):0;return{px,py,dx,dy,L:D-te}}
-function tipFor(b,cp){const c=cp.cfg,Bw=b.Bw,Lm=Bw*TAIL_MAX;
+function tipFor(b,cp){const c=cp.cfg,Bw=b.Bw,Lm=Bw*(c.tmax||TAIL_MAX);
   if(c.spk){const G=tailGeom(b,c,cp.box),L=clamp(G.L,Bw*.022,Lm);return[G.px-G.dx*L,G.py-G.dy*L]}
   if(!c.tip)return null;const [x,y,w,h]=cp.box;let tx=c.tip[0]*Bw,ty=c.tip[1]*b.Bh;const px=clamp(tx,x,x+w),py=clamp(ty,y,y+h),D=Math.hypot(tx-px,ty-py);
   if(D>Lm*1.2){tx=px+(tx-px)/D*Lm*1.2;ty=py+(ty-py)/D*Lm*1.2}return[tx,ty]}
@@ -545,9 +566,13 @@ const SND=(()=>{
   // ---- scene beds: each returns {g} with g.gain at 0; level 1 = intended loudness ----
   const BEDS={
     study(E){const g=E.gain(0);
-      const roar=E.gain(.16);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.3,.05,roar.gain);
-      E.chain(E.src('white'),E.filt('bandpass',1400,.6),E.gain(.035),g);
-      return {g,tick:(t)=>{if(rng()<.22){const o=E.gain(1);o.connect(g);E.burst(t,'white','highpass',1500+rng()*2500,.7,.04+rng()*.1,.001,.006+rng()*.02,o,(rng()-.5)*.6)}}}},
+      // fireplace: low roar + soft flame breath; crackles come in short irregular clusters with silence between (steady patter reads as rain)
+      const roar=E.gain(.17);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.3,.05,roar.gain);
+      const br=E.gain(.03);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);E.lfo(.17,.02,br.gain);
+      const cb=E.gain(1);cb.connect(g);
+      return {g,tick:(t)=>{
+        if(rng()<.05){const n=1+Math.floor(rng()*4),pan=(rng()-.5)*.5;let tt=t;for(let i=0;i<n;i++){tt+=.012+rng()*.05;E.burst(tt,'white','bandpass',1800+rng()*2400,1.2,.06+rng()*.12,.0005,.003+rng()*.009,cb,pan)}}
+        if(rng()<.012){const pan=(rng()-.5)*.4;E.burst(t,'white','bandpass',700+rng()*400,1.5,.17,.001,.03,cb,pan);E.burst(t+.002,'white','highpass',3000,.7,.12,.0005,.006,cb,pan)}}}},
     office(E){const g=E.gain(0);let next=0,tk=0;
       E.chain(E.src('brown'),E.filt('lowpass',250),E.gain(.12),g);
       E.chain(E.src('white'),E.filt('lowpass',700),E.gain(.07),g);
@@ -675,7 +700,10 @@ const SND=(()=>{
     VO.want=null;voStop(.35);const t=S.ctx.currentTime+.06;const s=S.ctx.createBufferSource();s.buffer=buf;const g=E.gain(VO_GAIN);s.connect(g);g.connect(E.voice);s.start(t);
     const c={s,g,k:b.k};VO.cur=c;(S.vlog||(S.vlog=[])).push(b.k);duck(true);s.onended=()=>{if(VO.cur===c){VO.cur=null;duck(false)}}}
   function voFrame(blocks,vh){
-    for(const b of blocks){if(!b.vo)continue;const top=b.el.getBoundingClientRect().top,thr=vh*VO_AT;
+    for(const b of blocks){if(!b.vo)continue;
+      // held opener carrying a scene's narration: start when its caption appears (stage progress), not on load
+      if(b.vop!=null){voLoad(b);const on=b.vis&&b.p>=b.vop;if(S.justOn){if(on){S.justOn=false;voPlay(b)}}else if(b._vp!=null&&b._vp<b.vop&&on)voPlay(b);b._vp=b.p;continue}
+      const top=b.el.getBoundingClientRect().top,thr=vh*VO_AT;
       if(top<vh*2.6&&top>-vh*1.5)voLoad(b);
       if(S.justOn){if(top<=thr&&b.el.getBoundingClientRect().bottom>vh*.55){S.justOn=false;voPlay(b)}}
       else if(b._vt!=null&&b._vt>thr&&top<=thr)voPlay(b);
@@ -795,7 +823,7 @@ function video(b,r,now){
 /* ---------- loop ---------- */
 let last=performance.now();const endEl=document.querySelector('.end'),lmEl=document.querySelector('.lm');const ttl=document.querySelector('.ttl');
 function frame(now){
-  const dt=Math.min(.05,(now-last)/1000);last=now;const t=RM?0:now/1000;
+  const dt=Math.min(.05,(now-last)/1000);last=now;const t=RM?0:(now/1000)%3600;
   let rainStr=0;
   for(const b of blocks){
     const r=b.el.getBoundingClientRect();b.near=r.bottom>-vh*.5&&r.top<vh*1.5;b.vis=r.bottom>0&&r.top<vh;

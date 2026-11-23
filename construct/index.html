@@ -488,7 +488,7 @@ const SND=(()=>{
   const BEDS={
     ruins(E){const g=E.gain(0);
       // open-air wind with NO volume swells (any swell reads as surf): steady hiss whose colour drifts, plus a thin whistle that glides in pitch
-      const bp=E.filt('bandpass',650,.9),w=E.gain(.22);E.chain(E.src('pink'),bp,w,g);E.lfo(.037,110,bp.frequency);E.lfo(.083,60,bp.frequency);
+      const bp=E.filt('bandpass',650,.9),w=E.gain(.22);E.chain(E.src('pink'),bp,w,g);
       const hi=E.filt('bandpass',1900,7),hg=E.gain(.05);E.chain(E.src('white'),hi,hg,g);E.lfo(.051,420,hi.frequency);E.lfo(.13,150,hi.frequency);
       const lp=E.filt('lowpass',300);const d1=E.osc('sine',55),d2=E.osc('sine',82.9);const dg=E.gain(.025);d1.connect(dg);d2.connect(dg);E.chain(dg,lp,g);
       return {g,tick:(t)=>{if(rng()<.01){E.tone(t,'sine',1500,880,.04,.004,.09,E.revIn)}}}},
@@ -505,18 +505,18 @@ const SND=(()=>{
     alley(E){const g=E.gain(0);
       E.chain(E.src('white'),E.filt('highpass',900),E.filt('lowpass',7500),E.gain(.26),g);
       E.chain(E.src('white'),E.filt('bandpass',1800,1.2),E.gain(.12),g);
-      const gl=E.gain(.22);E.chain(E.src('brown'),E.filt('lowpass',180),gl,g);E.lfo(.2,.08,gl.gain);
+      const gl=E.gain(.22);E.chain(E.src('brown'),E.filt('lowpass',180),gl,g);
       return {g,tick:(t)=>{if(rng()<.05){const o=E.gain(1);o.connect(g);E.tone(t,'sine',1300+rng()*900,700,.04,.003,.07,o)}}}},
     hall(E){const g=E.gain(0);
       const hush=E.chain(E.src('pink'),E.filt('lowpass',450),E.gain(.22));hush.connect(g);
       const hs=E.gain(.25);hush.connect(hs);hs.connect(E.revIn);
       E.chain(E.src('white'),E.filt('lowpass',500),E.gain(.05),g);
-      const bp=E.filt('bandpass',320,6);E.chain(E.src('brown'),bp,E.gain(.12),g);E.lfo(.05,60,bp.frequency);
+      const bp=E.filt('bandpass',320,6);E.chain(E.src('brown'),bp,E.gain(.12),g);
       return {g,tick:()=>{}}},
     study(E){const g=E.gain(0);
       // fireplace: low roar + soft flame breath; crackles come in short irregular clusters with silence between (steady patter reads as rain)
-      const roar=E.gain(.17);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.3,.05,roar.gain);
-      const br=E.gain(.03);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);E.lfo(.17,.02,br.gain);
+      const roar=E.gain(.17);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);
+      const br=E.gain(.03);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);
       const cb=E.gain(1);cb.connect(g);
       return {g,tick:(t)=>{
         if(rng()<.05){const n=1+Math.floor(rng()*4),pan=(rng()-.5)*.5;let tt=t;for(let i=0;i<n;i++){tt+=.012+rng()*.05;E.burst(tt,'white','bandpass',1800+rng()*2400,1.2,.06+rng()*.12,.0005,.003+rng()*.009,cb,pan)}}

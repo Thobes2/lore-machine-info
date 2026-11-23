@@ -543,8 +543,8 @@ const SND=(()=>{
   const BEDS={
     study(E){const g=E.gain(0);
       // fireplace: low roar + soft flame breath; crackles come in short irregular clusters with silence between (steady patter reads as rain)
-      const roar=E.gain(.17);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.3,.05,roar.gain);
-      const br=E.gain(.03);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);E.lfo(.17,.02,br.gain);
+      const roar=E.gain(.17);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);
+      const br=E.gain(.03);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);
       const cb=E.gain(1);cb.connect(g);
       return {g,tick:(t)=>{
         if(rng()<.05){const n=1+Math.floor(rng()*4),pan=(rng()-.5)*.5;let tt=t;for(let i=0;i<n;i++){tt+=.012+rng()*.05;E.burst(tt,'white','bandpass',1800+rng()*2400,1.2,.06+rng()*.12,.0005,.003+rng()*.009,cb,pan)}}
@@ -556,15 +556,15 @@ const SND=(()=>{
     alley(E){const g=E.gain(0);
       E.chain(E.src('white'),E.filt('highpass',900),E.filt('lowpass',7500),E.gain(.26),g);
       E.chain(E.src('white'),E.filt('bandpass',1800,1.2),E.gain(.12),g);
-      const gl=E.gain(.22);E.chain(E.src('brown'),E.filt('lowpass',180),gl,g);E.lfo(.2,.08,gl.gain);
+      const gl=E.gain(.22);E.chain(E.src('brown'),E.filt('lowpass',180),gl,g);
       return {g,tick:(t)=>{if(rng()<.05){const o=E.gain(1);o.connect(g);E.tone(t,'sine',1300+rng()*900,700,.04,.003,.07,o)}}}},
     shower(E){const g=E.gain(0);
       E.chain(E.src('white'),E.filt('highpass',1400),E.filt('lowpass',9000),E.gain(.3),g);
-      const body=E.gain(.16);E.chain(E.src('pink'),E.filt('lowpass',900),body,g);E.lfo(.4,.03,body.gain);
+      const body=E.gain(.16);E.chain(E.src('pink'),E.filt('lowpass',900),body,g);
       return {g,tick:(t)=>{if(rng()<.3){const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',2000+rng()*4000,3,.05+rng()*.06,.001,.01+rng()*.02,o,(rng()-.5)*.7)}}}},
     dream(E){const g=E.gain(0),lp=E.filt('lowpass',900);lp.connect(g);
       for(const f of [110,164.8,220.5]){const og=E.gain(.035);E.chain(E.osc('sine',f),og,lp);E.lfo(.07+rng()*.05,.02,og.gain)}
-      const sh=E.filt('bandpass',3000,3),sg=E.gain(.03);E.chain(E.src('pink'),sh,sg,g);E.lfo(.05,1200,sh.frequency);
+      const sh=E.filt('bandpass',3000,3),sg=E.gain(.03);E.chain(E.src('pink'),sh,sg,g);
       const sv=E.gain(.4);g.connect(sv);sv.connect(E.revIn);
       return {g,tick:(t)=>{if(rng()<.02){const f=[880,1046.5,1318.5,1568][rng()*4|0];const o=E.gain(1);o.connect(g);E.tone(t,'sine',f,f,.012,.3,2.2,o)}}}},
     harbour(E){const g=E.gain(0);

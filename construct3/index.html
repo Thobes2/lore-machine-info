@@ -562,8 +562,8 @@ const SND=(()=>{
   const BEDS={
     study(E){const g=E.gain(0);
       // fireplace: low roar + soft flame breath; crackles come in short irregular clusters with silence between (steady patter reads as rain)
-      const roar=E.gain(.17);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.3,.05,roar.gain);
-      const br=E.gain(.03);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);E.lfo(.17,.02,br.gain);
+      const roar=E.gain(.17);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);
+      const br=E.gain(.03);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);
       const cb=E.gain(1);cb.connect(g);
       return {g,tick:(t)=>{
         if(rng()<.05){const n=1+Math.floor(rng()*4),pan=(rng()-.5)*.5;let tt=t;for(let i=0;i<n;i++){tt+=.012+rng()*.05;E.burst(tt,'white','bandpass',1800+rng()*2400,1.2,.06+rng()*.12,.0005,.003+rng()*.009,cb,pan)}}
@@ -575,15 +575,15 @@ const SND=(()=>{
     alley(E){const g=E.gain(0);
       E.chain(E.src('white'),E.filt('highpass',900),E.filt('lowpass',7500),E.gain(.26),g);
       E.chain(E.src('white'),E.filt('bandpass',1800,1.2),E.gain(.12),g);
-      const gl=E.gain(.22);E.chain(E.src('brown'),E.filt('lowpass',180),gl,g);E.lfo(.2,.08,gl.gain);
+      const gl=E.gain(.22);E.chain(E.src('brown'),E.filt('lowpass',180),gl,g);
       return {g,tick:(t)=>{if(rng()<.05){const o=E.gain(1);o.connect(g);E.tone(t,'sine',1300+rng()*900,700,.04,.003,.07,o)}}}},
     shower(E){const g=E.gain(0);
       E.chain(E.src('white'),E.filt('highpass',1400),E.filt('lowpass',9000),E.gain(.3),g);
-      const body=E.gain(.16);E.chain(E.src('pink'),E.filt('lowpass',900),body,g);E.lfo(.4,.03,body.gain);
+      const body=E.gain(.16);E.chain(E.src('pink'),E.filt('lowpass',900),body,g);
       return {g,tick:(t)=>{if(rng()<.3){const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',2000+rng()*4000,3,.05+rng()*.06,.001,.01+rng()*.02,o,(rng()-.5)*.7)}}}},
     dream(E){const g=E.gain(0),lp=E.filt('lowpass',900);lp.connect(g);
       for(const f of [110,164.8,220.5]){const og=E.gain(.035);E.chain(E.osc('sine',f),og,lp);E.lfo(.07+rng()*.05,.02,og.gain)}
-      const sh=E.filt('bandpass',3000,3),sg=E.gain(.03);E.chain(E.src('pink'),sh,sg,g);E.lfo(.05,1200,sh.frequency);
+      const sh=E.filt('bandpass',3000,3),sg=E.gain(.03);E.chain(E.src('pink'),sh,sg,g);
       const sv=E.gain(.4);g.connect(sv);sv.connect(E.revIn);
       return {g,tick:(t)=>{if(rng()<.02){const f=[880,1046.5,1318.5,1568][rng()*4|0];const o=E.gain(1);o.connect(g);E.tone(t,'sine',f,f,.012,.3,2.2,o)}}}},
     harbour(E){const g=E.gain(0);
@@ -609,7 +609,7 @@ const SND=(()=>{
       return {g,tick:(t)=>{if(rng()<.08){const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',3000+rng()*3000,4,.035+rng()*.04,.001,.012,o,(rng()-.5)*.8)}if(rng()<.008)creak(E,t,g)}}},
     ruins(E){const g=E.gain(0);
       // open-air wind with NO volume swells (any swell reads as surf): steady hiss whose colour drifts, plus a thin whistle that glides in pitch
-      const bp=E.filt('bandpass',650,.9),w=E.gain(.22);E.chain(E.src('pink'),bp,w,g);E.lfo(.037,110,bp.frequency);E.lfo(.083,60,bp.frequency);
+      const bp=E.filt('bandpass',650,.9),w=E.gain(.22);E.chain(E.src('pink'),bp,w,g);
       const hi=E.filt('bandpass',1900,7),hg=E.gain(.05);E.chain(E.src('white'),hi,hg,g);E.lfo(.051,420,hi.frequency);E.lfo(.13,150,hi.frequency);
       const lp=E.filt('lowpass',300);const d1=E.osc('sine',55),d2=E.osc('sine',82.9);const dg=E.gain(.025);d1.connect(dg);d2.connect(dg);E.chain(dg,lp,g);
       return {g,tick:(t)=>{if(rng()<.01){E.tone(t,'sine',1500,880,.04,.004,.09,E.revIn)}}}},
@@ -636,20 +636,20 @@ const SND=(()=>{
     tavern(E){const g=E.gain(0);
       // a busy bar, indoors and dry: room tone, crowd murmur, mugs and glasses, the odd boot on the boards, a chair scrape, a creak
       E.chain(E.src('brown'),E.filt('lowpass',180),E.gain(.2),g);
-      const w1=E.filt('bandpass',380,1.3),g1=E.gain(.18);E.chain(E.src('pink'),w1,g1,g);E.lfo(.23,90,w1.frequency);E.lfo(.37,.05,g1.gain);
-      const w2=E.filt('bandpass',720,2.2),g2=E.gain(.09);E.chain(E.src('pink'),w2,g2,g);E.lfo(.31,180,w2.frequency);E.lfo(.53,.03,g2.gain);
-      const w3=E.filt('bandpass',1150,3),g3=E.gain(.038);E.chain(E.src('white'),w3,g3,g);E.lfo(.41,260,w3.frequency);E.lfo(.29,.015,g3.gain);
+      const w1=E.filt('bandpass',380,1.3),g1=E.gain(.18);E.chain(E.src('pink'),w1,g1,g);
+      const w2=E.filt('bandpass',720,2.2),g2=E.gain(.09);E.chain(E.src('pink'),w2,g2,g);
+      const w3=E.filt('bandpass',1150,3),g3=E.gain(.038);E.chain(E.src('white'),w3,g3,g);
       return {g,tick:(t)=>{
         if(rng()<.02){const o=E.gain(1);o.connect(g);const f=rng()<.5?2200+rng()*900:3400+rng()*1400;
           E.tone(t,'sine',f,f*.995,.05,.001,.12+rng()*.1,o);E.tone(t,'sine',f*2.71,f*2.7,.012,.001,.06,o);
           if(rng()<.35)E.tone(t+.09+rng()*.05,'sine',f*1.06,f*1.05,.045,.001,.1,o)}
         if(rng()<.006){const o=E.gain(1);o.connect(g);E.burst(t,'brown','lowpass',260,.7,.22,.003,.08,o,(rng()-.5)*.7)}
-        if(rng()<.004){const o=E.gain(1);o.connect(g);E.burst(t,'pink','bandpass',600+rng()*500,6,.08,.05,.35,o,(rng()-.5)*.7)}
+        if(rng()<.004){const o=E.gain(1);o.connect(g);E.burst(t,'pink','bandpass',700+rng()*500,6,.07,.01,.12,o,(rng()-.5)*.7)}
         if(rng()<.005)creak(E,t,g,.8)}}},
     town(E){const g=E.gain(0);
       // dry streets: low crowd murmur, a little air, passers-by's footsteps and the odd distant cart; no water at all
-      const mur=E.gain(.2);E.chain(E.src('pink'),E.filt('bandpass',420,.9),mur,g);E.lfo(.13,.05,mur.gain);
-      const vf=E.filt('bandpass',900,2),vg=E.gain(.08);E.chain(E.src('brown'),vf,vg,g);E.lfo(.07,200,vf.frequency);E.lfo(.31,.02,vg.gain);
+      const mur=E.gain(.2);E.chain(E.src('pink'),E.filt('bandpass',420,.9),mur,g);
+      const vf=E.filt('bandpass',900,2),vg=E.gain(.08);E.chain(E.src('brown'),vf,vg,g);
       E.chain(E.src('brown'),E.filt('lowpass',140),E.gain(.2),g);
       let walk=0,next=0,pan=0,pd=0;
       return {g,tick:(t)=>{
@@ -659,20 +659,20 @@ const SND=(()=>{
         const o=E.gain(1);o.connect(g);E.burst(t,'brown','lowpass',260,.7,.3,.002,.07,o,pan);E.burst(t+.004,'white','bandpass',2400,1.5,.035,.001,.02,o,pan);
         pan=Math.max(-.9,Math.min(.9,pan+pd));walk--;next=walk?t+.46+rng()*.08:t+3+rng()*6}}},
     cave(E){const g=E.gain(0);
-      const rum=E.gain(.14);E.chain(E.src('brown'),E.filt('lowpass',160),rum,g);E.lfo(.05,.008,rum.gain);
+      const rum=E.gain(.14);E.chain(E.src('brown'),E.filt('lowpass',160),rum,g);
       E.chain(E.src('pink'),E.filt('bandpass',420,3),E.gain(.03),g);
       const sv=E.gain(.6);g.connect(sv);sv.connect(E.revIn);
       return {g,tick:(t)=>{if(rng()<.025){const f=1100+rng()*1500,o=E.gain(1);o.connect(g);E.tone(t,'sine',f*1.6,f,.07,.001,.06,o,.03)}}}},
     camp(E){const g=E.gain(0);
       // outdoor fire: roar + soft breath; crackles in short irregular clusters with gaps, the odd louder pop (a steady patter reads as rain)
-      const roar=E.gain(.18);E.chain(E.src('brown'),E.filt('lowpass',320),roar,g);E.lfo(.4,.05,roar.gain);
-      const br=E.gain(.035);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);E.lfo(.21,.02,br.gain);
+      const roar=E.gain(.18);E.chain(E.src('brown'),E.filt('lowpass',320),roar,g);
+      const br=E.gain(.035);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);
       const cb=E.gain(1);cb.connect(g);
       return {g,tick:(t)=>{
         if(rng()<.06){const n=1+Math.floor(rng()*4),pan=(rng()-.5)*.5;let tt=t;for(let i=0;i<n;i++){tt+=.012+rng()*.05;E.burst(tt,'white','bandpass',1800+rng()*2400,1.2,.07+rng()*.13,.0005,.003+rng()*.009,cb,pan)}}
         if(rng()<.014){const pan=(rng()-.5)*.4;E.burst(t,'white','bandpass',700+rng()*400,1.5,.19,.001,.03,cb,pan);E.burst(t+.002,'white','highpass',3000,.7,.13,.0005,.006,cb,pan)}}}},
     deep(E){const g=E.gain(0),lp=E.filt('lowpass',420);lp.connect(g);
-      const bub=E.gain(.18);E.chain(E.src('brown'),E.filt('lowpass',300),bub,lp);E.lfo(.07,.06,bub.gain);
+      const bub=E.gain(.18);E.chain(E.src('brown'),E.filt('lowpass',300),bub,lp);
       for(const f of [55,82.4]){E.chain(E.osc('sine',f),E.gain(.03),lp)}
       return {g,tick:(t)=>{if(rng()<.05){const f=300+rng()*500,o=E.gain(1);o.connect(g);E.tone(t,'sine',f,f*1.8,.03,.002,.08,o,.06)}}}},
     night(E){const g=E.gain(0);

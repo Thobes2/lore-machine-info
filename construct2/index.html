@@ -542,9 +542,13 @@ const SND=(()=>{
   // ---- scene beds: each returns {g} with g.gain at 0; level 1 = intended loudness ----
   const BEDS={
     study(E){const g=E.gain(0);
-      const roar=E.gain(.16);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.3,.05,roar.gain);
-      E.chain(E.src('white'),E.filt('bandpass',1400,.6),E.gain(.035),g);
-      return {g,tick:(t)=>{if(rng()<.22){const o=E.gain(1);o.connect(g);E.burst(t,'white','highpass',1500+rng()*2500,.7,.04+rng()*.1,.001,.006+rng()*.02,o,(rng()-.5)*.6)}}}},
+      // fireplace: low roar + soft flame breath; crackles come in short irregular clusters with silence between (steady patter reads as rain)
+      const roar=E.gain(.17);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.3,.05,roar.gain);
+      const br=E.gain(.03);E.chain(E.src('pink'),E.filt('bandpass',520,.8),br,g);E.lfo(.17,.02,br.gain);
+      const cb=E.gain(1);cb.connect(g);
+      return {g,tick:(t)=>{
+        if(rng()<.05){const n=1+Math.floor(rng()*4),pan=(rng()-.5)*.5;let tt=t;for(let i=0;i<n;i++){tt+=.012+rng()*.05;E.burst(tt,'white','bandpass',1800+rng()*2400,1.2,.06+rng()*.12,.0005,.003+rng()*.009,cb,pan)}}
+        if(rng()<.012){const pan=(rng()-.5)*.4;E.burst(t,'white','bandpass',700+rng()*400,1.5,.17,.001,.03,cb,pan);E.burst(t+.002,'white','highpass',3000,.7,.12,.0005,.006,cb,pan)}}}},
     office(E){const g=E.gain(0);let next=0,tk=0;
       E.chain(E.src('brown'),E.filt('lowpass',250),E.gain(.12),g);
       E.chain(E.src('white'),E.filt('lowpass',700),E.gain(.07),g);

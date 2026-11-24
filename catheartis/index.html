@@ -3,6 +3,9 @@
 <head>
 <base href="/catheartis/">
 <meta charset="utf-8">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tales of Catheartis</title>
 <meta name="description" content="Tales of Catheartis, a scrolling dark-fantasy comic.">
@@ -1908,6 +1911,7 @@ window.SND = (() => {
     const wrap = $('.vwrap', P.inner); if (!P.isStage && P.mask) { wrap.style.webkitMaskImage = P.mask; wrap.style.maskImage = P.mask; }
     v.addEventListener('playing', () => { if (V.mode === 'wc') return; clearTimeout(V.timer); V.mode = 'video'; V.state = 'playing'; v.classList.add('on'); showOn(V); });
     v.addEventListener('ended', () => { if (V.mode === 'video') V.state = 'ended'; });
+    v.addEventListener('loadeddata', () => v.classList.add('on'));
     v.addEventListener('volumechange', () => { if (!v.muted) v.muted = true; });
     return V;
   });
@@ -1961,6 +1965,23 @@ window.SND = (() => {
     }
     if (W.flushDone && !W.q.length) { try { D.close(); } catch (e) {} V.wc = null; V.state = 'ended'; }
   }
+  function resetClip(V) {
+    clearTimeout(V.timer);
+    if (V.wc) { try { V.wc.dec.close(); } catch (e) {} for (const f of V.wc.q) { try { f.close(); } catch (e) {} } V.wc = null; }
+    if (V.mode === 'video') { try { V.v.pause(); V.v.currentTime = 0; } catch (e) {} }
+    V.state = 'idle';
+  }
+  // where autoplay is blocked outright, the reader's first tap or key starts the clip in view
+  const inView = V => { const r = V.P.sec.getBoundingClientRect(); return r.bottom > innerHeight * 0.2 && r.top < innerHeight * 0.8; };
+  const nudge = () => { for (const V of VIDS) if (inView(V) && (V.state === 'failed' || V.state === 'starting') && (V.buf || V.direct)) {
+    V.err = ''; const pr = V.v.play(); if (pr && pr.catch) pr.catch(e => { V.err = 'tap ' + e; }); } };
+  for (const ev of ['pointerdown', 'touchend', 'keydown']) addEventListener(ev, nudge, { passive: true });
+  if (/[?&]vdebug(?:[&=]|$)/.test(location.search)) {
+    const box = document.createElement('pre');
+    box.style.cssText = 'position:fixed;left:6px;bottom:6px;z-index:99999;margin:0;padding:6px 8px;max-width:92vw;font:11px/1.35 ui-monospace,Menlo,monospace;color:#0f0;background:rgba(0,0,0,.82);border-radius:6px;pointer-events:none;white-space:pre-wrap';
+    document.body.appendChild(box);
+    setInterval(() => { box.textContent = 'decoder ' + (HAS_WC ? 'yes' : 'no') + ' | refused ' + videoRefused + '\n' + VIDS.map(V => V.P.id + ' ' + (V.mode || '-') + ' ' + V.state + (V.buf ? '' : ' nobuf') + (V.err ? ' ' + V.err.slice(0, 40) : '')).join('\n'); }, 500);
+  }
   window.__vids = () => VIDS.map(V => ({ id: V.P.id, mode: V.mode, state: V.state, on: V.on, err: V.err, t: +V.v.currentTime.toFixed(2), muted: V.v.muted, loop: V.v.loop, buf: !!V.buf }));
   function updateVideos(y, vh, t) {
     if (RM) return;
@@ -1971,7 +1992,9 @@ window.SND = (() => {
       if (V.wc) stepWC(V, t);
       let go, p = 0;
       if (P.isStage) { p = clamp((y - P.top) / (P.h - hV)); go = y >= P.top - vh * 0.04 && y < P.top + P.h; }
-      else { const vis = (Math.min(vh, topV + hV) - Math.max(0, topV)) / Math.min(vh, hV); go = vis > 0.6; }
+      else { const vis = (Math.min(vh, topV + hV) - Math.max(0, topV)) / Math.min(vh, hV); go = vis > 0.7; }
+      const away = topV > vh * 1.15 || topV + hV < -vh * 0.25;
+      if (away && (V.state === 'ended' || V.state === 'playing' || V.state === 'decoding')) resetClip(V);
       if (go && V.state === 'idle' && (V.buf || V.direct)) startClip(V);
       if (P.isStage && P.cfg.stage && V.on) {
         const st = P.cfg.stage(p, t, P.S);

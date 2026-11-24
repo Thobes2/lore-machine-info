@@ -551,16 +551,25 @@ const SND=(()=>{
   // ---- live state ----
   let E=null,beds={},ring=null,music=null,mg=null,cool={},lastTick=0,targets={};
   const MUSIC_LEVEL=.42,VO_GAIN=1;
+  // THREE SEPARATE TRACKS, each straight to the speakers, never mixed through one another:
+  //   music  -> musicBus -> speakers   (nothing processes it, nothing else rides on it)
+  //   SFX    -> E.master -> compressor -> speakers   (off unless CFG.sfxOn)
+  //   voice  -> E.voice -> speakers
+  const SFX_ON=CFG.sfxOn===true;
+  const ONLY=(()=>{try{return new URLSearchParams(location.search).get('only')}catch(e){return null}})(); // listening test: ?only=music | sfx | voice
+  let musicBus=null;
   function start(){
     const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;
     try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
     S.ctx=new AC();E=engine(S.ctx,S.ctx.destination);E.master.gain.value=0;E.voice.gain.value=0;
-    for(const n of BED_NAMES){const b=BEDS[n](E);b.g.connect(E.bus);beds[n]=b;targets[n]=0}
-    // tinnitus voice for the wake-up stage
-    ring=E.gain(0);ring.connect(E.master);E.chain(E.osc('sine',3900),ring);E.chain(E.osc('sine',3907),ring);
+    E.voice.disconnect();E.voice.connect(S.ctx.destination);           // narration: its own track
+    musicBus=S.ctx.createGain();musicBus.gain.value=0;musicBus.connect(S.ctx.destination); // music: its own track
+    if(SFX_ON&&(!ONLY||ONLY==='sfx')){
+      for(const n of BED_NAMES){const b=BEDS[n](E);b.g.connect(E.bus);beds[n]=b;targets[n]=0}
+      ring=E.gain(0);ring.connect(E.master);E.chain(E.osc('sine',3900),ring);E.chain(E.osc('sine',3907),ring);}
     // music: streamed, never decoded whole
     try{music=new Audio();music.src='assets/music.mp3';music.loop=true;music.preload='auto';music.crossOrigin='anonymous';
-      const src=S.ctx.createMediaElementSource(music);mg=E.gain(0);src.connect(mg);mg.connect(E.master)}catch(e){music=null}
+      const src=S.ctx.createMediaElementSource(music);mg=E.gain(0);src.connect(mg);mg.connect(musicBus)}catch(e){music=null}
     return true}
   // ---- narration: one clip per panel, starts as the panel reaches the top of the screen ----
   const VO_AT=.18;const VO={buf:{},loading:{},cur:null,want:null,wantT:0};
@@ -568,7 +577,7 @@ const SND=(()=>{
     fetch(b.vo).then(r=>r.arrayBuffer()).then(a=>new Promise((res,rej)=>S.ctx.decodeAudioData(a,res,rej)))
       .then(buf=>{VO.buf[b.k]=buf;delete VO.loading[b.k];if(VO.want===b&&performance.now()-VO.wantT<4000)voPlay(b)}).catch(()=>{delete VO.loading[b.k]})}
   function voStop(f){if(!VO.cur)return;const c=VO.cur;VO.cur=null;const t=S.ctx.currentTime;c.g.gain.cancelScheduledValues(t);c.g.gain.setValueAtTime(c.g.gain.value,t);c.g.gain.linearRampToValueAtTime(0,t+f);try{c.s.stop(t+f+.05)}catch(e){}}
-  function duck(on){if(!E)return;const t=S.ctx.currentTime;E.bus.gain.setTargetAtTime(on?.78:1,t,on?.25:2.5);if(mg&&S.music)mg.gain.setTargetAtTime(MUSIC_LEVEL*(on?.5:1),t,on?.12:.8)}
+  function duck(on){} // tracks are independent: narration never moves the music or the SFX
   function voPlay(b){if(!S.voice||!E)return;const buf=VO.buf[b.k];if(!buf){VO.want=b;VO.wantT=performance.now();voLoad(b);return}
     VO.want=null;voStop(.35);const t=S.ctx.currentTime+.06;const s=S.ctx.createBufferSource();s.buffer=buf;const g=E.gain(VO_GAIN);s.connect(g);g.connect(E.voice);s.start(t);
     const c={s,g,k:b.k};VO.cur=c;(S.vlog||(S.vlog=[])).push(b.k);duck(true);s.onended=()=>{if(VO.cur===c){VO.cur=null;duck(false)}}}
@@ -585,18 +594,19 @@ const SND=(()=>{
   function setMusic(v){
     if(v&&!ensure())return;if(!E){S.music=false;return}
     S.music=v;const t=S.ctx.currentTime;
-    if(v){E.master.gain.cancelScheduledValues(t);E.master.gain.setTargetAtTime(.9,t,.25);
-      if(music){music.play().catch(()=>{});mg.gain.cancelScheduledValues(t);mg.gain.setValueAtTime(0,t);mg.gain.linearRampToValueAtTime(MUSIC_LEVEL*(VO.cur?.5:1),t+3)}}
-    else{E.master.gain.cancelScheduledValues(t);E.master.gain.setTargetAtTime(0,t,.15);setTimeout(()=>{if(!S.music&&music)music.pause()},700)}
+    if(v){E.master.gain.cancelScheduledValues(t);E.master.gain.setTargetAtTime(SFX_ON&&(!ONLY||ONLY==='sfx')?.9:0,t,.25);
+      musicBus.gain.cancelScheduledValues(t);musicBus.gain.setTargetAtTime(!ONLY||ONLY==='music'?1:0,t,.05);
+      if(music){music.play().catch(()=>{});mg.gain.cancelScheduledValues(t);mg.gain.setValueAtTime(0,t);mg.gain.linearRampToValueAtTime(MUSIC_LEVEL,t+3)}}
+    else{E.master.gain.cancelScheduledValues(t);E.master.gain.setTargetAtTime(0,t,.15);musicBus.gain.cancelScheduledValues(t);musicBus.gain.setTargetAtTime(0,t,.15);setTimeout(()=>{if(!S.music&&music)music.pause()},700)}
     sync()}
   // narration button: voice-over only
   function setVoice(v){
     if(v&&!ensure())return;if(!E){S.voice=false;return}
     S.voice=v;const t=S.ctx.currentTime;
-    if(v){S.justOn=true;E.voice.gain.cancelScheduledValues(t);E.voice.gain.setTargetAtTime(1,t,.05)}
+    if(v){S.justOn=true;E.voice.gain.cancelScheduledValues(t);E.voice.gain.setTargetAtTime(!ONLY||ONLY==='voice'?1:0,t,.05)}
     else{voStop(.2);duck(false);E.voice.gain.cancelScheduledValues(t);E.voice.gain.setTargetAtTime(0,t,.15)}
     sync()}
-  function hit(name,k){if(!S.music||!E||!HITS[name])return;const now=performance.now();if(cool[name]&&now-cool[name]<2500)return;cool[name]=now;(S.log||(S.log=[])).push(name);HITS[name](E,S.ctx.currentTime+.02,k)}
+  function hit(name,k){if(!SFX_ON||(ONLY&&ONLY!=='sfx')||!S.music||!E||!HITS[name])return;const now=performance.now();if(cool[name]&&now-cool[name]<2500)return;cool[name]=now;(S.log||(S.log=[])).push(name);HITS[name](E,S.ctx.currentTime+.02,k)}
   const CL={buf:{},loading:{},cur:{}};
   function clipLoad(b){if(!b.vaud||!S.ctx||CL.buf[b.k]||CL.loading[b.k])return;CL.loading[b.k]=1;
     fetch(b.vaud).then(r=>r.arrayBuffer()).then(a=>new Promise((res,rej)=>S.ctx.decodeAudioData(a,res,rej))).then(buf=>{CL.buf[b.k]=buf;delete CL.loading[b.k]}).catch(()=>{delete CL.loading[b.k]})}
@@ -605,7 +615,7 @@ const SND=(()=>{
     const t=S.ctx.currentTime+.02,s=S.ctx.createBufferSource();s.buffer=buf;const g=E.gain(b.vlv||.8);s.connect(g);g.connect(E.bus);
     try{s.start(t,Math.max(0,Math.min(off||0,buf.duration-.1)))}catch(e){return}CL.cur[b.k]={s,g};(S.log||(S.log=[])).push('clip:'+b.k)}
   function frame(blocks,vh,now,endEl){
-    if(!E)return;if(S.voice)voFrame(blocks,vh);if(!S.music)return;const t=S.ctx.currentTime;const w={};for(const n of BED_NAMES)w[n]=0;
+    if(!E)return;if(S.voice)voFrame(blocks,vh);if(!S.music||!ring)return; // no SFX track: nothing else to driveconst t=S.ctx.currentTime;const w={};for(const n of BED_NAMES)w[n]=0;
     let best=null,bestCov=0,lp=18000,ringLv=0;
     for(const b of blocks){const r=b.el.getBoundingClientRect();const cov=clamp((Math.min(vh,r.bottom)-Math.max(0,r.top))/vh,0,1);
       if(b.bed&&cov>0)w[b.bed]=Math.max(w[b.bed],clamp(cov*1.4,0,1)*(b.bedLv||1));

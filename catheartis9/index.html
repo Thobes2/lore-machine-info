@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base href="/catheartis9/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:,">
+<title>Tales of Catheartis · Episode 9 · The Birth of the Hexborn</title><meta name="description" content="Nothing can prepare Arhein and Lethan for what they are about to face...the Hexborn!">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lore Machine">
+<meta property="og:title" content="Tales of Catheartis · Episode 9 · The Birth of the Hexborn">
+<meta property="og:description" content="Nothing can prepare Arhein and Lethan for what they are about to face...the Hexborn!">
+<meta property="og:image" content="https://loremachine.info/catheartis9/assets/cover.jpg">
+<meta property="og:url" content="https://loremachine.info/catheartis9/">
+<meta name="twitter:card" content="summary_large_image">
+<script>try{if(window.top===window.self&&!/\/$|\.html?$/.test(location.pathname))location.replace(location.pathname+'/'+location.search+location.hash)}catch(e){}</script>
+<link rel="preload" href="fonts/comic-bi.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="fonts/grenze-gotisch.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:Archivo;src:url(fonts/archivo.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-style:normal;font-display:swap}
+@font-face{font-family:Archivo;src:url(fonts/archivo-italic.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-style:italic;font-display:swap}
+@font-face{font-family:'Comic Neue';src:url(fonts/comic-bi.woff2) format('woff2');font-weight:700;font-style:italic;font-display:swap}
+@font-face{font-family:'Grenze Gotisch';src:url(fonts/grenze-gotisch.woff2) format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:Grenze;src:url(fonts/grenze.woff2) format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+:root{--col:min(100vw,max(620px,70vh))}
+@media (orientation:portrait){:root{--col:100vw}}
+html,body{margin:0;padding:0;background:#000;color:#fff}
+body{overflow-x:hidden;-webkit-text-size-adjust:100%}
+.strip{width:var(--col);max-width:100vw;margin:0 auto;position:relative}
+.blk{position:relative;width:100%}
+.pn{aspect-ratio:9/16;container-type:inline-size;overflow:clip}
+.hero{aspect-ratio:9/16;overflow:clip}
+.pn+.pn,.pn+.stage,.stage+.pn,.stage+.stage,.hero+.stage{margin-top:-17.8%}
+.hero+.pn{margin-top:-17.8%}
+.media{position:absolute;inset:0;overflow:hidden}
+.pn .media{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 91%,rgba(0,0,0,.25) 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 91%,rgba(0,0,0,.25) 100%)}
+.pn.fo .media{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 84%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 84%,transparent 100%)}
+.hero .media{-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.4) 0,#000 7%,#000 91%,rgba(0,0,0,.25) 100%);mask-image:linear-gradient(to bottom,rgba(0,0,0,.4) 0,#000 7%,#000 91%,rgba(0,0,0,.25) 100%)}
+.stage{height:var(--sh,300vh)}
+.stage .sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:clip}
+.stage .media{--fade:0px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fade));mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fade))}
+.cam,.att,.glw{position:absolute;left:0;top:0;width:100%;height:100%;transform-origin:0 0}
+.cam img{display:block;width:100%;height:100%}
+.cam canvas.seq{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .25s linear}.cam canvas.seq.on{opacity:1}
+.stage.ttlst .sticky{container-type:inline-size}
+.cam video{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;opacity:0;transition:opacity .45s linear}.cam video.on{opacity:1}
+canvas.gl{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .35s linear}
+.glw{mix-blend-mode:screen;pointer-events:none}
+.fog{position:absolute;inset:-2%;pointer-events:none;mix-blend-mode:screen;background-image:url(assets/fog.png);background-repeat:repeat;opacity:var(--fo,.16)}
+.fog.f1{background-size:calc(var(--col) * .9) auto;animation:drift1 80s linear infinite}
+.fog.f2{background-size:calc(var(--col) * .55) auto;animation:drift2 55s linear infinite;opacity:calc(var(--fo,.16) * .7)}
+@keyframes drift1{from{background-position:0 0}to{background-position:calc(var(--col) * .9) calc(var(--col) * -.18)}}
+@keyframes drift2{from{background-position:0 0}to{background-position:calc(var(--col) * -.55) calc(var(--col) * .08)}}
+.lamp{position:absolute;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,196,120,.62) 0,rgba(255,150,64,.22) 38%,rgba(255,120,40,0) 70%);opacity:.74;animation:flick var(--d,3s) ease-in-out infinite;animation-delay:var(--dl,0s)}
+.lamp.cool{background:radial-gradient(circle,rgba(255,170,110,.5) 0,rgba(220,110,60,.16) 40%,rgba(200,90,40,0) 70%);animation-name:smoulder}
+@keyframes flick{0%{opacity:.74}13%{opacity:.81}27%{opacity:.68}41%{opacity:.8}58%{opacity:.66}73%{opacity:.83}88%{opacity:.7}100%{opacity:.74}}
+.glint{position:absolute;width:7%;aspect-ratio:1;transform:translate(-50%,-50%) scale(.3);opacity:0;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.95) 0,rgba(220,235,255,.5) 18%,rgba(200,220,255,0) 45%),linear-gradient(90deg,transparent 0,transparent 47%,rgba(255,255,255,.9) 50%,transparent 53%,transparent 100%),linear-gradient(0deg,transparent 0,transparent 47%,rgba(255,255,255,.8) 50%,transparent 53%,transparent 100%);border-radius:50%;animation:glint 6.5s ease-in-out infinite;animation-delay:var(--dl,0s)}
+@keyframes glint{0%,80%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(0)}86%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(20deg)}94%,100%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(40deg)}}
+@keyframes smoulder{0%,100%{opacity:.5}50%{opacity:.82}}
+.cap{position:absolute}
+.pz{position:absolute;inset:0;transform-origin:50% 50%;will-change:transform}
+.bx{position:absolute;inset:0;box-sizing:border-box;display:flex;align-items:center;justify-content:center}
+.cap-c .bx{background:#fff03c;border:var(--bw,2px) solid #111;box-shadow:.45cqw .45cqw 0 rgba(0,0,0,.55)}
+.cap-b .bx{background:#fff;border:var(--bw,2px) solid #182132}
+.tx{position:relative;width:100%;box-sizing:border-box;text-align:center;font-family:Archivo,system-ui,sans-serif;font-style:italic;font-weight:720;font-stretch:116%;line-height:1.22;letter-spacing:.005em;margin:0}
+.cap-c .tx{color:#111}
+.cap-b .tx{color:#12161f}
+.cap-c .tx{font-family:'Comic Neue','Comic Sans MS',sans-serif;font-style:italic;font-weight:700;font-stretch:100%;letter-spacing:0;line-height:1.2}
+.cap-b .tx{font-family:'Comic Neue','Comic Sans MS',sans-serif;font-style:italic;font-weight:700;font-stretch:100%;letter-spacing:0;line-height:1.2}
+.tx .c{display:inline}
+.spark{position:absolute;width:.5em;height:.5em;margin:-.25em 0 0 -.25em;border-radius:50%;pointer-events:none;opacity:0;background:radial-gradient(circle,#fff6d8 0,rgba(255,206,120,.85) 35%,rgba(255,170,60,0) 70%)}
+.cap-b .spark{background:radial-gradient(circle,#ffd28a 0,rgba(255,140,40,.7) 35%,rgba(255,110,30,0) 70%)}
+.tail{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.ttl{position:absolute;left:0;right:0;top:57%;margin:0;font-size:inherit;font-weight:inherit;display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.ttl img{width:76%;height:auto;display:block;opacity:0;transform:scale(.96);transition:opacity 1.4s ease,transform 1.8s cubic-bezier(.2,.7,.2,1)}
+.ttl.on img{opacity:1;transform:none}
+.cue{margin-top:4%;font:italic 600 clamp(10px,2.6cqw,14px)/1 Archivo,system-ui,sans-serif;font-stretch:118%;letter-spacing:.32em;text-transform:uppercase;color:rgba(240,215,190,.72);opacity:0;transition:opacity 1.2s ease 1s}
+.ttl.on .cue{opacity:1}
+.ep{margin:2.6% 0 0;display:flex;flex-direction:column;align-items:center;gap:.5em;opacity:0;transform:translateY(6px);transition:opacity 1.3s ease .6s,transform 1.6s cubic-bezier(.2,.7,.2,1) .6s;text-align:center}
+.ttl.on .ep{opacity:1;transform:none}
+.ep .epn{font:italic 600 clamp(10px,2.5cqw,13px)/1 Archivo,system-ui,sans-serif;font-stretch:120%;letter-spacing:.42em;text-transform:uppercase;color:rgba(240,215,190,.8);padding-left:.42em;display:flex;align-items:center;gap:1em}
+.ep .epn::before,.ep .epn::after{content:'';width:8cqw;height:1px;background:linear-gradient(90deg,rgba(255,150,60,0),rgba(255,150,60,.7))}.ep .epn::after{transform:scaleX(-1)}
+.ep .ept{font:700 clamp(24px,8.4cqw,46px)/1.05 'Grenze Gotisch',Georgia,serif;color:#f3ead7;text-shadow:0 2px 14px rgba(0,0,0,.85),0 0 30px rgba(0,0,0,.6)}
+.hero{container-type:inline-size}
+.end{height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6vh;container-type:inline-size}
+.end .endlogo{width:84%;height:auto;display:block}
+.built{display:flex;flex-direction:column;align-items:center;gap:2.4cqw;width:100%;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.built .bw{display:flex;align-items:center;gap:1em;font:italic 600 clamp(10px,2.4cqw,13px)/1 Archivo,system-ui,sans-serif;font-stretch:120%;letter-spacing:.42em;text-transform:uppercase;color:rgba(255,236,242,.78);padding-left:.42em}
+.built .bw::before,.built .bw::after{content:'';width:9cqw;height:1px;background:linear-gradient(90deg,rgba(255,61,107,0),rgba(255,61,107,.9))}.built .bw::after{transform:scaleX(-1)}
+.lm{position:relative;width:37%;aspect-ratio:2000/454;--rev:0;-webkit-mask-image:linear-gradient(100deg,#000 calc(var(--rev) * 125% - 22%),transparent calc(var(--rev) * 125% - 2%));mask-image:linear-gradient(100deg,#000 calc(var(--rev) * 125% - 22%),transparent calc(var(--rev) * 125% - 2%))}
+.lm img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.lm .lmglow{opacity:.35;animation:lmbreathe 4.2s ease-in-out infinite}@keyframes lmbreathe{0%,100%{opacity:.33}50%{opacity:.62}}
+.lm .sheen{position:absolute;inset:0;opacity:0;pointer-events:none;background:linear-gradient(105deg,rgba(255,255,255,0) 42%,rgba(255,244,248,.85) 50%,rgba(255,255,255,0) 58%);background-size:260% 100%;background-position:120% 0;-webkit-mask-image:url(assets/lm-logo.png);mask-image:url(assets/lm-logo.png);-webkit-mask-size:100% 100%;mask-size:100% 100%}
+.lm.done .sheen{opacity:1;animation:lmsheen 6.5s ease-in-out .3s infinite}@keyframes lmsheen{0%{background-position:120% 0}22%,100%{background-position:-20% 0}}
+.end>*{opacity:0}
+#flash{position:fixed;left:50%;top:0;width:var(--col);max-width:100vw;height:100vh;transform:translateX(-50%);pointer-events:none;z-index:19;opacity:0;mix-blend-mode:screen;background:radial-gradient(ellipse 120% 70% at 50% 0%,rgba(225,238,255,.95) 0,rgba(170,195,235,.45) 45%,rgba(120,150,200,.12) 75%,rgba(0,0,0,0) 100%)}
+#sndbar{position:fixed;z-index:30;bottom:calc(14px + env(safe-area-inset-bottom,0px));right:max(14px,calc(50vw - var(--col) / 2 + 14px));display:flex;gap:10px}
+.sb{width:44px;height:44px;border-radius:50%;border:1px solid rgba(240,215,190,.42);background:rgba(10,6,4,.55);color:rgba(245,225,200,.6);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;transition:color .2s,border-color .2s,box-shadow .2s}
+.sb svg{width:22px;height:22px;display:block}.sb .x{transition:opacity .2s}.sb[aria-pressed=true] .x{opacity:0}
+.sb.armed{animation:armed 2.4s ease-in-out infinite}@keyframes armed{0%,100%{box-shadow:0 0 0 1px rgba(255,150,60,.22),0 0 6px rgba(255,150,60,.15)}50%{box-shadow:0 0 0 1px rgba(255,150,60,.4),0 0 18px rgba(255,150,60,.38)}}
+.sb[aria-pressed=true]{color:#ffd9a8;border-color:rgba(255,150,60,.85);box-shadow:0 0 0 1px rgba(255,150,60,.22),0 0 14px rgba(255,150,60,.25)}
+.ttl h1{margin:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:inherit}
+.ttl img.aib{width:46%;margin-bottom:2.4%}
+.end .aibend{width:40%;height:auto;display:block;margin-bottom:-3.6vh}
+.sndhelp{pointer-events:auto;margin-top:3.5%;display:flex;flex-direction:column;align-items:center;gap:.55em;background:rgba(10,6,4,.45);border:1px solid rgba(240,215,190,.3);border-radius:14px;padding:.75em 1.15em;color:rgba(244,232,214,.94);font:italic 600 clamp(11px,3.1cqw,15px)/1.2 Archivo,system-ui,sans-serif;font-stretch:112%;opacity:0;transition:opacity 1.2s ease 1.4s}
+.ttl.on .sndhelp{opacity:1}.sndhelp>span{display:flex;align-items:center;gap:.45em;white-space:nowrap}
+.sb.mini{width:2.15em;height:2.15em;flex:none}.sb.mini svg{width:1.2em;height:1.2em}
+#rain{position:fixed;left:50%;top:0;width:var(--col);max-width:100vw;height:100vh;transform:translateX(-50%);pointer-events:none;z-index:20}
+@media (prefers-reduced-motion:reduce){.ep{transition:none!important}.fog,.lamp,.glint,.sb.armed,.lm .lmglow,.lm.done .sheen{animation:none!important}.lm .sheen{display:none}.glint{opacity:0!important}.ttl img,.cue{transition:none!important}}
+.ttl{isolation:isolate}.ttl::before{content:'';position:absolute;left:0;right:0;top:-14%;bottom:-38%;z-index:-1;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,0),rgba(0,0,0,.58) 24%,rgba(0,0,0,.7) 62%,rgba(0,0,0,0));opacity:0;transition:opacity 1.4s ease}.ttl.on::before{opacity:1}.ep .epn,.cue{text-shadow:0 1px 6px rgba(0,0,0,.9)}.sndhelp{background:rgba(10,6,4,.62)}.cap-t .bx{background:none!important;border:0!important;box-shadow:none!important}.cap-t .tx{color:#f6ecff!important;font-family:'Grenze Gotisch',Georgia,serif!important;font-style:normal!important;font-weight:700!important;letter-spacing:.06em!important;line-height:1!important;text-align:center;text-shadow:0 0 14px rgba(190,90,255,.95),0 0 34px rgba(150,50,240,.7),0 3px 6px #000}.cap-t .tx>span{font-size:2.7em}.ttl .ep{width:100%;box-sizing:border-box;padding:0 7%}.ep .ept{text-wrap:balance}.ttl{top:0;bottom:3.2%;justify-content:flex-end}.ttl::before{top:24%;bottom:-3.6%;background:linear-gradient(to bottom,rgba(0,0,0,0),rgba(0,0,0,.5) 30%,rgba(0,0,0,.7) 72%,rgba(0,0,0,.62))}.ttl img.aib{width:40%;margin-bottom:0}.ttl h1 img:not(.aib){margin:-9.4% 0 -6%}.end .endlogo{margin:-10% 0 -6%}.ttl .built{margin-top:1.6%;gap:1.8cqw;pointer-events:none;opacity:0;transition:opacity 1.2s ease .6s}.ttl.on .built{opacity:1}.ttl .lm{width:30%}.ttl .lm img{position:absolute;inset:0;width:100%;height:100%;opacity:1;transform:none;transition:none}@property --rev{syntax:'<number>';inherits:false;initial-value:0}.ttl.on .lm{animation:lmwipe 1.5s .8s cubic-bezier(.3,.6,.2,1) forwards}@keyframes lmwipe{from{--rev:0}to{--rev:1}}.ttl.on .lm .sheen{opacity:1;animation:lmsheen 6.5s ease-in-out 2.6s infinite}.end{gap:4.5vh}.end .aibend{width:44%;margin-bottom:-1.5vh}.built .bw{color:rgba(244,232,214,.8)}.built .bw::before,.built .bw::after{background:linear-gradient(90deg,rgba(255,150,60,0),rgba(255,150,60,.85))}@media (prefers-reduced-motion:reduce){.ttl .lm{animation:none!important;--rev:1}}
+</style>
+</head>
+<body>
+<main class="strip" id="strip">
+<section class="blk stage ttlst" id="b-title" style="--fo:0.05;--sh:200vh"><div class="sticky"><div class="media"><div class="cam"><img src="assets/cover.jpg" alt="Nothing can prepare Arhein and Lethan for what they are about to face...the Hexborn!" width="1080" height="1920" loading="eager" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"></div><div class="ttl"><h1><img class="aib" src="assets/wof-logo.png" alt="Well of Fables presents" width="1100" height="402"><img src="assets/logo.png" alt="Tales of Catheartis, Episode 9: The Birth of the Hexborn" width="1920" height="1132"></h1><div class="built tb"><span class="bw">Built with</span><span class="lm" role="img" aria-label="Lore Machine"><img class="lmglow" src="assets/lm-glow.png" alt="" aria-hidden="true"><img class="lmlogo" src="assets/lm-logo.png" alt="" aria-hidden="true" width="2000" height="454"><i class="sheen" aria-hidden="true"></i></span></div><p class="ep"><span class="epn">Episode 9</span><span class="ept">The Birth of the Hexborn</span></p><span class="cue" aria-hidden="true">Scroll</span><div class="sndhelp"><span><span class="tw">Tap</span> <button class="sb mini" type="button" data-snd="music" aria-pressed="true" aria-label="Turn off music and sound effects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/><path class="x" d="M4 4l16 16"/></svg></button> for music and sound effects</span><span>and <button class="sb mini" type="button" data-snd="voice" aria-pressed="false" aria-label="Turn on narration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21M8.5 21h7"/><path class="x" d="M4 4l16 16"/></svg></button> for narration</span></div></div></div></section>
+<section class="blk pn" id="b-s1" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s1.jpg" alt="SCENE/ACTION: An extreme close-up, low-angle shot looking directly up at Vaelia." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s1-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Vaelia&#x27;s vacant eyes have no remnants of her previous vitality, her broken body suspended by steel chains over a summoning sigil.</span><span class="ty" aria-hidden="true">Vaelia&#x27;s vacant eyes have no remnants of her previous vitality, her broken body suspended by steel chains over a summoning sigil.</span></p></div></div></div><div class="cap cap-b" id="cap-s1-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">I lost my faith and broke to their will. I am so sorry.</span><span class="ty" aria-hidden="true">I lost my faith and broke to their will. I am so sorry.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s2" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s2.jpg" alt="SCENE/ACTION: A tight, intimate extreme close-up with both center frame high angle shot looking down on only A" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s2-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Who did this to you, my sweet Vaelia?</span><span class="ty" aria-hidden="true">Who did this to you, my sweet Vaelia?</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div><div class="cap cap-c" id="cap-s2-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Arhein is at a loss for words. What he witnesses he has only read about in ancient books on magic discussing a dangerous ritual that has never been performed to its finality.</span><span class="ty" aria-hidden="true">Arhein is at a loss for words. What he witnesses he has only read about in ancient books on magic discussing a dangerous ritual that has never been performed to its finality.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s3" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s3.jpg" alt="SCENE/ACTION: A low-angle, medium shot focusing on Alistra and Naethira as they emerge from the deep shadows," width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s3-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">We did, foolish men.</span><span class="ty" aria-hidden="true">We did, foolish men.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div><div class="cap cap-b" id="cap-s3-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">The Sisters Alistra and Naethira are we, and &quot;sweet Vaelia&quot; is the newest addition to our family.</span><span class="ty" aria-hidden="true">The Sisters Alistra and Naethira are we, and &quot;sweet Vaelia&quot; is the newest addition to our family.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s4" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s4.jpg" alt="SCENE/ACTION: Alistra is captured in a cinematic low-angle close-up, her face and body positioned center." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s4-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">And with your arrival the circle is complete.</span><span class="ty" aria-hidden="true">And with your arrival the circle is complete.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s5" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s5.jpg" alt="SCENE/ACTION: An extreme close-up, low-angle shot focusing exclusively on Vaelia as the Hexborn&#x27;s face in the" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s5-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">The sisters&#x27; dark magic tears through Vaelia, coursing with a powerful surge as it rips her soul from her body.</span><span class="ty" aria-hidden="true">The sisters&#x27; dark magic tears through Vaelia, coursing with a powerful surge as it rips her soul from her body.</span></p></div></div></div><div class="cap cap-b" id="cap-s5-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Her pain is transmuted and gives birth to...</span><span class="ty" aria-hidden="true">Her pain is transmuted and gives birth to...</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s6" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s6.jpg" alt="SCENE/ACTION: A cinematic extreme wide shot of the Chamber of The Hexborn." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c cap-t" id="cap-s6-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">THE HEXBORN.</span><span class="ty" aria-hidden="true">THE HEXBORN.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s7" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s7.jpg" alt="SCENE/ACTION: Vaelia as the Hexborn is captured in a cinematic close-up, floating vertically off-center right." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s7-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">And with a final crackle of energy, Vaelia is possessed by an otherworldly entity.</span><span class="ty" aria-hidden="true">And with a final crackle of energy, Vaelia is possessed by an otherworldly entity.</span></p></div></div></div><div class="cap cap-c" id="cap-s7-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Her previously vacant eyes now burn with a demonic force.</span><span class="ty" aria-hidden="true">Her previously vacant eyes now burn with a demonic force.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s8" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s8.jpg" alt="SCENE/ACTION: A macro close-up focusing on the right hand of Vaelia as the Hexborn as it points downward to th" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s8-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">She reaches her hand down, a violet energy crackling at the tip of her finger that she directs into Lethan.</span><span class="ty" aria-hidden="true">She reaches her hand down, a violet energy crackling at the tip of her finger that she directs into Lethan.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s9" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s9.jpg" alt="SCENE/ACTION: Lethan is captured in an extreme close-up, positioned off-center left, his face filling the fram" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s9-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">You were trained to fight this, Vaelia. I have faith that you can escape the Hexborn&#x27;s grasp.</span><span class="ty" aria-hidden="true">You were trained to fight this, Vaelia. I have faith that you can escape the Hexborn&#x27;s grasp.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div><div class="cap cap-c" id="cap-s9-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Her energy pulses within Lethan&#x27;s already cracked veins, exploiting his weakness before he can fully heal.</span><span class="ty" aria-hidden="true">Her energy pulses within Lethan&#x27;s already cracked veins, exploiting his weakness before he can fully heal.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s10" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s10.jpg" alt="SCENE/ACTION: Arhein stands off-center left in a powerful, wide-legged combat stance, raising his heavy broads" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s10-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Your witchcraft is not welcome in the Badlands, Sisters. The Thrice Great has invested me with the charge to cleanse this desecration.</span><span class="ty" aria-hidden="true">Your witchcraft is not welcome in the Badlands, Sisters. The Thrice Great has invested me with the charge to cleanse this desecration.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div><div class="cap cap-c" id="cap-s10-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">As Lethan struggles with Vaelia&#x27;s newfound dark powers, Arhein faces against the witches who ushered in this demonic being.</span><span class="ty" aria-hidden="true">As Lethan struggles with Vaelia&#x27;s newfound dark powers, Arhein faces against the witches who ushered in this demonic being.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s11" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s11.jpg" alt="SCENE/ACTION: Alistra stands off-center right in the Chamber of the Hexborn, her head tilted far back in a fit" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s11-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Oh you fool. All your pomp and circumstance. Posturing for your &quot;god.&quot; Don&#x27;t you know that god is dead and no one cares about you?</span><span class="ty" aria-hidden="true">Oh you fool. All your pomp and circumstance. Posturing for your &quot;god.&quot; Don&#x27;t you know that god is dead and no one cares about you?</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s12" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s12.jpg" alt="SCENE/ACTION: An extreme macro close-up focusing on the outstretched right hand of Alistra." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s12-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">We are all but a moment to be extinguished in the grand scheme of the cosmic horror show. No one will remember you as your name will be ground into dust by the heel of Time.</span><span class="ty" aria-hidden="true">We are all but a moment to be extinguished in the grand scheme of the cosmic horror show. No one will remember you as your name will be ground into dust by the heel of Time.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s13" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s13.jpg" alt="SCENE/ACTION: Arhein is captured in a dynamic, mid-stride charge, positioned off-center left and leaning heavi" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s13-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">You&#x27;re the fool! Our lives are filled with meaning as every breath is sacred, given to us by the Thrice Great.</span><span class="ty" aria-hidden="true">You&#x27;re the fool! Our lives are filled with meaning as every breath is sacred, given to us by the Thrice Great.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div><div class="cap cap-c" id="cap-s13-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">With a frustrated roar at Alistra&#x27;s nihilistic retort, Arhein rushes the evil witch with his sword raised to slay her  where she stands.</span><span class="ty" aria-hidden="true">With a frustrated roar at Alistra&#x27;s nihilistic retort, Arhein rushes the evil witch with his sword raised to slay her  where she stands.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s14" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s14.jpg" alt="SCENE/ACTION: Alistra is positioned center in the Chamber of The Hexborn, her head thrown back in a wide-mouth" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s14-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Our powers come from the chaos of the universe. Your desire for order will always be your downfall.</span><span class="ty" aria-hidden="true">Our powers come from the chaos of the universe. Your desire for order will always be your downfall.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s15" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s15.jpg" alt="SCENE/ACTION: Arhein is captured in a violent, mid-air recoil, positioned center as he flies backwards to the" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s15-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">With a powerful blast, Arhein is flung into the rough cave wall as the fingers of Alistra&#x27;s spell bind him.</span><span class="ty" aria-hidden="true">With a powerful blast, Arhein is flung into the rough cave wall as the fingers of Alistra&#x27;s spell bind him.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s16" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s16.jpg" alt="SCENE/ACTION: Extreme macro close-up of Naethira&#x27;s face, positioned off-center right, as she is caught in a mo" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s16-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Now stay put, little turtle dove, while our harbinger removes the final thread of her human frailty.</span><span class="ty" aria-hidden="true">Now stay put, little turtle dove, while our harbinger removes the final thread of her human frailty.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div><div class="cap cap-c" id="cap-s16-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Alistra&#x27;s sister Naethira laughs hysterically as she watches Arhein struggle against his restraints, gasping as she speaks.</span><span class="ty" aria-hidden="true">Alistra&#x27;s sister Naethira laughs hysterically as she watches Arhein struggle against his restraints, gasping as she speaks.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s17" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s17.jpg" alt="SCENE/ACTION: Vaelia as the Hexborn is positioned off-center right, levitating several feet above the floor in" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s17-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Please...Vaelia...not...like...this...</span><span class="ty" aria-hidden="true">Please...Vaelia...not...like...this...</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s18" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s18.jpg" alt="SCENE/ACTION: Extreme close-up of Lethan, positioned off-center left, as he struggles to raise his right hand" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s18-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Do you not recall my face? Do you not recall my ring...and all those times we prayed together?</span><span class="ty" aria-hidden="true">Do you not recall my face? Do you not recall my ring...and all those times we prayed together?</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div><div class="cap cap-c" id="cap-s18-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Lethan&#x27;s eyes tear with pain and sadness as he stares into the empty eyes of the one he raised from childhood. He lifts his hand with the last of his strength in an attempt to give Vaelia recollection.</span><span class="ty" aria-hidden="true">Lethan&#x27;s eyes tear with pain and sadness as he stares into the empty eyes of the one he raised from childhood. He lifts his hand with the last of his strength in an attempt to give Vaelia recollection.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s19" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s19.jpg" alt="SCENE/ACTION: A dramatic low-angle close-up of Vaelia as the Hexborn, positioned center frame." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s19-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">You are nothing to me. You are nothing to this world. You are nothing at all.</span><span class="ty" aria-hidden="true">You are nothing to me. You are nothing to this world. You are nothing at all.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s20" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s20.jpg" alt="SCENE/ACTION: Alistra and Naethira are positioned center." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s20-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Oh poor Lethan. There is nothing worse than being nothing to someone.</span><span class="ty" aria-hidden="true">Oh poor Lethan. There is nothing worse than being nothing to someone.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div><div class="cap cap-b" id="cap-s20-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">A memory wiped away from all existence. To dissolve into dust with no stone to mark your time.</span><span class="ty" aria-hidden="true">A memory wiped away from all existence. To dissolve into dust with no stone to mark your time.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s21" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s21.jpg" alt="SCENE/ACTION: Arhein is positioned off-center left, physically pinned flat against a jagged obsidian wall by c" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s21-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Don&#x27;t let their words weaken you, Lethan. Fight back with all your muster!</span><span class="ty" aria-hidden="true">Don&#x27;t let their words weaken you, Lethan. Fight back with all your muster!</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s22" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s22.jpg" alt="SCENE/ACTION: Vaelia as the Hexborn stands center frame in a powerful, predatory upright stance on the reflect" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s22-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Your words are futile, foolish humans. Face the Hexborn and see the truth.</span><span class="ty" aria-hidden="true">Your words are futile, foolish humans. Face the Hexborn and see the truth.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s23" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s23.jpg" alt="SCENE/ACTION: Lethan is positioned off-center left facing right, captured in a moment of agonizing physical st" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s23-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">That...is...not...the...truth. And...you...are...not...Vaelia!!!</span><span class="ty" aria-hidden="true">That...is...not...the...truth. And...you...are...not...Vaelia!!!</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div><div class="cap cap-c" id="cap-s23-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Lethan pushes himself up with his hammer, each word getting him closer to his feet.</span><span class="ty" aria-hidden="true">Lethan pushes himself up with his hammer, each word getting him closer to his feet.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s24" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s24.jpg" alt="SCENE/ACTION: A cinematic over-the-shoulder shot from behind Lethan, looking toward Vaelia as the Hexborn." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s24-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Pathetic. You fight so hard for a cause that was already lost.</span><span class="ty" aria-hidden="true">Pathetic. You fight so hard for a cause that was already lost.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s25" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s25.jpg" alt="SCENE/ACTION: Lethan is positioned off-center right, captured in a powerful reverse shot as he stands himself" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s25-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">My actions have echoed through all time, as a butterfly flaps its wings and causes a tsunami on the other side of our world. You are mistaken as to what meaning truly is!</span><span class="ty" aria-hidden="true">My actions have echoed through all time, as a butterfly flaps its wings and causes a tsunami on the other side of our world. You are mistaken as to what meaning truly is!</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s26" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s26.jpg" alt="SCENE/ACTION: Extreme close-up of Arhein&#x27;s face, positioned off-center left." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s26-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">Lethan, you are doing it! Keep going...she will break to your will.</span><span class="ty" aria-hidden="true">Lethan, you are doing it! Keep going...she will break to your will.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s27" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s27.jpg" alt="SCENE/ACTION: A dead-center, symmetrical close-up of Vaelia as the Hexborn." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s27-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">You have no will. It is not free nor is it yours. I am the Will of the Nothing. That which sits at the center of the Universe...waiting.</span><span class="ty" aria-hidden="true">You have no will. It is not free nor is it yours. I am the Will of the Nothing. That which sits at the center of the Universe...waiting.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div><div class="cap cap-c" id="cap-s27-1"><div class="pz"><div class="bx"><p class="tx"><span class="sr">The Hexborn&#x27;s voice shifts, deepening with a resonance that echoes throughout the chambers.</span><span class="ty" aria-hidden="true">The Hexborn&#x27;s voice shifts, deepening with a resonance that echoes throughout the chambers.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s28" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s28.jpg" alt="SCENE/ACTION: A low-angle, dramatic close-up focusing exclusively on Lethan in his final moment." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s28-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Her words rip through Lethan, cracking his skin and bone like brittle parchment.</span><span class="ty" aria-hidden="true">Her words rip through Lethan, cracking his skin and bone like brittle parchment.</span></p></div></div></div></div></section>
+<section class="blk pn" id="b-s29" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s29.jpg" alt="SCENE/ACTION: A tight, cinematic close-up focusing on Alistra and Naethira, positioned off-center right." width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-b" id="cap-s29-0"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">That is the will of the Hexborn.</span><span class="ty" aria-hidden="true">That is the will of the Hexborn.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div><div class="cap cap-b" id="cap-s29-1"><div class="pz"><svg class="tail under" aria-hidden="true"><polygon fill="#ffffff" stroke="#182132" stroke-linejoin="round"/></svg><div class="bx"><p class="tx"><span class="sr">And what a will it is! It&#x27;s going to be so much fun to unleash her into this world, Sister.</span><span class="ty" aria-hidden="true">And what a will it is! It&#x27;s going to be so much fun to unleash her into this world, Sister.</span></p></div><svg class="tail over" aria-hidden="true"><polygon fill="#ffffff"/></svg></div></div></div></section>
+<section class="blk pn" id="b-s30" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s30.jpg" alt="SCENE/ACTION: A dramatic low-angle full-body shot of Lethan facing camera in the center of the frame as his en" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s30-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">Lethan fades from existence as if he was never there; a fractured reality broken down beyond its very essence.</span><span class="ty" aria-hidden="true">Lethan fades from existence as if he was never there; a fractured reality broken down beyond its very essence.</span></p></div></div></div></div></section>
+<section class="blk pn fo" id="b-s31" style="--fo:0.05"><div class="media"><div class="cam"><img src="assets/s31.jpg" alt="SCENE/ACTION: A macro, extreme close-up focusing on Lethan&#x27;s silver sigil ring as it falls vertically through" width="1080" height="1920" loading="lazy" decoding="async"></div><div class="fog f1"></div><div class="fog f2"></div></div><div class="glw"></div><div class="att"><div class="cap cap-c" id="cap-s31-0"><div class="pz"><div class="bx"><p class="tx"><span class="sr">His signet ring somehow escapes his fate, falling to the chamber floor and hitting the smooth ritual markings with a melodic tone.</span><span class="ty" aria-hidden="true">His signet ring somehow escapes his fate, falling to the chamber floor and hitting the smooth ritual markings with a melodic tone.</span></p></div></div></div></div></section>
+<section class="blk end" id="b-end"><img class="aib aibend" src="assets/wof-logo.png" alt="Well of Fables" width="1100" height="402" loading="lazy"><img class="endlogo" src="assets/logo.png" alt="Tales of Catheartis" width="1920" height="1132" loading="lazy"><div class="built"><span class="bw">Built with</span><span class="lm" role="img" aria-label="Lore Machine"><img class="lmglow" src="assets/lm-glow.png" alt="" aria-hidden="true" loading="lazy"><img class="lmlogo" src="assets/lm-logo.png" alt="" aria-hidden="true" loading="lazy" width="2000" height="454"><i class="sheen" aria-hidden="true"></i></span></div></section>
+</main>
+<div id="flash" aria-hidden="true"></div>
+<div id="sndbar"><button class="sb" type="button" data-snd="music" aria-pressed="false" aria-label="Turn on music and sound effects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/><path class="x" d="M4 4l16 16"/></svg></button><button class="sb" type="button" data-snd="voice" aria-pressed="false" aria-label="Turn on narration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21M8.5 21h7"/><path class="x" d="M4 4l16 16"/></svg></button></div>
+<canvas id="rain" aria-hidden="true"></canvas>
+<script>
+(()=>{
+'use strict';
+const CFG={"blocks":[{"k":"title","img":"assets/cover.jpg","map":"assets/cover-map.png","aspect":[9,16],"focus":0.818,"camcfg":null,"caps_cfg":[],"zmin":1.0,"stage":true,"fog":0.05,"script":"pan","pan":[1.0,0.5,0.5,1.08,0.5,0.46],"bed":"cave","bedLv":0.6},{"k":"s1","img":"assets/s1.jpg","map":"assets/s1-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.521,0.521],"off":[0.004,0.03]},"caps_cfg":[{"id":"cap-s1-0","type":"c","auto":[0.1771,0.1114,0.2679]},{"id":"cap-s1-1","type":"b","auto":[0.7153,0.6424,0.2381],"spk":{"m":[0.4864,0.4852],"e":[0.5083,0.4056,0.2503,0.2015]},"avoid":[[0.2937,0.2329,0.4291,0.3454]]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s1.mp3"},{"k":"s2","img":"assets/s2.jpg","map":"assets/s2-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.501,0.545],"off":[0.004,0.03]},"caps_cfg":[{"id":"cap-s2-0","type":"b","auto":[0.82,0.24,0.2381],"tip":[0.6441,0.32],"avoid":[[0.1705,0.2632,0.272,0.2189]]},{"id":"cap-s2-1","type":"c","auto":[0.2308,0.0973,0.3869]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s2.mp3"},{"k":"s3","img":"assets/s3.jpg","map":"assets/s3-map.png","aspect":[9,16],"focus":0.817,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.502,0.527],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s3-0","type":"b","auto":[0.2866,0.1906,0.2381],"tip":[0.2271,0.227],"avoid":[[0.2484,0.3066,0.0914,0.0644],[0.6076,0.5129,0.112,0.0729]]},{"id":"cap-s3-1","type":"b","auto":[0.5674,0.6641,0.2679],"spk":{"m":[0.6688,0.5633],"e":[0.6636,0.5493,0.0653,0.0425]},"avoid":[[0.2484,0.3066,0.0914,0.0644],[0.6076,0.5129,0.112,0.0729]]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s4","img":"assets/s4.jpg","map":"assets/s4-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.47,0.548],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s4-0","type":"b","auto":[0.3789,0.8086,0.3274],"tip":[0.5634,0.8086],"avoid":[[0.314,0.291,0.3685,0.2574]]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s5","img":"assets/s5.jpg","map":"assets/s5-map.png","aspect":[9,16],"focus":0.672,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.525,0.48],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s5-0","type":"c","auto":[0.1771,0.1168,0.2679]},{"id":"cap-s5-1","type":"b","auto":[0.4076,0.7395,0.2976]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s6","img":"assets/s6.jpg","map":"assets/s6-map.png","aspect":[9,16],"focus":0.818,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.479,0.476],"off":[0.004,0.03]},"caps_cfg":[{"id":"cap-s6-0","type":"c","auto":[0.4808,0.6951,0.4464]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s7","img":"assets/s7.jpg","map":"assets/s7-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.498,0.526],"off":[0.004,0.03]},"caps_cfg":[{"id":"cap-s7-0","type":"c","auto":[0.19,0.14,0.21]},{"id":"cap-s7-1","type":"c","auto":[0.8538,0.8065,0.2381]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s8","img":"assets/s8.jpg","map":"assets/s8-map.png","aspect":[9,16],"focus":0.798,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.526,0.446],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s8-0","type":"c","auto":[0.2079,0.1038,0.2976]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s9","img":"assets/s9.jpg","map":"assets/s9-map.png","aspect":[9,16],"focus":0.835,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.455,0.485],"off":[0.004,0.03]},"caps_cfg":[{"id":"cap-s9-0","type":"b","auto":[0.8417,0.6941,0.2381],"tip":[0.7018,0.6941]},{"id":"cap-s9-1","type":"c","auto":[0.2154,0.0778,0.3274]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s10","img":"assets/s10.jpg","map":"assets/s10-map.png","aspect":[9,16],"focus":0.875,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.512,0.532],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s10-0","type":"b","auto":[0.74,0.2,0.2976],"spk":{"m":[0.4414,0.3449],"e":[0.4356,0.3263,0.0601,0.0417]},"avoid":[[0.3841,0.2906,0.103,0.0715]]},{"id":"cap-s10-1","type":"c","auto":[0.22,0.8,0.2976]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s11","img":"assets/s11.jpg","map":"assets/s11-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.523,0.524],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s11-0","type":"b","auto":[0.2621,0.3578,0.2381],"tip":[0.402,0.3578]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s11.mp3"},{"k":"s12","img":"assets/s12.jpg","map":"assets/s12-map.png","aspect":[9,16],"focus":0.796,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.527,0.459],"off":[0.004,0.03]},"caps_cfg":[{"id":"cap-s12-0","type":"b","auto":[0.797,0.121,0.3571],"tip":[0.82,0.42],"avoid":[[0.3269,0.1251,0.0895,0.0626]]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s12.mp3"},{"k":"s13","img":"assets/s13.jpg","map":"assets/s13-map.png","aspect":[9,16],"focus":0.851,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.493,0.496],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s13-0","type":"b","auto":[0.78,0.2,0.2381],"spk":{"m":[0.4763,0.3619],"e":[0.4725,0.346,0.0564,0.0377]},"avoid":[[0.4241,0.3137,0.0968,0.0646]]},{"id":"cap-s13-1","type":"c","auto":[0.1693,0.0995,0.2679]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s14","img":"assets/s14.jpg","map":"assets/s14-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.525,0.513],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s14-0","type":"b","auto":[0.3224,0.2519,0.2827],"spk":{"m":[0.6033,0.2446],"e":[0.6021,0.2312,0.0606,0.042]},"avoid":[[0.5501,0.1952,0.104,0.072]]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s14.mp3"},{"k":"s15","img":"assets/s15.jpg","map":"assets/s15-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.511,0.58],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s15-0","type":"c","auto":[0.22,0.75,0.2679]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s15.mp3"},{"k":"s16","img":"assets/s16.jpg","map":"assets/s16-map.png","aspect":[9,16],"focus":0.683,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.492,0.483],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s16-0","type":"b","auto":[0.2585,0.7122,0.3125],"tip":[0.3366,0.6595]},{"id":"cap-s16-1","type":"c","auto":[0.1712,0.0896,0.2976]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s16.mp3"},{"k":"s17","img":"assets/s17.jpg","map":"assets/s17-map.png","aspect":[9,16],"focus":0.857,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.442,0.58],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s17-0","type":"b","auto":[0.2483,0.4624,0.2232],"spk":{"m":[0.2985,0.5727],"e":[0.273,0.5566,0.0621,0.0456]},"avoid":[[0.521,0.1494,0.1115,0.0784],[0.2198,0.5175,0.1065,0.0782]]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s17.mp3"},{"k":"s18","img":"assets/s18.jpg","map":"assets/s18-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.51,0.534],"off":[0.004,0.03]},"caps_cfg":[{"id":"cap-s18-0","type":"b","auto":[0.6477,0.7398,0.2679],"tip":[0.5807,0.6789]},{"id":"cap-s18-1","type":"c","auto":[0.2001,0.1157,0.3571]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s19","img":"assets/s19.jpg","map":"assets/s19-map.png","aspect":[9,16],"focus":0.6,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.499,0.497],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s19-0","type":"b","auto":[0.5422,0.662,0.2381],"spk":{"m":[0.5042,0.5583],"e":[0.504,0.4929,0.1908,0.1289]},"avoid":[[0.3405,0.3824,0.3271,0.221]]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s19.mp3"},{"k":"s20","img":"assets/s20.jpg","map":"assets/s20-map.png","aspect":[9,16],"focus":0.87,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.506,0.539],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s20-0","type":"b","auto":[0.4596,0.303,0.2381],"tip":[0.4001,0.3557]},{"id":"cap-s20-1","type":"b","auto":[0.7515,0.6123,0.253],"tip":[0.6882,0.5514]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s20.mp3"},{"k":"s21","img":"assets/s21.jpg","map":"assets/s21-map.png","aspect":[9,16],"focus":0.873,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.51,0.492],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s21-0","type":"b","auto":[0.6303,0.1827,0.2381],"spk":{"m":[0.3725,0.1917],"e":[0.3625,0.1802,0.0449,0.0299]},"avoid":[[0.3241,0.1546,0.077,0.0513],[0.7442,0.5144,0.1021,0.0652],[0.762,0.21,0.086,0.0596]]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s21.mp3"},{"k":"s22","img":"assets/s22.jpg","map":"assets/s22-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.497,0.494],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s22-0","type":"b","auto":[0.784,0.1697,0.2381],"spk":{"m":[0.5049,0.2109],"e":[0.5032,0.1923,0.0561,0.0398]},"avoid":[[0.4551,0.1581,0.0961,0.0683]]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s22.mp3"},{"k":"s23","img":"assets/s23.jpg","map":"assets/s23-map.png","aspect":[9,16],"focus":0.839,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.506,0.5],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s23-0","type":"b","auto":[0.8,0.25,0.26],"tip":[0.4308,0.2162]},{"id":"cap-s23-1","type":"c","auto":[0.1638,0.0876,0.2679]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s24","img":"assets/s24.jpg","map":"assets/s24-map.png","aspect":[9,16],"focus":0.828,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.44,0.475],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s24-0","type":"b","auto":[0.7171,0.1873,0.253],"spk":{"m":[0.6889,0.3046],"e":[0.6927,0.2958,0.0309,0.0217]},"avoid":[[0.6661,0.2772,0.053,0.0373]]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s25","img":"assets/s25.jpg","map":"assets/s25-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.504,0.551],"off":[0.004,0.03]},"caps_cfg":[{"id":"cap-s25-0","type":"b","auto":[0.7201,0.2347,0.3423],"tip":[0.6345,0.3038],"avoid":[[0.5844,0.3736,0.1592,0.1321]]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s25.mp3"},{"k":"s26","img":"assets/s26.jpg","map":"assets/s26-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.481,0.533],"off":[0.004,0.03]},"caps_cfg":[{"id":"cap-s26-0","type":"b","auto":[0.7575,0.1614,0.2381],"tip":[0.698,0.2141]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s26.mp3"},{"k":"s27","img":"assets/s27.jpg","map":"assets/s27-map.png","aspect":[9,16],"focus":0.88,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.52,0.517],"off":[0.004,0.03]},"caps_cfg":[{"id":"cap-s27-0","type":"b","auto":[0.6587,0.6161,0.3274],"spk":{"m":[0.5487,0.4707],"e":[0.5221,0.3929,0.1906,0.155]},"avoid":[[0.3588,0.2601,0.3267,0.2657]]},{"id":"cap-s27-1","type":"c","auto":[0.1847,0.0789,0.3125]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s28","img":"assets/s28.jpg","map":"assets/s28-map.png","aspect":[9,16],"focus":0.874,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.497,0.549],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s28-0","type":"c","auto":[0.1867,0.093,0.2679]}],"zmin":1.04,"bed":"cave","fog":0.05},{"k":"s29","img":"assets/s29.jpg","map":"assets/s29-map.png","aspect":[9,16],"focus":0.737,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.58,0.541],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s29-0","type":"b","auto":[0.2236,0.3924,0.2381],"spk":{"m":[0.3548,0.3346],"e":[0.3703,0.2951,0.1121,0.0821]},"avoid":[[0.6081,0.583,0.2089,0.1346],[0.2743,0.2247,0.1921,0.1407]]},{"id":"cap-s29-1","type":"b","auto":[0.4945,0.7157,0.2381],"spk":{"m":[0.7294,0.6709],"e":[0.7125,0.6503,0.1219,0.0785]},"avoid":[[0.6081,0.583,0.2089,0.1346],[0.2743,0.2247,0.1921,0.1407]]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s29.mp3"},{"k":"s30","img":"assets/s30.jpg","map":"assets/s30-map.png","aspect":[9,16],"focus":0.547,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.58,0.484],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s30-0","type":"c","auto":[0.79,0.1243,0.3125]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s30.mp3"},{"k":"s31","img":"assets/s31.jpg","map":"assets/s31-map.png","aspect":[9,16],"focus":0.656,"camcfg":{"z":[1.04,1.12],"c0":[0.5,0.5],"c1":[0.503,0.513],"off":[0.005,0.024]},"caps_cfg":[{"id":"cap-s31-0","type":"c","auto":[0.1963,0.1081,0.2976]}],"zmin":1.04,"bed":"cave","fog":0.05,"vo":"assets/vo/s31.mp3"}],"fsk":{"c":1.25,"b":1.08}};
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DPR=Math.min(2,window.devicePixelRatio||1);
+const POOL=4;
+const clamp=(x,a,b)=>x<a?a:x>b?b:x, lerp=(a,b,t)=>a+(b-a)*t;
+const ss=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+const easeBack=t=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
+let vh=innerHeight,vw=innerWidth;
+
+/* ---------- blocks ---------- */
+const blocks=CFG.blocks.map(c=>{
+  const el=document.getElementById('b-'+c.k);
+  const box=c.stage?el.querySelector('.sticky'):el;
+  return Object.assign({},c,{el,box,media:el.querySelector('.media'),cam:el.querySelector('.cam'),att:el.querySelector('.att'),glw:el.querySelector('.glw'),
+    still:el.querySelector('.cam img'),vid:el.querySelector('.cam video'),fogs:[...el.querySelectorAll('.fog')],slot:null,noGL:!!c.nogl,caps:[],near:false,imgs:null,tf:'',p:0});
+});
+const B=Object.fromEntries(blocks.map(b=>[b.k,b]));
+
+/* ---------- images ---------- */
+function loadImgs(b){
+  if(b.imgs)return;
+  const mk=src=>{const i=new Image();i.decoding='async';i.src=src;return i};
+  b.imgs={c:mk(b.img),m:mk(b.map)};if(b.fg)b.imgs.f=mk(b.fg);
+}
+const ok=i=>!i||(i.complete&&i.naturalWidth>0);const ready=b=>b.imgs&&ok(b.imgs.c)&&ok(b.imgs.m)&&ok(b.imgs.f);
+
+/* ---------- WebGL ---------- */
+const VS='attribute vec2 a;varying vec2 v;void main(){v=vec2(a.x*.5+.5,.5-a.y*.5);gl_Position=vec4(a,0.,1.);}';
+const FS=`precision mediump float;varying vec2 v;uniform sampler2D tc,td,tf;uniform vec4 view;uniform vec2 off,dc,fc,fo;uniform float focus,t,dz,dark,gmode,gamt,fgOn,fz,bl,dv,lid;uniform vec3 gtint;uniform vec4 tw;uniform float wat;uniform vec2 wdir;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}
+void main(){vec2 uv=(v-.5)*view.xy+view.zw;vec2 p=uv;float d;
+for(int i=0;i<3;i++){d=texture2D(td,p).r;p=uv-off*(d-focus)+(uv-dc)*dz*(focus-d);}
+vec3 c=texture2D(tc,p).rgb;
+if(bl>.0005){vec3 a=c;for(int i=0;i<8;i++){float an=float(i)*.7854;a+=texture2D(tc,p+vec2(cos(an),sin(an)*.5625)*bl).rgb+texture2D(tc,p+vec2(cos(an+.39),sin(an+.39)*.5625)*bl*.5).rgb;}c=a/17.;}
+if(dv>.0005){c=mix(c,texture2D(tc,p+vec2(dv,dv*.25)).rgb,.42);}
+vec4 mp=texture2D(td,p);float fb=mp.b*gamt;float sm=(1.-mp.a)*2.*gamt;
+if(sm>.01&&wat>.5){vec2 dr=normalize(wdir),nr=vec2(-dr.y,dr.x);float fa=dot(p,dr),fb2=dot(p,nr);
+ float n1=vn(vec2(fb2*150.,fa*8.-t*2.4)),n2=vn(vec2(fb2*290.,fa*15.-t*3.9));
+ vec2 ds=dr*(n1-.5)*.014*sm+nr*(n2-.5)*.004*sm;vec3 ac=vec3(0.);
+ for(int i=0;i<5;i++){ac+=texture2D(tc,p+ds+dr*(float(i)-2.)*.0045*sm).rgb;}
+ float st=smoothstep(.6,.92,n1*.55+n2*.45);c=mix(c,ac/5.,clamp(sm*1.1,0.,1.))+sm*st*vec3(.09,.12,.15);}
+else if(sm>.01){vec2 q=p*vec2(16.,10.)+vec2(-t*.06,t*.35);vec2 ds=vec2(vn(q)-.5,vn(q*1.9+5.3)-.5)*.011*sm;vec3 c2=texture2D(tc,p+ds).rgb;float dn=vn(p*vec2(11.,7.)+vec2(-t*.05,t*.28))*.65+vn(p*vec2(23.,15.)+vec2(-t*.08,t*.5))*.35;c=mix(c,c2,clamp(sm*1.2,0.,1.));c*=1.+sm*(dn-.5)*.55;}
+float inT=step(tw.x,p.x)*step(p.x,tw.z)*step(tw.y,p.y)*step(p.y,tw.w);
+if(fb>.01&&inT>.5){float s=vn(p*vec2(210.,118.)+vec2(t*1.1,-t*.8));s=s*s*s*s;float br=.5+.5*sin(t*.9);c*=1.+fb*(s*1.6+br*.18);c+=fb*gtint*(s*.75+br*.1);}
+else if(fb>.01){
+ if(gmode<.5){float n=vn(vec2(p.x*90.,p.y*50.+t*2.2))*.62+vn(vec2(p.x*190.,p.y*105.+t*4.3))*.38;float k=(n-.5)*1.5+.1*sin(t*7.+p.x*30.);c*=1.+fb*k*.42;c+=fb*max(k,0.)*vec3(.15,.07,0.);}
+ else{float k=.5+.35*sin(t*1.05+p.x*7.)+.15*sin(t*.61+p.y*11.);c*=1.+fb*(k-.5)*.55;c+=fb*max(k-.45,0.)*gtint*.4;}
+}
+if(fgOn>.5){vec2 pf=fc+(uv-fc)/fz+fo;float a=texture2D(td,pf).g*step(0.,pf.x)*step(pf.x,1.)*step(0.,pf.y)*step(pf.y,1.);c=mix(c,texture2D(tf,pf).rgb,a);}
+if(lid<5.){float e=abs(v.y-.5)*2.+2.4*(v.x-.5)*(v.x-.5);c*=1.-smoothstep(lid-.14,lid,e);}
+gl_FragColor=vec4(c*dark,1.);}`;
+const slots=[];let heroSlot=null;
+function makeSlot(){
+  const cv=document.createElement('canvas');cv.className='gl';cv.setAttribute('aria-hidden','true');
+  const gl=cv.getContext('webgl',{alpha:false,antialias:false,depth:false,stencil:false,premultipliedAlpha:false,powerPreference:'default'});
+  if(!gl)return null;
+  const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);return o};
+  const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);
+  if(!gl.getProgramParameter(pr,gl.LINK_STATUS))return null;
+  gl.useProgram(pr);
+  const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const al=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);
+  const U={};for(const n of['tc','td','tf','view','off','dc','focus','t','dz','dark','gmode','gamt','gtint','fgOn','fz','fc','fo','bl','dv','lid','tw','wat','wdir'])U[n]=gl.getUniformLocation(pr,n);
+  gl.uniform1i(U.tc,0);gl.uniform1i(U.td,1);gl.uniform1i(U.tf,2);
+  const tex=()=>{const x=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,x);
+    for(const[k,v]of[[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]])gl.texParameteri(gl.TEXTURE_2D,k,v);return x};
+  const s={cv,gl,U,tc:tex(),td:tex(),tf:tex(),owner:null,dead:false,shown:false};
+  gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,s.tf);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,1,1,0,gl.RGB,gl.UNSIGNED_BYTE,new Uint8Array([0,0,0]));
+  cv.addEventListener('webglcontextlost',e=>{e.preventDefault();lose(s)},false);
+  return s;
+}
+function lose(s){
+  if(s.dead)return;s.dead=true;const b=s.owner;
+  if(b){b.noGL=true;b.slot=null;b.still.style.visibility='visible';clearTimeout(b.hideT)}
+  s.cv.remove();const i=slots.indexOf(s);if(i>=0)slots.splice(i,1);if(s===heroSlot)heroSlot=null;
+}
+function sizeCanvas(b){
+  const s=b.slot;if(!s)return;let w=b.cw*DPR,h=b.ch*DPR;const k=Math.min(1,1920/Math.max(w,h));
+  w=Math.max(2,Math.round(w*k));h=Math.max(2,Math.round(h*k));if(s.cv.width!==w||s.cv.height!==h){s.cv.width=w;s.cv.height=h}
+}
+function attach(b,s){
+  const gl=s.gl;s.owner=b;s.shown=false;b.slot=s;
+  const fx=b.media.querySelector('.fog');b.media.insertBefore(s.cv,fx||null);s.cv.style.opacity=0;
+  sizeCanvas(b);
+  gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL,gl.NONE);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
+  gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,s.tc);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,b.imgs.c);
+  gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,s.td);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,b.imgs.m);
+  if(b.imgs.f){gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,s.tf);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,b.imgs.f)}
+}
+function release(b){
+  const s=b.slot;if(!s)return;clearTimeout(b.hideT);b.still.style.visibility='visible';
+  s.cv.remove();s.owner=null;s.shown=false;b.slot=null;
+}
+function draw(b,t){
+  const s=b.slot;if(!s||s.dead)return;const gl=s.gl,U=s.U;if(gl.isContextLost())return;
+  gl.viewport(0,0,s.cv.width,s.cv.height);
+  gl.uniform4f(U.view,b.view[0],b.view[1],b.view[2],b.view[3]);gl.uniform2f(U.off,b.off[0],b.off[1]);gl.uniform2f(U.dc,b.dc[0],b.dc[1]);
+  gl.uniform1f(U.focus,b.focus);gl.uniform1f(U.t,t);gl.uniform1f(U.dz,b.dz);gl.uniform1f(U.dark,b.dark);
+  gl.uniform1f(U.bl,b.bl||0);gl.uniform1f(U.dv,b.dv||0);gl.uniform1f(U.lid,b.lid==null?9:b.lid);const T=b.tw||[2,2,-1,-1];gl.uniform4f(U.tw,T[0],T[1],T[2],T[3]);gl.uniform1f(U.fgOn,b.imgs.f?1:0);gl.uniform1f(U.fz,b.fz||1);gl.uniform2f(U.fc,b.fc[0],b.fc[1]);gl.uniform2f(U.fo,b.fo[0],b.fo[1]);gl.uniform1f(U.gmode,b.gmode||0);gl.uniform1f(U.wat,b.water?1:0);const WD=b.water||[0,1];gl.uniform2f(U.wdir,WD[0],WD[1]);gl.uniform1f(U.gamt,RM?0:1);const g=b.gtint||[1,.6,.3];gl.uniform3f(U.gtint,g[0],g[1],g[2]);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+  if(!s.shown){s.shown=true;requestAnimationFrame(()=>{if(b.slot===s)s.cv.style.opacity=1});
+    clearTimeout(b.hideT);b.hideT=setTimeout(()=>{if(b.slot===s&&!s.dead)b.still.style.visibility='hidden'},950);}
+}
+function managePool(){
+  const want=blocks.filter(b=>!b.hero&&!b.noGL&&b.near).sort((x,y)=>x.dist-y.dist).slice(0,POOL);
+  for(const b of blocks)if(!b.hero&&b.slot&&!want.includes(b))release(b);
+  const need=want.find(b=>!b.slot&&ready(b));
+  if(need){let s=slots.find(x=>!x.owner&&!x.dead);if(!s&&slots.length<POOL){s=makeSlot();if(s)slots.push(s)}if(s){try{attach(need,s)}catch(e){release(need);need.noGL=true}}}
+  const h=blocks.find(b=>b.hero);
+  if(h&&!h.noGL&&!h.slot&&ready(h)){if(!heroSlot)heroSlot=makeSlot();if(heroSlot){try{attach(h,heroSlot)}catch(e){release(h);h.noGL=true}}}
+}
+
+/* ---------- captions ---------- */
+function buildCaps(){
+  for(const b of blocks)for(const c of(b.caps_cfg||[])){
+    const el=document.getElementById(c.id);const tx=el.querySelector('.tx');const ty=tx.querySelector('.ty');
+    const text=ty.textContent;ty.textContent='';const spans=[];
+    for(const ch of text){const s=document.createElement('span');s.className='c';s.textContent=ch;ty.appendChild(s);spans.push(s)}
+    const spark=document.createElement('i');spark.className='spark';tx.appendChild(spark);
+    b.caps.push({cfg:c,el,pz:el.querySelector('.pz'),bx:el.querySelector('.bx'),tx,spans,spark,n:spans.length,r:-1,pop:-1,prev:new Float32Array(spans.length).fill(-1),box:null,tails:[...el.querySelectorAll('svg.tail')]});
+  }
+}
+// does any glyph spill past the text box's padding? (transform-proof: offsets, not screen rects)
+function inkOver(cp){const tx=cp.tx,pl=parseFloat(tx.style.paddingLeft)||0,pr=parseFloat(tx.style.paddingRight)||0,lim=tx.clientWidth-pr+.5;
+  for(const s of cp.spans){if(!s.textContent.trim())continue;const l=s.offsetLeft;if(l+s.offsetWidth>lim||l<pl-.5)return true}return false}
+function fitCap(b,cp){
+  const c=cp.cfg,Bw=b.Bw,Bh=b.Bh;let x,y,w,h;
+  const bw=Math.max(1.5,Bw*.0019);cp.el.style.setProperty('--bw',bw.toFixed(2)+'px');
+  const zmin=b.zmin||1.02,fmin=12.5/zmin,base=Bw/672,fk=(window.__fsk&&window.__fsk[c.type])||(CFG.fsk&&CFG.fsk[c.type])||1,f=Math.max(16*base,fmin)*fk,k=f/(16*base);
+  const pv=Math.max(5,10*base*k),ph=Math.max(5,10*base*k)+(c.type==='b'?Math.max(2,4*base*k):0);
+  cp.tx.style.padding=`0 ${ph.toFixed(1)}px`;cp.tx.style.fontSize=f.toFixed(2)+'px';
+  // start at the creator's width (scaled with the type), then shrink-wrap without adding lines
+  let Wm=Math.min(c.auto[2]*Bw*k,Bw*.92);cp.el.style.width=Wm+'px';while(inkOver(cp)&&Wm<Bw*.92){Wm=Math.min(Wm*1.06+2,Bw*.92);cp.el.style.width=Wm+'px'}const H0=cp.tx.offsetHeight;
+  let lo=Math.min(Wm,f*2.5+2*ph),hi=Wm;
+  for(let i=0;i<14;i++){const m=(lo+hi)/2;cp.el.style.width=m+'px';if(cp.tx.offsetHeight<=H0+.5&&cp.tx.scrollWidth<=cp.tx.clientWidth+1&&!inkOver(cp))hi=m;else lo=m}
+  w=Math.ceil(hi)+1;cp.el.style.width=w+'px';h=cp.tx.offsetHeight+2*pv*(c.type==='b'?1.25:1)+2*bw;
+  x=clamp(c.auto[0]*Bw-w/2,Bw*.02,Bw*.98-w);y=clamp(c.auto[1]*Bh-h/2,0,Bh-h);
+  if(c.avoid){ // keep the bubble off faces: move it the shortest way out of each avoid rect
+    for(const A of c.avoid){const ax=A[0]*Bw,ay=A[1]*Bh,aw=A[2]*Bw,ah=A[3]*Bh,m=Bw*.012;
+      if(x<ax+aw&&x+w>ax&&y<ay+ah&&y+h>ay){
+        const opts=[[0,ay-m-(y+h)],[0,ay+ah+m-y],[ax-m-(x+w),0],[ax+aw+m-x,0]]
+          .filter(([dx,dy])=>x+dx>=Bw*.02&&x+dx+w<=Bw*.98&&y+dy>=0&&y+dy+h<=Bh)
+          .sort((p,q)=>Math.hypot(...p)-Math.hypot(...q));
+        if(opts.length){x+=opts[0][0];y+=opts[0][1]}}}
+  }
+  if(c.tip){ // a grown bubble must not swallow its own tail tip: slide it clear
+    const tx=c.tip[0]*Bw,ty=c.tip[1]*Bh,m=Math.max(6,Bw*.025);
+    if(tx>x-m&&tx<x+w+m&&ty>y-m&&ty<y+h+m){
+      const opts=[[tx+m-x,0],[tx-m-(x+w),0],[0,ty+m-y],[0,ty-m-(y+h)]]
+        .filter(([dx,dy])=>x+dx>=Bw*.02&&x+dx+w<=Bw*.98&&y+dy>=0&&y+dy+h<=Bh)
+        .sort((p,q)=>Math.hypot(...p)-Math.hypot(...q));
+      if(opts.length){x+=opts[0][0];y+=opts[0][1]}
+    }
+  }
+  Object.assign(cp.el.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'});
+  cp.box=[x,y,w,h];
+  if(c.type==='b'){cp.bx.style.borderRadius=Math.min(h/2,w/2,Bw*.06)+'px';drawTail(b,cp)}
+}
+// captions laid out at the creator's positions can collide once phone type is scaled up: keep narration where it is
+// and slide any speech bubble that lands on another caption the shortest way clear (never onto its own tail tip or a face)
+function placeCaps(b){
+  const Bw=b.Bw,Bh=b.Bh,m=Bw*.014,top=b.stage?Bh*.03:Bh*.105+8,bot=b.stage?Bh*.97:Bh*.895-8;
+  const order=b.caps.filter(c=>c.box).sort((p,q)=>(p.cfg.type==='c'?0:1)-(q.cfg.type==='c'?0:1));
+  // first bring everything inside the safe band (the runtime bleed guard would otherwise push it onto its neighbours)
+  for(const cp of order){const [x,y,w,h]=cp.box,Y=clamp(y,top,Math.max(top,bot-h));if(Y!==y){cp.box=[x,Y,w,h];cp.el.style.top=Y+'px';if(cp.cfg.type==='b')drawTail(b,cp)}}
+  const placed=[],hit=(x,y,w,h,R)=>x<R[0]+R[2]+m&&x+w+m>R[0]&&y<R[1]+R[3]+m&&y+h+m>R[1];
+  for(const cp of order){let [x,y,w,h]=cp.box;const c=cp.cfg;
+    if(placed.some(R=>hit(x,y,w,h,R))){
+      const obs=placed.slice();if(c.avoid)for(const A of c.avoid)obs.push([A[0]*Bw,A[1]*Bh,A[2]*Bw,A[3]*Bh]);
+      if(c.tip&&!c.spk)obs.push([c.tip[0]*Bw-3,c.tip[1]*Bh-3,6,6]);
+      const clash=(X,Y)=>obs.some(R=>hit(X,Y,w,h,R));let best=null;
+      const xs=[x],ys=[y];for(const R of obs){ys.push(R[1]+R[3]+m,R[1]-m-h);xs.push(R[0]+R[2]+m,R[0]-m-w)}
+      for(const nx of xs)for(const ny of ys){const X=clamp(nx,Bw*.02,Bw*.98-w),Y=clamp(ny,top,Math.max(top,bot-h));
+        if(clash(X,Y))continue;const d=Math.hypot(X-x,Y-y);if(!best||d<best[2])best=[X,Y,d]}
+      if(best){x=best[0];y=best[1];cp.box=[x,y,w,h];Object.assign(cp.el.style,{left:x+'px',top:y+'px'});if(c.type==='b')drawTail(b,cp)}
+    }
+    placed.push([x,y,w,h]);
+  }
+  // keep tails short: if a speaker sits far from their bubble, slide the bubble toward them (never onto a face or another caption)
+  for(const cp of order){const c=cp.cfg;if(!c.spk)continue;const G=tailGeom(b,c,cp.box),Lm=Bw*TAIL_MAX;if(!G||G.L<=Lm)continue;
+    const need=G.L-Lm*.7,obs=b.caps.filter(o=>o!==cp&&o.box).map(o=>o.box).concat((c.avoid||[]).map(A=>[A[0]*Bw,A[1]*Bh,A[2]*Bw,A[3]*Bh]));
+    const [x,y,w,h]=cp.box;
+    for(const f of [1,.8,.6,.4,.2]){const X=clamp(x-G.dx*need*f,Bw*.02,Bw*.98-w),Y=clamp(y-G.dy*need*f,top,Math.max(top,bot-h));
+      if(!obs.some(R=>hit(X,Y,w,h,R))){cp.box=[X,Y,w,h];Object.assign(cp.el.style,{left:X+'px',top:Y+'px'});break}}
+    drawTail(b,cp)}
+}
+// tail geometry: ray from the speaker's mouth to the nearest point of the bubble; the tail may only cover the stretch
+// outside the (padded) face ellipse, and never more than TAIL_MAX of the panel width
+const TAIL_MAX=.085;
+function tailGeom(b,c,box){const s=c.spk;if(!s)return null;const [x,y,w,h]=box,Bw=b.Bw,Bh=b.Bh;
+  const mx=s.m[0]*Bw,my=s.m[1]*Bh,g=Bw*.016,ex=s.e[0]*Bw,ey=s.e[1]*Bh,rx=s.e[2]*Bw+g,ry=s.e[3]*Bh+g;
+  const px=clamp(mx,x,x+w),py=clamp(my,y,y+h);let dx=px-mx,dy=py-my;const D=Math.hypot(dx,dy);if(D<1)return{px,py,dx:0,dy:-1,L:0};dx/=D;dy/=D;
+  const ax=(mx-ex)/rx,ay=(my-ey)/ry,bx=dx/rx,by=dy/ry,A=bx*bx+by*by,B2=2*(ax*bx+ay*by),C=ax*ax+ay*ay-1,disc=B2*B2-4*A*C;
+  const te=(C<0&&disc>0)?(-B2+Math.sqrt(disc))/(2*A):0;return{px,py,dx,dy,L:D-te}}
+function tipFor(b,cp){const c=cp.cfg,Bw=b.Bw,Lm=Bw*TAIL_MAX;
+  if(c.spk){const G=tailGeom(b,c,cp.box),L=clamp(G.L,Bw*.022,Lm);return[G.px-G.dx*L,G.py-G.dy*L]}
+  if(!c.tip)return null;const [x,y,w,h]=cp.box;let tx=c.tip[0]*Bw,ty=c.tip[1]*b.Bh;const px=clamp(tx,x,x+w),py=clamp(ty,y,y+h),D=Math.hypot(tx-px,ty-py);
+  if(D>Lm*1.2){tx=px+(tx-px)/D*Lm*1.2;ty=py+(ty-py)/D*Lm*1.2}return[tx,ty]}
+function drawTail(b,cp){
+  const c=cp.cfg,T=tipFor(b,cp);if(!T)return;const [x,y,w,h]=cp.box;const tx=T[0]-x,ty=T[1]-y;
+  // pick the side the tip lies beyond (by overshoot), not the nearest infinite line
+  const ox=tx<0?-tx:tx>w?tx-w:0,oy=ty<0?-ty:ty>h?ty-h:0;
+  const r=Math.min(h/2,w/2,b.Bw*.06),hw=Math.min(w,h)*.16;const bwi=(parseFloat(cp.el.style.getPropertyValue('--bw'))||2)+.6;let p1,p2;
+  if(oy>0||(ox===0)){const top=ty<h/2;const yy=top?0:h;const bx=clamp(tx,Math.min(r+hw,w/2),Math.max(w-r-hw,w/2));const k=top?1:-1;p1=[bx-hw,yy+k*bwi];p2=[bx+hw,yy+k*bwi]}
+  else{const left=tx<w/2;const xx=left?0:w;const lo=r+hw,hi=h-r-hw;const by=lo<=hi?clamp(ty,lo,hi):h/2;const k=left?1:-1;p1=[xx+k*bwi,by-hw];p2=[xx+k*bwi,by+hw]}
+  const pts=`${p1[0]},${p1[1]} ${tx},${ty} ${p2[0]},${p2[1]}`;
+  for(const s of cp.tails){const bw=parseFloat(cp.el.style.getPropertyValue('--bw'))||2;
+    s.setAttribute('width',w);s.setAttribute('height',h);s.setAttribute('viewBox',`0 0 ${w} ${h}`);
+    const pg=s.querySelector('polygon');pg.setAttribute('points',pts);if(s.classList.contains('under'))pg.setAttribute('stroke-width',bw*2)}
+}
+function typeCap(cp,r,accent,final){
+  if(Math.abs(r-cp.r)<1e-4)return;cp.r=r;const N=cp.n,f=r*(N+4);
+  for(let i=0;i<N;i++){let a=clamp((f-i)/4,0,1);a=Math.round(a*20)/20;if(a===cp.prev[i])continue;cp.prev[i]=a;const s=cp.spans[i].style;
+    if(a>=1){s.opacity=1;s.filter='';s.color=''}else if(a<=0){s.opacity=0;s.filter=''}else{s.opacity=a;s.filter=`blur(${(1-a)*2}px)`;s.color=accent}}
+  const lead=Math.floor(f-.5);const sp=cp.spark.style;
+  if(RM||r<=0||r>=1||lead<0||lead>=N){sp.opacity=0}else{const e=cp.spans[lead];sp.left=(e.offsetLeft+e.offsetWidth)+'px';sp.top=(e.offsetTop+e.offsetHeight*.5)+'px';sp.opacity=.95}
+}
+function popCap(cp,k){
+  if(Math.abs(k-cp.pop)<1e-4)return;cp.pop=k;
+  const s=k>=1?1:lerp(.35,1,easeBack(k));cp.pz.style.transform=`scale(${s.toFixed(4)})`;cp.pz.style.opacity=clamp(k*3,0,1);
+}
+
+/* ---------- layout ---------- */
+function layout(){
+  vh=innerHeight;vw=innerWidth;
+  for(const b of blocks){
+    b.cw=b.box.clientWidth;b.ch=b.box.clientHeight;
+    const iw=b.aspect[0],ih=b.aspect[1],s=Math.max(b.cw/iw,b.ch/ih);b.Bw=iw*s;b.Bh=ih*s;
+    for(const L of[b.cam,b.att,b.glw])if(L){L.style.width=b.Bw+'px';L.style.height=b.Bh+'px'}
+    b.tf='';sizeCanvas(b);
+    for(const cp of b.caps)fitCap(b,cp);
+    placeCaps(b);
+  }
+  sizeRain();
+  // keep the logo and the sound instruction above the fold on short screens (desktop, landscape)
+  const T=document.querySelector('.ttl');if(T&&B.title){const hh=B.title.ch,th=T.offsetHeight;T.style.top=Math.max(hh*.3,Math.min(hh*.57,vh-th-84))+'px'}
+}
+
+/* ---------- camera ---------- */
+function camera(b,r){
+  let z,cx,cy,ox=0,oy=0,dz=0,dark=1,dc=[.5,.5];const C=b.camcfg;
+  b.fz=1;b.fc=[.5,.5];b.fo=[0,0];b.bl=0;b.dv=0;b.lid=9;
+  if(b.stage){
+    const p=clamp(-r.top/Math.max(1,r.height-b.ch),0,1);b.p=p;
+    if(b.script==='crane'){ // crane: maze plate drifts slowly, cliff + climber layer rises and grows past it
+      const e=ss(0,1,p);z=lerp(1,1.1,e);cx=lerp(.54,.57,e);cy=lerp(.45,.53,e);oy=RM?0:.025*(1-2*p);
+      b.fz=RM?1.14:lerp(1.08,1.24,e);b.fc=[.77,.5];b.fo=[0,RM?.01:lerp(-.03,.055,e)];
+    }else if(b.script==='push'){ // slow push toward a target, background slides behind
+      const P=b.push||[1.2,.5,.4];const e=ss(0,1,p);z=lerp(1.0,P[0],e);cx=lerp(.5,P[1],e);cy=lerp(.5,P[2],e);oy=RM?0:.022*(1-2*p);ox=RM?0:.006*(1-2*p);
+    }else if(b.script==='pan'){ // drift from one framing to another
+      const P=b.pan,e=ss(0,1,p);z=lerp(P[0],P[3],e);cx=lerp(P[1],P[4],e);cy=lerp(P[2],P[5],e);oy=RM?0:.02*(1-2*p);
+    }else if(b.script==='wake'){ // eyes open: lids part, blink, double vision settles
+      const o1=.55*ss(.02,.16,p),bk=ss(.18,.22,p)-ss(.24,.32,p),o2=.85*ss(.3,.5,p);
+      b.lid=RM?9:Math.max(0,o1*(1-.92*bk))+o2;b.bl=RM?0:.02*(1-ss(.08,.56,p));b.dv=RM?0:.04*(1-ss(.12,.6,p));
+      z=lerp(1.03,1.1,ss(0,1,p));cx=.5;cy=lerp(.52,.48,p);oy=RM?0:.012*(1-2*p);
+      if(b.glw){const go=clamp(b.lid*1.15-.25,0,1).toFixed(3);if(b.glw.style.opacity!==go)b.glw.style.opacity=go}
+    }else{ // vertigo: hold on Arden, then dive into the dark below
+      const a=ss(0,.12,p),v=RM?0:ss(.14,.62,p),q=RM?0:ss(.68,.96,p);
+      z=lerp(1,1.04,a);z=lerp(z,1.22,v);cx=lerp(.5,.54,v);cy=lerp(.5,.44,v);dz=.26*v*(1-q);dc=[.54,.42];
+      z*=Math.pow(4.2,q);cx=lerp(cx,.2,q);cy=lerp(cy,.88,q);dark=1-ss(.8,.97,p);oy=RM?0:.02*(1-2*p)*(1-q);
+    }
+    const fade=Math.min(b.cw*.178,Math.max(0,b.box.getBoundingClientRect().top));b.media.style.setProperty('--fade',fade.toFixed(1)+'px');
+  }else{
+    const t=b.hero?clamp(-r.top/r.height,0,1):clamp((vh-r.top)/(vh+r.height),0,1);b.p=t;
+    z=RM?(C.z[0]+C.z[1])/2:lerp(C.z[0],C.z[1],t);cx=lerp(C.c0[0],C.c1[0],RM?.5:t);cy=lerp(C.c0[1],C.c1[1],RM?.5:t);
+    if(!RM){ox=C.off[0]*(1-2*t);oy=C.off[1]*(1-2*t)}
+  }
+  // cut-out foreground layer: scales/slides at its own rate over the scroll, so it separates from the background
+  if(b.fgp){const F=b.fgp,q=RM?.5:(b.stage?ss(0,1,b.p):b.p);b.fz=lerp(F.z[0],F.z[1],q);b.fc=F.c;b.fo=[lerp(F.o0[0],F.o1[0],q),lerp(F.o0[1],F.o1[1],q)]}
+  if(b.shakeT&&!RM){const e=performance.now()-b.shakeT;if(e<520){const a=Math.pow(1-e/520,2)*.016;cx+=Math.sin(e*.083)*a;cy+=Math.cos(e*.117)*a*.6;z*=1+a*.6}}
+  const sx=b.cw/(b.Bw*z),sy=b.ch/(b.Bh*z);cx=clamp(cx,sx/2,1-sx/2);cy=clamp(cy,sy/2,1-sy/2);
+  b.view=[sx,sy,cx,cy];b.off=[ox,oy];b.dz=dz;b.dark=dark;b.dc=dc;b.z=z;
+  const tf=`translate(${(b.cw/2-cx*b.Bw*z).toFixed(2)}px,${(b.ch/2-cy*b.Bh*z).toFixed(2)}px) scale(${z.toFixed(5)})`;
+  if(tf!==b.tf){b.tf=tf;for(const L of[b.cam,b.att,b.glw])if(L)L.style.transform=tf}
+  if(b.stage&&b.fogs.length)b.el.style.setProperty('--fo',((b.fog||.07)*dark).toFixed(3));
+}
+function updateCaps(b,r){
+  for(const cp of b.caps){
+    if(!cp.box)continue;const [x,y,w,h]=cp.box;
+    // nudge into view horizontally
+    const sl=b.cw/2+(x/b.Bw-b.view[2])*b.Bw*b.z,sr=sl+w*b.z,m=6;let dx=0,dy=0;
+    if(sl<m)dx=(m-sl)/b.z;else if(sr>b.cw-m)dx=-(sr-(b.cw-m))/b.z;
+    const stp=b.ch/2+(y/b.Bh-b.view[3])*b.Bh*b.z,sbt=stp+h*b.z;
+    // stay out of the bleed zones: the top 10% fades in over the panel above, the bottom 10% sits under the next panel
+    const mt=b.stage?Math.max(10,b.ch*.02):b.ch*.105+6,mb=b.stage?Math.max(10,b.ch*.02):b.ch*.105+6;
+    if(stp<mt)dy=(mt-stp)/b.z;else if(sbt>b.ch-mb)dy=-(sbt-(b.ch-mb))/b.z;
+    cp._dx=dx;cp._dy=dy;
+    let pop,typ;
+    if(RM){pop=1;typ=1}
+    else if(b.stage){const p=b.p,S=cp.cfg.sched||b.sched||[.03,.1,.1,.32,2,3];pop=ss(S[0],S[1],p);typ=clamp((p-S[2])/(S[3]-S[2]),0,1);const out=1-ss(S[4],S[5],p);const o=out.toFixed(3);if(cp.el.style.opacity!==o)cp.el.style.opacity=o}
+    else{const boxTop=r.top+(b.stage?0:0);const top=boxTop+b.ch/2+(y/b.Bh-b.view[3])*b.Bh*b.z,ctr=top+h*b.z/2;
+      pop=clamp((vh*.97-top)/(vh*.08),0,1);typ=clamp((vh*.9-ctr)/(vh*.36),0,1);}
+    cp.typ=typ;popCap(cp,pop);typeCap(cp,typ,cp.cfg.type==='b'?'#55640a':'#ffcf7a');
+  }
+  // a caption nudged down out of the top bleed must not land on the one below it: push that one along too
+  const L=b.caps.filter(c=>c.box).sort((p,q)=>p.box[1]-q.box[1]);
+  for(let i=0;i<L.length;i++)for(let j=i+1;j<L.length;j++){const A=L[i],C=L[j],[ax,ay,aw,ah]=A.box,[cx,cy,cw]=C.box;
+    if(ay+ah<=cy+2&&ax+A._dx<cx+C._dx+cw&&ax+A._dx+aw>cx+C._dx){const ov=ay+A._dy+ah+b.Bw*.012-(cy+C._dy);if(ov>0)C._dy+=ov}}
+  for(const cp of L){const nt=(cp._dx||cp._dy)?`translate(${cp._dx.toFixed(1)}px,${cp._dy.toFixed(1)}px)`:'';if(cp.nt!==nt){cp.nt=nt;cp.el.style.transform=nt}}
+}
+
+/* ---------- rain ---------- */
+const rc=document.getElementById('rain'),rx=rc.getContext('2d');let drops=[],rainOn=false,RW=0,RH=0;const RD=Math.min(1.5,DPR);
+function sizeRain(){RW=rc.clientWidth;RH=rc.clientHeight;rc.width=Math.round(RW*RD);rc.height=Math.round(RH*RD)}
+function rain(dt,str){
+  if(RM||str<.02){if(rainOn){rx.clearRect(0,0,rc.width,rc.height);rainOn=false}return}
+  rainOn=true;const want=Math.round(str*170*(RW*RH)/(400*800));
+  while(drops.length<want)drops.push(newDrop(true));if(drops.length>want)drops.length=want;
+  rx.setTransform(RD,0,0,RD,0,0);rx.clearRect(0,0,RW,RH);rx.lineCap='round';
+  for(const d of drops){d.y+=d.v*dt;d.x+=d.v*.11*dt;if(d.y-d.l>RH||d.x>RW+20)Object.assign(d,newDrop(false));
+    rx.strokeStyle=`rgba(196,212,226,${(d.a*str).toFixed(3)})`;rx.lineWidth=d.w;rx.beginPath();rx.moveTo(d.x,d.y);rx.lineTo(d.x-d.l*.11,d.y-d.l);rx.stroke()}
+}
+function newDrop(any){const z=Math.random();return{x:Math.random()*(RW+40)-30,y:any?Math.random()*RH:-Math.random()*60,v:900+z*900,l:10+z*22,w:.6+z*.8,a:.12+z*.22}}
+
+/* ---------- dust motes (scene 4 window light) ---------- */
+const dust=[];
+function setupDust(){
+  for(const b of blocks)if(b.dust){const cv=document.createElement('canvas');cv.className='dust';cv.style.position='absolute';
+    const [x,y,w,h]=b.dust;Object.assign(cv.style,{left:x*100+'%',top:y*100+'%',width:w*100+'%',height:h*100+'%'});b.glw.appendChild(cv);
+    const ps=[];for(let i=0;i<54;i++)ps.push({x:Math.random(),y:Math.random(),s:.5+Math.random()*1.4,ph:Math.random()*6.28,sp:.4+Math.random()*.8,vx:(Math.random()-.5)*.006,vy:-(.002+Math.random()*.006)});
+    dust.push({b,cv,cx:cv.getContext('2d'),ps});}
+}
+function drawDust(t,dt){
+  for(const D of dust){const b=D.b;if(!b.vis||RM){continue}const cv=D.cv,W=cv.clientWidth,H=cv.clientHeight;if(!W)continue;
+    const k=Math.min(2,DPR);if(cv.width!==Math.round(W*k)){cv.width=Math.round(W*k);cv.height=Math.round(H*k)}
+    const x=D.cx;x.setTransform(k,0,0,k,0,0);x.clearRect(0,0,W,H);
+    for(const p of D.ps){p.x+=(p.vx+.004*Math.sin(t*.3*p.sp+p.ph))*dt;p.y+=p.vy*dt;if(p.y<-.02){p.y=1.02;p.x=Math.random()}if(p.x<-.02)p.x=1.02;if(p.x>1.02)p.x=-.02;
+      const shaft=.35+.65*Math.pow(Math.max(0,Math.sin((p.x*.74+.13)*Math.PI*4)),2);const a=(.25+.35*Math.sin(t*p.sp+p.ph))*shaft*(1-p.y*.6);
+      if(a<=0)continue;x.fillStyle=`rgba(255,246,220,${a.toFixed(3)})`;x.beginPath();x.arc(p.x*W,p.y*H,p.s,0,6.283);x.fill()}}
+}
+
+/* ---------- sound (opt-in; everything synthesized except the music bed) ---------- */
+const SND=(()=>{
+  const S={on:false,ctx:null,music:false,voice:false};
+  const rng=()=>Math.random();
+  // ---- shared building blocks (work with AudioContext and OfflineAudioContext) ----
+  function noiseBuf(ctx,kind,secs){
+    const n=Math.floor(ctx.sampleRate*secs),b=ctx.createBuffer(2,n,ctx.sampleRate);
+    for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);let last=0,b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+      for(let i=0;i<n;i++){const w=rng()*2-1;
+        if(kind==='white')d[i]=w*.5;
+        else if(kind==='brown'){last=(last+.02*w)/1.02;d[i]=last*3.2}
+        else{b0=.99886*b0+w*.0555179;b1=.99332*b1+w*.0750759;b2=.969*b2+w*.153852;b3=.8665*b3+w*.3104856;b4=.55*b4+w*.5329522;b5=-.7616*b5-w*.016898;d[i]=(b0+b1+b2+b3+b4+b5+b6+w*.5362)*.11;b6=w*.115926}}
+      // crossfade the loop seam
+      const f=Math.floor(ctx.sampleRate*.05);for(let i=0;i<f;i++){const a=i/f;d[i]=d[i]*a+d[n-f+i]*(1-a)}}
+    return b}
+  function reverb(ctx,secs,decay){
+    const n=Math.floor(ctx.sampleRate*secs),b=ctx.createBuffer(2,n,ctx.sampleRate);
+    for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<n;i++)d[i]=(rng()*2-1)*Math.pow(1-i/n,decay)}
+    const c=ctx.createConvolver();c.buffer=b;return c}
+  function engine(ctx,dest){
+    const E={ctx,buf:{white:noiseBuf(ctx,'white',7),brown:noiseBuf(ctx,'brown',7),pink:noiseBuf(ctx,'pink',7)}};
+    E.comp=ctx.createDynamicsCompressor();E.comp.threshold.value=-16;E.comp.ratio.value=3.5;E.comp.attack.value=.01;E.comp.release.value=.25;
+    E.master=ctx.createGain();E.master.gain.value=.9;E.master.connect(E.comp);E.comp.connect(dest);
+    E.voice=ctx.createGain();E.voice.gain.value=1;E.voice.connect(E.comp);
+    E.rev=reverb(ctx,3.2,2.6);E.revIn=ctx.createGain();E.revIn.gain.value=.5;E.revIn.connect(E.rev);E.rev.connect(E.master);
+    E.bus=ctx.createGain();E.lp=ctx.createBiquadFilter();E.lp.type='lowpass';E.lp.frequency.value=18000;E.lp.Q.value=.5;
+    E.bus.connect(E.lp);E.lp.connect(E.master);
+    E.src=(kind,off)=>{const s=ctx.createBufferSource();s.buffer=E.buf[kind];s.loop=true;s.start(ctx.currentTime,(off==null?rng()*6:off));return s};
+    E.filt=(type,f,q)=>{const b=ctx.createBiquadFilter();b.type=type;b.frequency.value=f;if(q!=null)b.Q.value=q;return b};
+    E.gain=v=>{const g=ctx.createGain();g.gain.value=v;return g};
+    E.osc=(type,f)=>{const o=ctx.createOscillator();o.type=type;o.frequency.value=f;o.start();return o};
+    E.lfo=(f,depth,param)=>{const o=E.osc('sine',f),g=E.gain(depth);o.connect(g);g.connect(param);return o};
+    E.chain=(...n)=>{for(let i=0;i<n.length-1;i++)n[i].connect(n[i+1]);return n[n.length-1]};
+    // one-shot noise burst
+    E.burst=(t,kind,type,f,q,peak,att,dec,out,pan)=>{const s=ctx.createBufferSource();s.buffer=E.buf[kind];const fl=E.filt(type,f,q),g=E.gain(0);
+      s.connect(fl);fl.connect(g);let o=g;if(pan){const p=ctx.createStereoPanner();p.pan.value=pan;g.connect(p);o=p}o.connect(out||E.master);
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+att);g.gain.setTargetAtTime(0,t+att,dec/4);s.start(t,rng()*5);s.stop(t+att+dec*1.6+.05);return g};
+    E.tone=(t,type,f0,f1,peak,att,dec,out,glide)=>{const o=ctx.createOscillator();o.type=type;o.frequency.setValueAtTime(f0,t);if(f1!==f0)o.frequency.exponentialRampToValueAtTime(f1,t+(glide||dec));
+      const g=E.gain(0);o.connect(g);g.connect(out||E.master);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+att);g.gain.setTargetAtTime(0,t+att,dec/4);o.start(t);o.stop(t+att+dec*1.6+.05);return g};
+    return E}
+
+  // ---- scene beds: each returns {g} with g.gain at 0; level 1 = intended loudness ----
+  // ---- one-shot textures shared by the beds ----
+  function gull(E,t,out,k){k=k||1;const n=1+(rng()*3|0),pan=(rng()-.5)*1.4,f0=1250+rng()*500;
+    for(let i=0;i<n;i++){const tt=t+i*(.3+rng()*.14);const o=E.ctx.createOscillator();o.type='triangle';
+      o.frequency.setValueAtTime(f0,tt);o.frequency.linearRampToValueAtTime(f0*1.5,tt+.07);o.frequency.exponentialRampToValueAtTime(f0*.8,tt+.3);
+      const v=E.ctx.createOscillator();v.frequency.value=22;const vg=E.gain(f0*.03);v.connect(vg);vg.connect(o.frequency);
+      const bp=E.filt('bandpass',f0*1.3,2),gg=E.gain(0),p=E.ctx.createStereoPanner();p.pan.value=pan;
+      o.connect(bp);bp.connect(gg);gg.connect(p);p.connect(out);const sv=E.gain(.35);gg.connect(sv);sv.connect(E.revIn);
+      gg.gain.setValueAtTime(0,tt);gg.gain.linearRampToValueAtTime(.045*k,tt+.04);gg.gain.setTargetAtTime(0,tt+.2,.05);
+      o.start(tt);o.stop(tt+.5);v.start(tt);v.stop(tt+.5)}}
+  function creak(E,t,out,k){k=k||1;const d=.35+rng()*.6,o=E.ctx.createOscillator();o.type='sawtooth';const f=55+rng()*60;
+    o.frequency.setValueAtTime(f,t);o.frequency.linearRampToValueAtTime(f*(.7+rng()*.6),t+d);
+    const bp=E.filt('bandpass',500+rng()*500,5),g=E.gain(0);o.connect(bp);bp.connect(g);g.connect(out);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.08*k,t+d*.3);g.gain.linearRampToValueAtTime(0,t+d);o.start(t);o.stop(t+d+.05)}
+  // ---- scene beds: each returns {g} with g.gain at 0; level 1 = intended loudness ----
+  const BEDS={
+    hall(E){const g=E.gain(0);const rt=E.gain(.2);E.chain(E.src('brown'),E.filt('lowpass',110),rt,g);E.lfo(.05,.04,rt.gain);const roar=E.gain(.06);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.6,.025,roar.gain);E.chain(E.src('pink'),E.filt('bandpass',500,1.2),E.gain(.014),g);const sv=E.gain(.45);g.connect(sv);sv.connect(E.revIn);return {g,tick:(t)=>{if(rng()<.035){const o=E.gain(1);o.connect(g);const k=2+(rng()*4|0);for(let i=0;i<k;i++)E.burst(t+rng()*.35,'white','highpass',1400+rng()*2600,.7,.03+rng()*.07,.001,.006+rng()*.02,o,(rng()-.5)*.6)}if(rng()<.004){const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',900,2,.12,.002,.05,o)}}}},
+    study(E){const g=E.gain(0);
+      const roar=E.gain(.16);E.chain(E.src('brown'),E.filt('lowpass',300),roar,g);E.lfo(.3,.05,roar.gain);
+      E.chain(E.src('white'),E.filt('bandpass',1400,.6),E.gain(.035),g);
+      return {g,tick:(t)=>{if(rng()<.22){const o=E.gain(1);o.connect(g);E.burst(t,'white','highpass',1500+rng()*2500,.7,.04+rng()*.1,.001,.006+rng()*.02,o,(rng()-.5)*.6)}}}},
+    office(E){const g=E.gain(0);let next=0,tk=0;
+      E.chain(E.src('brown'),E.filt('lowpass',250),E.gain(.12),g);
+      E.chain(E.src('white'),E.filt('lowpass',700),E.gain(.07),g);
+      return {g,tick:(t)=>{if(t>=next){next=t+1;tk^=1;const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',tk?2700:2200,6,.5,.001,.02,o)}}}},
+    alley(E){const g=E.gain(0);
+      E.chain(E.src('white'),E.filt('highpass',900),E.filt('lowpass',7500),E.gain(.26),g);
+      E.chain(E.src('white'),E.filt('bandpass',1800,1.2),E.gain(.12),g);
+      const gl=E.gain(.22);E.chain(E.src('brown'),E.filt('lowpass',180),gl,g);E.lfo(.2,.08,gl.gain);
+      return {g,tick:(t)=>{if(rng()<.05){const o=E.gain(1);o.connect(g);E.tone(t,'sine',1300+rng()*900,700,.04,.003,.07,o)}}}},
+    shower(E){const g=E.gain(0);
+      E.chain(E.src('white'),E.filt('highpass',1400),E.filt('lowpass',9000),E.gain(.3),g);
+      const body=E.gain(.16);E.chain(E.src('pink'),E.filt('lowpass',900),body,g);E.lfo(.4,.03,body.gain);
+      return {g,tick:(t)=>{if(rng()<.3){const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',2000+rng()*4000,3,.05+rng()*.06,.001,.01+rng()*.02,o,(rng()-.5)*.7)}}}},
+    dream(E){const g=E.gain(0),lp=E.filt('lowpass',900);lp.connect(g);
+      for(const f of [110,164.8,220.5]){const og=E.gain(.035);E.chain(E.osc('sine',f),og,lp);E.lfo(.07+rng()*.05,.02,og.gain)}
+      const sh=E.filt('bandpass',3000,3),sg=E.gain(.03);E.chain(E.src('pink'),sh,sg,g);E.lfo(.05,1200,sh.frequency);
+      const sv=E.gain(.4);g.connect(sv);sv.connect(E.revIn);
+      return {g,tick:(t)=>{if(rng()<.02){const f=[880,1046.5,1318.5,1568][rng()*4|0];const o=E.gain(1);o.connect(g);E.tone(t,'sine',f,f,.012,.3,2.2,o)}}}},
+    harbour(E){const g=E.gain(0);
+      const lap=E.gain(.2);E.chain(E.src('brown'),E.filt('lowpass',520),E.filt('highpass',60),lap,g);E.lfo(.31,.11,lap.gain);
+      const sl=E.gain(.05);E.chain(E.src('pink'),E.filt('bandpass',1100,.8),sl,g);E.lfo(.23,.04,sl.gain);
+      const cr=E.gain(.07);E.chain(E.src('pink'),E.filt('bandpass',520,1.4),cr,g);E.lfo(.17,.03,cr.gain);
+      return {g,tick:(t)=>{if(rng()<.008)gull(E,t,g);if(rng()<.006)creak(E,t,g,.8);
+        if(rng()<.002){const o=E.gain(.5);o.connect(g);E.tone(t,'sine',880,880,.05,.002,1.6,o);E.tone(t,'sine',2210,2210,.02,.002,.9,o)}}}},
+    deck(E){const g=E.gain(0);
+      const wv=E.gain(.26);E.chain(E.src('brown'),E.filt('lowpass',700),wv,g);E.lfo(.11,.13,wv.gain);
+      const hs=E.gain(.06);E.chain(E.src('white'),E.filt('bandpass',2400,.7),hs,g);E.lfo(.11,.04,hs.gain);
+      const wd=E.filt('bandpass',500,1.5),wg=E.gain(.06);E.chain(E.src('pink'),wd,wg,g);E.lfo(.07,160,wd.frequency);
+      return {g,tick:(t)=>{if(rng()<.005)gull(E,t,g,.6);if(rng()<.007)creak(E,t,g);if(rng()<.004)E.burst(t,'white','bandpass',300,1,.12,.01,.25,g)}}},
+    cabin(E){const g=E.gain(0);
+      const wv=E.gain(.24);E.chain(E.src('brown'),E.filt('lowpass',260),wv,g);E.lfo(.09,.12,wv.gain);
+      E.chain(E.src('white'),E.filt('bandpass',3200,1.5),E.gain(.012),g);
+      return {g,tick:(t)=>{if(rng()<.016)creak(E,t,g,1.2)}}},
+    squall(E){const g=E.gain(0);
+      const wv=E.gain(.24);E.chain(E.src('brown'),E.filt('lowpass',600),wv,g);E.lfo(.08,.14,wv.gain);
+      const wd=E.filt('bandpass',650,4),wg=E.gain(.09);E.chain(E.src('pink'),wd,wg,g);E.lfo(.05,260,wd.frequency);E.lfo(.13,.05,wg.gain);
+      const rn=E.gain(.22);E.chain(E.src('white'),E.filt('highpass',1100),E.filt('lowpass',8000),rn,g);E.lfo(.21,.05,rn.gain);
+      E.chain(E.src('white'),E.filt('bandpass',2600,1.1),E.gain(.08),g);
+      return {g,tick:(t)=>{if(rng()<.08){const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',3000+rng()*3000,4,.035+rng()*.04,.001,.012,o,(rng()-.5)*.8)}if(rng()<.008)creak(E,t,g)}}},
+    ruins(E){const g=E.gain(0),c=E.ctx;
+      const bp=E.filt('bandpass',380,.7),w=E.gain(.3);E.chain(E.src('brown'),bp,w,g);E.lfo(.07,220,bp.frequency);E.lfo(.13,.22,w.gain);
+      const lp=E.filt('lowpass',380);const d1=E.osc('sine',55),d2=E.osc('sine',82.9);const dg=E.gain(.05);d1.connect(dg);d2.connect(dg);E.chain(dg,lp,g);
+      return {g,tick:(t)=>{if(rng()<.012){E.tone(t,'sine',1500,880,.05,.004,.09,E.revIn)}}}},
+    shore(E){const g=E.gain(0);
+      const surf=E.gain(.28);E.chain(E.src('pink'),E.filt('lowpass',1400),E.filt('highpass',120),surf,g);E.lfo(.09,.2,surf.gain);
+      const wash=E.gain(.08);E.chain(E.src('white'),E.filt('bandpass',3200,.6),wash,g);E.lfo(.09,.07,wash.gain);
+      const wd=E.filt('bandpass',520,1.5),wg=E.gain(.05);E.chain(E.src('pink'),wd,wg,g);E.lfo(.06,180,wd.frequency);
+      return {g,tick:(t)=>{if(rng()<.006)gull(E,t,g,.7)}}},
+    jungle(E){const g=E.gain(0);
+      E.chain(E.src('pink'),E.filt('lowpass',900),E.gain(.1),g);
+      const ins=E.gain(.025);E.chain(E.src('white'),E.filt('bandpass',5200,8),ins,g);E.lfo(7.5,.02,ins.gain);
+      const ins2=E.gain(.018);E.chain(E.src('white'),E.filt('bandpass',3900,10),ins2,g);E.lfo(5.3,.015,ins2.gain);
+      return {g,tick:(t)=>{
+        if(rng()<.02){const f=1800+rng()*1600,n=2+(rng()*3|0),o=E.gain(1),pan=E.ctx.createStereoPanner();pan.pan.value=(rng()-.5)*1.6;o.connect(pan);pan.connect(g);
+          for(let i=0;i<n;i++)E.tone(t+i*.12,'sine',f,f*(.8+rng()*.5),.03,.01,.09,o)}
+        if(rng()<.03){const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',1500+rng()*2500,6,.04,.002,.03,o,(rng()-.5)*.8)}}}},
+    cave(E){const g=E.gain(0);
+      const rum=E.gain(.14);E.chain(E.src('brown'),E.filt('lowpass',160),rum,g);E.lfo(.05,.04,rum.gain);
+      E.chain(E.src('pink'),E.filt('bandpass',420,3),E.gain(.03),g);
+      const sv=E.gain(.6);g.connect(sv);sv.connect(E.revIn);
+      return {g,tick:(t)=>{if(rng()<.025){const f=1100+rng()*1500,o=E.gain(1);o.connect(g);E.tone(t,'sine',f*1.6,f,.07,.001,.06,o,.03)}}}},
+    camp(E){const g=E.gain(0);
+      const roar=E.gain(.14);E.chain(E.src('brown'),E.filt('lowpass',320),roar,g);E.lfo(.4,.05,roar.gain);
+      E.chain(E.src('pink'),E.filt('lowpass',600),E.gain(.06),g);
+      return {g,tick:(t)=>{if(rng()<.28){const o=E.gain(1);o.connect(g);E.burst(t,'white','highpass',1500+rng()*2500,.7,.05+rng()*.12,.001,.006+rng()*.02,o,(rng()-.5)*.6)}
+        if(rng()<.01){const o=E.gain(1);o.connect(g);E.burst(t,'white','bandpass',900,2,.12,.002,.05,o)}}}},
+    deep(E){const g=E.gain(0),lp=E.filt('lowpass',420);lp.connect(g);
+      const bub=E.gain(.18);E.chain(E.src('brown'),E.filt('lowpass',300),bub,lp);E.lfo(.07,.06,bub.gain);
+      for(const f of [55,82.4]){E.chain(E.osc('sine',f),E.gain(.03),lp)}
+      return {g,tick:(t)=>{if(rng()<.05){const f=300+rng()*500,o=E.gain(1);o.connect(g);E.tone(t,'sine',f,f*1.8,.03,.002,.08,o,.06)}}}},
+    night(E){const g=E.gain(0);
+      const wv=E.gain(.3);E.chain(E.src('brown'),E.filt('lowpass',600),wv,g);E.lfo(.08,.16,wv.gain);
+      const hs=E.gain(.07);E.chain(E.src('white'),E.filt('bandpass',1800,.6),hs,g);E.lfo(.08,.05,hs.gain);
+      const wd=E.filt('bandpass',650,4),wg=E.gain(.1);E.chain(E.src('pink'),wd,wg,g);E.lfo(.05,260,wd.frequency);E.lfo(.13,.05,wg.gain);
+      return {g,tick:(t)=>{if(rng()<.01)creak(E,t,g)}}},
+  };
+  // ---- hits ----
+  const HITS={
+    boom(E,t,k){k=k||1;E.tone(t,'sine',72,30,.75*k,.01,2.2,E.master,1.6);E.burst(t,'brown','lowpass',120,.7,.5*k,.01,1.6);const s=E.gain(.35*k);s.connect(E.revIn);E.tone(t,'sine',72,30,1,.01,1.8,s,1.6)},
+    end(E,t){HITS.boom(E,t,.55)},
+    sting(E,t){const g=E.gain(0),lp=E.filt('lowpass',700);g.connect(lp);lp.connect(E.master);const s=E.gain(.4);lp.connect(s);s.connect(E.revIn);
+      for(const f of [73.4,77.8,110,116.5]){const o=E.ctx.createOscillator();o.type='sawtooth';o.frequency.value=f;o.connect(g);o.start(t);o.stop(t+4.2)}
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.11,t+.5);g.gain.setTargetAtTime(0,t+.7,.9);
+      E.tone(t+.05,'sine',1244,1244,.025,.3,2.5,s)},
+    deep(E,t){HITS.boom(E,t,.7)},
+    slap(E,t){const buf=E.sb&&E.sb.slap;if(buf){const s=E.ctx.createBufferSource();s.buffer=buf;const g=E.gain(.95);s.connect(g);g.connect(E.master);s.start(t)}HITS.boom(E,t+.2,buf?.55:.9)},
+    whoosh(E,t){const s=E.ctx.createBufferSource();s.buffer=E.buf.white;const bp=E.filt('bandpass',500,1.6),g=E.gain(0);s.connect(bp);bp.connect(g);g.connect(E.master);
+      bp.frequency.setValueAtTime(400,t);bp.frequency.exponentialRampToValueAtTime(2600,t+.22);bp.frequency.exponentialRampToValueAtTime(900,t+.4);
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(1.6,t+.16);g.gain.linearRampToValueAtTime(0,t+.42);s.start(t,rng()*4);s.stop(t+.5)},
+    smack(E,t){E.tone(t,'sine',130,45,1,.003,.35,E.master,.14);E.burst(t,'white','lowpass',2800,.7,.6,.002,.09);E.burst(t,'white','bandpass',4500,1.5,.3,.001,.05);E.burst(t+.01,'brown','lowpass',300,.7,.5,.003,.25);
+      const s=E.gain(.25);s.connect(E.revIn);E.burst(t,'white','bandpass',1500,.8,.5,.002,.15,s)},
+    thud(E,t){E.tone(t,'sine',85,38,.9,.004,.5,E.master,.3);E.burst(t,'brown','lowpass',220,.7,.9,.005,.5);E.burst(t+.12,'brown','lowpass',300,.7,.35,.005,.25)},
+    bell(E,t,k){k=k||1;const n=k>=1?5:2,gap=k>=1?.42:.9,s=E.gain(.45);s.connect(E.revIn);
+      for(let i=0;i<n;i++){const tt=t+i*gap,a=(k>=1?.16:.08)*(i?1:1.15);
+        [[1,1],[2,.5],[2.76,.45],[5.4,.22],[8.9,.1]].forEach(([r,amp],j)=>{const f=468*r;E.tone(tt,'sine',f,f,a*amp,.002,j?1.4:3.2);E.tone(tt,'sine',f*1.002,f*1.002,a*amp*.6,.002,j?1.2:2.8,s)});
+        E.burst(tt,'white','highpass',3500,.7,.12*k,.001,.03)}},
+    bellsoft(E,t){HITS.bell(E,t,.5)},
+    dread(E,t){const g=E.gain(0),lp=E.filt('lowpass',420);g.connect(lp);lp.connect(E.master);const s=E.gain(.5);lp.connect(s);s.connect(E.revIn);
+      for(const f of [41.2,43.65,61.7,92.5]){const o=E.ctx.createOscillator();o.type='sawtooth';o.frequency.value=f;o.connect(g);o.start(t);o.stop(t+6.5)}
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.13,t+3);g.gain.setTargetAtTime(0,t+3.4,.9);
+      lp.frequency.setValueAtTime(150,t);lp.frequency.linearRampToValueAtTime(520,t+3);E.burst(t+.5,'brown','lowpass',160,.7,.35,2.4,2.5)},
+  };
+  const BED_NAMES=Object.keys(BEDS);
+  // ---- live state ----
+  let E=null,beds={},ring=null,music=null,mg=null,cool={},lastTick=0,targets={};
+  const MUSIC_LEVEL=.42,VO_GAIN=1;
+  function start(){
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;
+    try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+    S.ctx=new AC();E=engine(S.ctx,S.ctx.destination);E.master.gain.value=0;E.voice.gain.value=0;
+    E.sb={};if(CFG.blocks.some(b=>(b.sfx||[]).some(x=>x[2]==='slap')))fetch('assets/slap.mp3').then(r=>r.arrayBuffer()).then(a=>new Promise((res,rej)=>S.ctx.decodeAudioData(a,res,rej))).then(buf=>{E.sb.slap=buf}).catch(()=>{});
+    for(const n of BED_NAMES){const b=BEDS[n](E);b.g.connect(E.bus);beds[n]=b;targets[n]=0}
+    // music: streamed, never decoded whole
+    try{music=new Audio();music.src='assets/music.mp3';music.loop=true;music.preload='auto';music.crossOrigin='anonymous';
+      const src=S.ctx.createMediaElementSource(music);mg=E.gain(0);src.connect(mg);mg.connect(E.master)}catch(e){music=null}
+    return true}
+  // ---- narration: one clip per panel, starts as the panel reaches the top of the screen ----
+  const VO_AT=.18;const VO={buf:{},loading:{},cur:null,want:null,wantT:0};
+  function voLoad(b){if(!b.vo||!S.ctx||VO.buf[b.k]||VO.loading[b.k])return;VO.loading[b.k]=1;
+    fetch(b.vo).then(r=>r.arrayBuffer()).then(a=>new Promise((res,rej)=>S.ctx.decodeAudioData(a,res,rej)))
+      .then(buf=>{VO.buf[b.k]=buf;delete VO.loading[b.k];if(VO.want===b&&performance.now()-VO.wantT<4000)voPlay(b)}).catch(()=>{delete VO.loading[b.k]})}
+  function voStop(f){if(!VO.cur)return;const c=VO.cur;VO.cur=null;const t=S.ctx.currentTime;c.g.gain.cancelScheduledValues(t);c.g.gain.setValueAtTime(c.g.gain.value,t);c.g.gain.linearRampToValueAtTime(0,t+f);try{c.s.stop(t+f+.05)}catch(e){}}
+  function duck(on){if(!E)return;const t=S.ctx.currentTime;E.bus.gain.setTargetAtTime(on?.6:1,t,on?.12:.6);if(mg&&S.music)mg.gain.setTargetAtTime(MUSIC_LEVEL*(on?.5:1),t,on?.12:.8)}
+  function voPlay(b){if(!S.voice||!E)return;const buf=VO.buf[b.k];if(!buf){VO.want=b;VO.wantT=performance.now();voLoad(b);return}
+    VO.want=null;voStop(.35);const t=S.ctx.currentTime+.06;const s=S.ctx.createBufferSource();s.buffer=buf;const g=E.gain(VO_GAIN);s.connect(g);g.connect(E.voice);s.start(t);
+    const c={s,g,k:b.k};VO.cur=c;(S.vlog||(S.vlog=[])).push(b.k);duck(true);s.onended=()=>{if(VO.cur===c){VO.cur=null;duck(false)}}}
+  function voFrame(blocks,vh){
+    for(const b of blocks){if(!b.vo)continue;const top=b.el.getBoundingClientRect().top,thr=vh*VO_AT;
+      if(top<vh*2.6&&top>-vh*1.5)voLoad(b);
+      if(S.justOn){if(top<=thr&&b.el.getBoundingClientRect().bottom>vh*.55){S.justOn=false;voPlay(b)}}
+      else if(b._vt!=null&&b._vt>thr&&top<=thr)voPlay(b);
+      b._vt=top}
+    S.justOn=false}
+  const CL={buf:{},loading:{},cur:{}};
+  function clipLoad(b){if(!b.vaud||!S.ctx||CL.buf[b.k]||CL.loading[b.k])return;CL.loading[b.k]=1;
+    fetch(b.vaud).then(r=>r.arrayBuffer()).then(a=>new Promise((res,rej)=>S.ctx.decodeAudioData(a,res,rej))).then(buf=>{CL.buf[b.k]=buf;delete CL.loading[b.k]}).catch(()=>{delete CL.loading[b.k]})}
+  function clipStop(b){const c=CL.cur[b.k];if(!c)return;delete CL.cur[b.k];const t=S.ctx.currentTime;c.g.gain.setTargetAtTime(0,t,.15);try{c.s.stop(t+.8)}catch(e){}}
+  function clip(b,off){if(!S.music||!E)return;const buf=CL.buf[b.k];if(!buf){clipLoad(b);return}clipStop(b);
+    const t=S.ctx.currentTime+.02,s=S.ctx.createBufferSource();s.buffer=buf;const g=E.gain(b.vlv||.8);s.connect(g);g.connect(E.bus);
+    try{s.start(t,Math.max(0,Math.min(off||0,buf.duration-.1)))}catch(e){return}CL.cur[b.k]={s,g};(S.log||(S.log=[])).push('clip:'+b.k)}
+  function ensure(){if(!E&&!start())return false;if(S.ctx.state!=='running')S.ctx.resume();return true}
+  function sync(){S.on=S.music||S.voice;if(!S.on&&S.ctx)setTimeout(()=>{if(!S.on&&S.ctx&&S.ctx.state==='running')S.ctx.suspend()},700)}
+  // music button: music bed + ambience + hits
+  function setMusic(v){
+    if(v&&!ensure())return;if(!E){S.music=false;return}
+    S.music=v;const t=S.ctx.currentTime;
+    if(v){E.master.gain.cancelScheduledValues(t);E.master.gain.setTargetAtTime(.9,t,.25);
+      if(music){music.play().catch(()=>{});mg.gain.cancelScheduledValues(t);mg.gain.setValueAtTime(0,t);mg.gain.linearRampToValueAtTime(MUSIC_LEVEL*(VO.cur?.5:1),t+3)}}
+    else{E.master.gain.cancelScheduledValues(t);E.master.gain.setTargetAtTime(0,t,.15);setTimeout(()=>{if(!S.music&&music)music.pause()},700)}
+    sync()}
+  // narration button: voice-over only
+  function setVoice(v){
+    if(v&&!ensure())return;if(!E){S.voice=false;return}
+    S.voice=v;const t=S.ctx.currentTime;
+    if(v){S.justOn=true;E.voice.gain.cancelScheduledValues(t);E.voice.gain.setTargetAtTime(1,t,.05)}
+    else{voStop(.2);duck(false);E.voice.gain.cancelScheduledValues(t);E.voice.gain.setTargetAtTime(0,t,.15)}
+    sync()}
+  function hit(name,k){if(!S.music||!E||!HITS[name])return;const now=performance.now();if(cool[name]&&now-cool[name]<2500)return;cool[name]=now;(S.log||(S.log=[])).push(name);HITS[name](E,S.ctx.currentTime+.02,k)}
+  function frame(blocks,vh,now,endEl){
+    if(!E)return;if(S.voice)voFrame(blocks,vh);if(!S.music)return;const t=S.ctx.currentTime;const w={};for(const n of BED_NAMES)w[n]=0;
+    let best=null,bestCov=0,lp=18000,ringLv=0;
+    for(const b of blocks){const r=b.el.getBoundingClientRect();const cov=clamp((Math.min(vh,r.bottom)-Math.max(0,r.top))/vh,0,1);
+      if(b.bed&&cov>0)w[b.bed]=Math.max(w[b.bed],clamp(cov*1.4,0,1)*(b.bedLv||1));
+      if(cov>bestCov){bestCov=cov;best=b}
+      // scroll-triggered hits
+      if(b.sfx&&cov>0)for(const s of b.sfx){const [mode,thr,name]=s;let v;
+        if(mode==='p')v=b.p;else if(mode==='t')v=b.caps.length?b.caps[0].typ||0:0;else v=1-((r.top+r.bottom)/2)/vh;
+        const key=b.k+name;if(v>=thr&&!s.fired){s.fired=true;hit(name)}else if(v<thr-.15)s.fired=false}}
+    for(const b of blocks)if(b.vaud&&b.near)clipLoad(b);
+    if(endEl){const er=endEl.getBoundingClientRect();if(er.top<vh*.45&&!endEl._f){endEl._f=1;hit('end')}else if(er.top>vh*.9)endEl._f=0;
+      const ecov=clamp((vh-er.top)/vh,0,1);for(const n of BED_NAMES)w[n]*=1-.6*ecov}
+    for(const n of BED_NAMES){if(Math.abs(w[n]-targets[n])>.01){targets[n]=w[n];beds[n].g.gain.setTargetAtTime(w[n],t,1.1)}}
+    if(Math.abs(E.lp.frequency.value-lp)>20)E.lp.frequency.setTargetAtTime(lp,t,.35);
+    if(now-lastTick>45){lastTick=now;for(const n of BED_NAMES)if(targets[n]>.05)beds[n].tick(t+.05)}
+  }
+  document.addEventListener('visibilitychange',()=>{if(!music||!S.music)return;if(document.hidden)music.pause();else music.play().catch(()=>{})});
+  // offline level check (used by the test harness only)
+  async function measure(name,kind,secs){
+    const oc=new OfflineAudioContext(2,44100*secs,44100);const X=engine(oc,oc.destination);
+    if(kind==='bed'){const b=BEDS[name](X);b.g.connect(X.bus);b.g.gain.value=1;for(let tt=.05;tt<secs;tt+=.045)b.tick(tt)}
+    else HITS[name](X,.05);
+    const buf=await oc.startRendering();let pk=0,ss2=0;const L=buf.getChannelData(0),R=buf.getChannelData(1);
+    for(let i=0;i<L.length;i++){const a=Math.max(Math.abs(L[i]),Math.abs(R[i]));if(a>pk)pk=a;ss2+=(L[i]*L[i]+R[i]*R[i])/2}
+    const db=x=>Math.round(20*Math.log10(Math.max(1e-9,x))*10)/10;return{name,kind,rms:db(Math.sqrt(ss2/L.length)),peak:db(pk)}}
+  return Object.assign(S,{clip,clipLoad,clipStop,setMusic,setVoice,setOn:v=>{setMusic(v);setVoice(v)},hit,frame,measure,BED_NAMES,HIT_NAMES:Object.keys(HITS)});
+})();
+
+/* ---------- thunder ---------- */
+const flashEl=document.getElementById('flash');let flashT=-1,lastThunder=-1e9;
+function thunder(now,b){if(now-lastThunder<1500)return;lastThunder=now;flashT=now;if(b&&b.shake)b.shakeT=now;SND.hit(b&&b.shake?'punch':'thunder')}
+
+/* ---------- sparkles: tiny green glints that bloom and fade over the illustration ---------- */
+const sparkSets=[];
+function setupSparks(){
+  for(const b of blocks)if(b.sparks){const S=b.sparks;const cv=document.createElement('canvas');cv.className='sparks';cv.setAttribute('aria-hidden','true');cv.style.position='absolute';
+    const [x,y,w,h]=S.rect;Object.assign(cv.style,{left:x*100+'%',top:y*100+'%',width:w*100+'%',height:h*100+'%'});b.glw.appendChild(cv);
+    sparkSets.push({b,S,cv,cx:cv.getContext('2d'),act:[],next:0});}
+}
+function drawSparks(now){
+  for(const P of sparkSets){const b=P.b,S=P.S;if(!b.vis||RM)continue;const cv=P.cv,W=cv.clientWidth,H=cv.clientHeight;if(!W)continue;
+    const k=Math.min(2.5,DPR*(b.z||1)),bw=Math.round(W*k),bh=Math.round(H*k);if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh}
+    const [rx,ry,rw,rh]=S.rect,s=b.Bw/400;
+    const first=!P.act.length;
+    while(P.act.length<S.n&&(S.fill||now>=P.next)){
+      let px,py;const J=S.jit||[.03,.02];if(Math.random()<(S.fromPts==null?.7:S.fromPts)){const q=S.pts[(Math.random()*S.pts.length)|0];px=q[0]+(Math.random()-.5)*J[0];py=q[1]+(Math.random()-.5)*J[1]}
+      else{const a=Math.random()*6.283,r=Math.sqrt(Math.random());px=S.c[0]+Math.cos(a)*S.c[2]*r;py=S.c[1]+Math.sin(a)*S.c[3]*r}
+      const LF=S.life||[1300,2800],K=S.szk||1,DR=S.drift==null?1:S.drift;
+      const lf=LF[0]+Math.random()*(LF[1]-LF[0]);
+      P.act.push({x:px,y:py,t0:S.fill&&first?now-Math.random()*lf:now,life:lf,sz:(.55+Math.random()*.85)*s*K,dy:-(3+Math.random()*9)*s*DR,star:Math.random()<(S.star==null?.3:S.star)});
+      P.next=now+(S.gap!=null?S.gap*(.6+Math.random()*.8):110+Math.random()*170)}
+    const x=P.cx;x.setTransform(k,0,0,k,0,0);x.clearRect(0,0,W,H);x.globalCompositeOperation='lighter';
+    P.act=P.act.filter(p=>{const u=(now-p.t0)/p.life;if(u>=1)return false;const a=Math.pow(Math.sin(Math.PI*u),1.6)*.9;
+      const X=(p.x-rx)/rw*W,Y=(p.y-ry)/rh*H+p.dy*u,R=p.sz*(S.glow||5);
+      const g=x.createRadialGradient(X,Y,0,X,Y,R);const C1=S.col?S.col[0]:[140,255,160],C2=S.col?S.col[1]:[220,255,225];g.addColorStop(0,`rgba(${C1},${(a*.38).toFixed(3)})`);g.addColorStop(1,`rgba(${C1},0)`);
+      x.fillStyle=g;x.beginPath();x.arc(X,Y,R,0,6.283);x.fill();
+      x.fillStyle=`rgba(${C2},${a.toFixed(3)})`;x.beginPath();x.arc(X,Y,p.sz*.85,0,6.283);x.fill();
+      if(p.star){x.strokeStyle=`rgba(${C2},${(a*.65).toFixed(3)})`;x.lineWidth=.6;const L=p.sz*6;x.beginPath();x.moveTo(X-L,Y);x.lineTo(X+L,Y);x.moveTo(X,Y-L);x.lineTo(X,Y+L);x.stroke()}
+      return true});
+    x.globalCompositeOperation='source-over';}
+}
+
+/* ---------- scroll-scrubbed frame sequence (title card): the scroll position picks the frame ---------- */
+const seqs=[];
+function setupSeq(){for(const b of blocks)if(b.seq&&!RM){const S=b.seq,cv=document.createElement('canvas');cv.className='seq';cv.setAttribute('aria-hidden','true');cv.width=S.w;cv.height=S.h;b.cam.appendChild(cv);
+  const Q={b,S,cv,cx:cv.getContext('2d'),fr:new Array(S.n).fill(null),next:0,act:0,last:-1};
+  Q.pump=()=>{while(Q.act<4&&Q.next<S.n){const i=Q.next++,im=new Image();im.decoding='async';Q.act++;im.onload=()=>{Q.fr[i]=im;Q.act--;Q.pump()};im.onerror=()=>{Q.act--;Q.pump()};im.src=S.src.replace('###',String(i+1).padStart(3,'0'))}};
+  Q.pump();seqs.push(Q)}}
+function drawSeq(){for(const Q of seqs){const b=Q.b,S=Q.S;if(!b.near)continue;
+  const q=clamp((b.p-S.p[0])/(S.p[1]-S.p[0]),0,1);let i=Math.round(q*(S.n-1));while(i>0&&!Q.fr[i])i--;
+  const show=b.p>S.p[0]*.5&&!!Q.fr[i];if(Q.cv._on!==show){Q.cv._on=show;Q.cv.classList.toggle('on',show)}
+  if(show&&i!==Q.last){Q.last=i;Q.cx.drawImage(Q.fr[i],0,0,S.w,S.h)}}}
+
+/* ---------- video panels: play once when the panel arrives, then hold the last frame (never loop) ---------- */
+function video(b,r,now){
+  const v=b.vid;
+  if(!b.vload&&r.top<vh*2.2&&r.bottom>-vh){b.vload=true;v.preload='auto';try{v.load()}catch(e){}
+    v.addEventListener('playing',()=>{v.classList.add('on');if(!b.vclip){b.vclip=true;SND.clip(b,v.currentTime)}});}
+  if(RM)return;
+  const arrived=b.stage?(r.top<=1&&b.p>.02):(r.top<vh*.3||(Math.min(vh,r.bottom)-Math.max(0,r.top))/Math.max(1,r.height)>.8);
+  if(!b.vgo&&arrived&&b.vis&&now-(b.vtry||-1e9)>1200){b.vgo=true;b.vtry=now;try{v.currentTime=0}catch(e){}const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{b.vgo=false})}
+  // far off screen: rewind quietly so the next arrival starts from the opening frame (which matches the still)
+  if(b.vgo&&(r.top>vh*1.4||r.bottom<-vh*.6)){b.vgo=false;b.vclip=false;v.pause();try{v.currentTime=0}catch(e){}v.classList.remove('on');SND.clipStop(b)}
+}
+
+/* ---------- loop ---------- */
+let last=performance.now();const endEl=document.querySelector('.end'),lmEl=document.querySelector('.end .lm');const ttl=document.querySelector('.ttl');
+function frame(now){
+  const dt=Math.min(.05,(now-last)/1000);last=now;const t=RM?0:now/1000;
+  let rainStr=0;
+  for(const b of blocks){
+    const r=b.el.getBoundingClientRect();b.near=r.bottom>-vh*.5&&r.top<vh*1.5;b.vis=r.bottom>0&&r.top<vh;
+    if(r.top<vh*2.5&&r.bottom>-vh)loadImgs(b);
+    const br=b.stage?b.box.getBoundingClientRect():r;b.dist=Math.abs((br.top+br.bottom)/2-vh/2);
+    if(b.near){camera(b,r);updateCaps(b,r)}
+    if(b.vid)video(b,r,now);
+    if(b.shk&&b.vis&&!RM){const v=b.shk[0]==='c'?1-((r.top+r.bottom)/2)/vh:(b.caps.length?b.caps[0].typ||0:0);if(v>=b.shk[1]&&!b.shkF){b.shkF=true;b.shakeT=now}else if(v<b.shk[1]-.15)b.shkF=false}
+    if(b.thunder){
+      if(b.vis&&!b.fired&&b.caps.length&&b.caps[0].typ>=.8&&!RM){b.fired=true;thunder(now,b)}
+      if(b.fired&&r.top>vh*.9)b.fired=false;
+      b.rainNow=lerp(b.rainNow==null?b.rain:b.rainNow,b.fired?b.rain2:b.rain,clamp(dt*1.6,0,1));
+    }
+    const rv=b.rainNow!=null?b.rainNow:b.rain;
+    if(rv&&b.vis){const cov=(Math.min(vh,r.bottom)-Math.max(0,r.top))/vh;rainStr=Math.max(rainStr,rv*clamp(cov*1.6,0,1))}
+  }
+  managePool();drawSeq();
+  SND.frame(blocks,vh,now,endEl);
+  for(const b of blocks)if(b.slot&&b.vis)draw(b,t);
+  rain(dt,rainStr);drawDust(t,dt);drawSparks(now);
+  if(flashT>=0){const e=now-flashT;let f=0;for(const[t0,a]of[[0,1],[150,.55],[310,.85]])if(e>=t0)f+=a*Math.exp(-(e-t0)/120);
+    if(e>1400){flashT=-1;f=0}flashEl.style.opacity=clamp(f*.8,0,.9).toFixed(3)}
+  if(ttl){const h=B.title;const k=clamp(-h.el.getBoundingClientRect().top/(h.ch*.6),0,1);ttl.style.opacity=(1-k).toFixed(3)}
+  if(endEl){const er=endEl.getBoundingClientRect();const k=ss(vh*.98,vh*.5,er.top);for(const c of endEl.children)c.style.opacity=k.toFixed(3);
+    // the Lore Machine logo brushes on with the scroll, then glows and catches a sheen
+    if(lmEl){const lr=lmEl.getBoundingClientRect();const maxS=document.documentElement.scrollHeight-innerHeight,fin=lr.top-(maxS-scrollY),rv=RM?1:clamp((vh*.95-lr.top)/Math.max(1,vh*.95-fin)*1.18,0,1);const s=rv.toFixed(3);if(lmEl._rv!==s){lmEl._rv=s;lmEl.style.setProperty('--rev',s);lmEl.classList.toggle('done',rv>.995)}}}
+  requestAnimationFrame(frame);
+}
+
+/* ---------- init ---------- */
+buildCaps();setupDust();setupSparks();setupSeq();layout();
+for(const b of blocks)if(b.hero)loadImgs(b);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(layout,80)});
+requestAnimationFrame(()=>{ttl&&ttl.classList.add('on')});
+const sbs=[...document.querySelectorAll('[data-snd]')];let sndFirst=true,musicPref=true,unlockT=-1e9;
+// music is on by default; browsers only allow sound after the reader's first tap, click or key press
+function syncSnd(){for(const b of sbs){const m=b.dataset.snd==='music',on=m?musicPref:SND.voice;b.setAttribute('aria-pressed',String(!!on));b.classList.toggle('armed',m&&musicPref&&!SND.music);b.setAttribute('aria-label',(on?'Turn off ':'Turn on ')+(m?'music and sound effects':'narration'))}}
+function firstBoom(){if(sndFirst&&SND.music){sndFirst=false;const h=B.title.el.getBoundingClientRect();if(h.bottom>vh*.35)SND.hit('boom')}}
+function startMusic(){if(musicPref&&!SND.music){SND.setMusic(true);if(SND.music){unlockT=performance.now();firstBoom()}}}
+function toggleSnd(kind){
+  if(kind==='music'){if(performance.now()-unlockT<800){syncSnd();return}musicPref=!musicPref;SND.setMusic(musicPref);if(musicPref)firstBoom()}
+  else{startMusic();SND.setVoice(!SND.voice)}
+  syncSnd()}
+for(const b of sbs)b.addEventListener('click',e=>{e.preventDefault();toggleSnd(b.dataset.snd)});
+const unlock=e=>{if(e.type==='keydown'&&(e.key==='Escape'||e.key==='Tab'))return;startMusic();syncSnd()};
+for(const ev of ['pointerup','touchend','click','keydown'])addEventListener(ev,unlock,{capture:true,passive:true});
+const tapWord=document.querySelector('.sndhelp .tw');try{if(tapWord&&matchMedia('(hover:hover) and (pointer:fine)').matches)tapWord.textContent='Click'}catch(e){}
+syncSnd();
+requestAnimationFrame(frame);
+window.__construct={vid:k=>{const b=B[k];return b&&b.vid&&{t:b.vid.currentTime,paused:b.vid.paused,ended:b.vid.ended,on:b.vid.classList.contains('on'),loop:b.vid.loop,go:!!b.vgo}},snd:SND,pool:POOL,live:()=>slots.filter(s=>!s.dead).length+(heroSlot&&!heroSlot.dead?1:0),canvases:()=>document.querySelectorAll('canvas.gl').length,
+  lose:k=>{const b=B[k];if(b&&b.slot){const e=b.slot.gl.getExtension('WEBGL_lose_context');if(e){e.loseContext();return true}}return false},
+  state:k=>{const b=B[k];return b&&{slot:!!b.slot,noGL:b.noGL,still:b.still.style.visibility||'visible'}}};
+})();
+</script>
+</body>
+</html>

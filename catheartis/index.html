@@ -147,22 +147,26 @@ body{font-family:var(--font-title);-webkit-font-smoothing:antialiased;overflow-x
 .tbc{margin:0;font-size:14px;font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:#a99883}
 
 /* sound toggle */
-#snd{position:fixed;z-index:30;top:14px;right:calc(max(0px,(100vw - var(--col)) / 2) + 14px);width:44px;height:44px;border-radius:50%;display:grid;place-items:center;padding:0;background:rgba(8,8,12,.55);border:1px solid rgba(239,230,210,.35);color:var(--bone);cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:background .2s,border-color .2s,color .2s}
-#snd svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-#snd .spk{fill:currentColor;stroke:none}
-#snd .w1,#snd .w2{display:none}
-#snd[aria-pressed="true"] .w1,#snd[aria-pressed="true"] .w2{display:inline}
-#snd[aria-pressed="true"] .x{display:none}
-#snd[aria-pressed="true"]{border-color:rgba(255,170,90,.75);color:#ffd9a8}
-#snd:hover{background:rgba(24,18,14,.78)}
-#snd:focus-visible{outline:2px solid #ffd28a;outline-offset:3px}
-#snd.nudge{animation:sndnudge 2.4s 1.8s ease-in-out 3}
+#sndbar{position:fixed;z-index:30;top:14px;right:calc(max(0px,(100vw - var(--col)) / 2) + 14px);display:flex;gap:10px}
+.sb{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;padding:0;background:rgba(8,8,12,.55);border:1px solid rgba(239,230,210,.35);color:var(--bone);cursor:pointer;-webkit-tap-highlight-color:transparent;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:background .2s,border-color .2s,color .2s,box-shadow .2s}
+.sb svg{width:22px;height:22px}
+.sb .x{transition:opacity .2s}
+.sb[aria-pressed="true"] .x{opacity:0}
+.sb[aria-pressed="true"]{border-color:rgba(255,170,90,.75);color:#ffd9a8}
+.sb:hover{background:rgba(24,18,14,.78)}
+.sb:focus-visible{outline:2px solid #ffd28a;outline-offset:3px}
+.sb.armed{animation:sndnudge 2.4s ease-in-out infinite}
+.sndline{margin:2.6cqw 0 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.25em .5em;font-family:var(--font-title);font-weight:600;font-size:12px;line-height:1;letter-spacing:.22em;text-transform:uppercase;color:#e9c9a6;text-shadow:0 1px 3px #000;opacity:0}
+.go .sndline{animation:rise 1s 1.75s ease forwards}
+.sb.mini{width:2.6em;height:2.6em;letter-spacing:0;-webkit-backdrop-filter:none;backdrop-filter:none}
+.sb.mini svg{width:1.45em;height:1.45em}
 @keyframes sndnudge{0%,100%{box-shadow:0 0 0 0 rgba(255,170,90,0)}40%{box-shadow:0 0 0 7px rgba(255,170,90,.28)}}
-.snd-hint{position:fixed;z-index:30;top:29px;right:calc(max(0px,(100vw - var(--col)) / 2) + 68px);margin:0;font-family:var(--font-title);font-weight:600;font-size:12px;line-height:1;letter-spacing:.22em;text-transform:uppercase;color:#e9c9a6;text-shadow:0 1px 3px #000;opacity:0;transition:opacity .6s;pointer-events:none}
+.snd-hint{position:fixed;z-index:30;top:29px;right:calc(max(0px,(100vw - var(--col)) / 2) + 122px);margin:0;font-family:var(--font-title);font-weight:600;font-size:12px;line-height:1;letter-spacing:.22em;text-transform:uppercase;color:#e9c9a6;text-shadow:0 1px 3px #000;opacity:0;transition:opacity .6s;pointer-events:none}
 .snd-hint.show{opacity:1}
 
 @media (prefers-reduced-motion: reduce){
-  #snd.nudge{animation:none}
+  .sb.armed{animation:none}
+  .sndline{opacity:1!important;animation:none!important}
   .logo,.cue{opacity:1!important;transform:none!important;filter:none!important;animation:none!important}
   .slash,.glint,.ghost{display:none}
   .cue span{animation:none}
@@ -183,12 +187,12 @@ body{font-family:var(--font-title);-webkit-font-smoothing:antialiased;overflow-x
 /* ---------- Well of Fables + Built with Lore Machine ---------- */
 @property --rev{syntax:'<number>';inherits:false;initial-value:0}
 .wof{display:block;height:auto;max-width:none}
-.lockup .wof{width:min(40cqw,250px);opacity:0;position:relative;z-index:1}
+.lockup .wof{width:min(32cqw,200px);opacity:0;position:relative;z-index:1}
 .go .wof{animation:rise 1s 1.15s ease forwards}
 .lockup .logo{margin:calc(min(103cqw,672px) * -.125) 0 calc(min(103cqw,672px) * -.08)}
 .lockup .built{opacity:0;margin-top:1.5cqw}
 .go .built{animation:rise 1s 1.45s ease forwards}
-.end-lockup .wof{width:min(44cqw,270px)}
+.end-lockup .wof{width:min(35.2cqw,216px)}
 .end-lockup .logo{margin:calc(min(84cqw,504px) * -.115) 0 calc(min(84cqw,504px) * -.075)}
 .built{display:flex;flex-direction:column;align-items:center;gap:2.2cqw;width:100%}
 .built .bw{display:flex;align-items:center;gap:1em;font-size:11px;font-weight:600;line-height:1;letter-spacing:.42em;text-transform:uppercase;color:#c9a98a;padding-left:.42em}
@@ -209,10 +213,7 @@ body{font-family:var(--font-title);-webkit-font-smoothing:antialiased;overflow-x
 </head>
 <body>
 <canvas id="fx" aria-hidden="true"></canvas>
-<button id="snd" class="nudge" type="button" aria-pressed="false" aria-label="Turn sound on">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M3.5 9.2h3.8L12.5 5v14l-5.2-4.2H3.5z"/><path class="w1" d="M15.6 9.4a3.8 3.8 0 0 1 0 5.2"/><path class="w2" d="M18.2 6.8a7.6 7.6 0 0 1 0 10.4"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
-</button>
-<p class="snd-hint" aria-hidden="true">Tap for sound</p>
+<div id="sndbar"><button class="sb" type="button" data-snd="music" aria-pressed="false" aria-label="Turn on music"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/><path class="x" d="M4 4l16 16"/></svg></button><button class="sb" type="button" data-snd="sfx" aria-pressed="false" aria-label="Turn on sound effects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.0 2.5 L13.8 7.8 L18.7 5.3 L16.2 10.2 L21.5 12.0 L16.2 13.8 L18.7 18.7 L13.8 16.2 L12.0 21.5 L10.2 16.2 L5.3 18.7 L7.8 13.8 L2.5 12.0 L7.8 10.2 L5.3 5.3 L10.2 7.8Z"/><path class="x" d="M4 4l16 16"/></svg></button></div>
 
 <main class="strip">
   <section id="title">
@@ -227,6 +228,7 @@ body{font-family:var(--font-title);-webkit-font-smoothing:antialiased;overflow-x
         <img class="wof" src="assets/wof-logo.png" alt="Well of Fables presents" width="1100" height="402">
         <h1 style="margin:0"><img class="logo" src="assets/logo-glow.png" alt="Tales of Catheartis"></h1>
         <div class="built"><span class="bw">Built with</span><span class="lm" role="img" aria-label="Lore Machine"><img class="lmglow" src="assets/lm-glow.png" alt="" aria-hidden="true"><img class="lmlogo" src="assets/lm-logo.png" alt="" aria-hidden="true" width="2000" height="454"><i class="sheen" aria-hidden="true"></i></span></div>
+        <p class="sndline"><span class="tw">Tap</span> <button class="sb mini" type="button" data-snd="music" aria-pressed="false" aria-label="Turn on music"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/><path class="x" d="M4 4l16 16"/></svg></button> for music and <button class="sb mini" type="button" data-snd="sfx" aria-pressed="false" aria-label="Turn on sound effects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.0 2.5 L13.8 7.8 L18.7 5.3 L16.2 10.2 L21.5 12.0 L16.2 13.8 L18.7 18.7 L13.8 16.2 L12.0 21.5 L10.2 16.2 L5.3 18.7 L7.8 13.8 L2.5 12.0 L7.8 10.2 L5.3 5.3 L10.2 7.8Z"/><path class="x" d="M4 4l16 16"/></svg></button> for SFX</p>
       </div>
       <p class="cue">Scroll <span aria-hidden="true">↓</span></p>
       <div class="t-fade" aria-hidden="true"></div>
@@ -275,7 +277,7 @@ body{font-family:var(--font-title);-webkit-font-smoothing:antialiased;overflow-x
     </div>
   </section>
 
-  <section class="pn pnl" id="p4" data-top="fade" data-img="assets/p4-base.jpg" data-depth="assets/p4-depth.png" data-aux="assets/p4-box.png">
+  <section class="pn pnl" id="p4" data-top="fade" data-img="assets/p4.jpg" data-depth="assets/p4-depth.png" data-aux="assets/p4-box.png">
     <img class="fallback" loading="lazy" src="assets/p4.jpg" alt="From behind the throne: the king's jagged crown in the foreground, the young messenger approaching down the aisle between hooded knights, raising the black box.">
     <canvas class="gl" aria-hidden="true"></canvas>
     <div class="att glows" aria-hidden="true">
@@ -608,9 +610,12 @@ window.SND = (() => {
   const MUSIC_GAIN = 1.55; // about 3 dB up from the first pass, still under the effects
   const AC = window.AudioContext || window.webkitAudioContext;
   const rnd = (a, b) => a + Math.random() * (b - a);
-  const LAYERS = ['rain', 'wind', 'room', 'roar', 'chapel', 'drone', 'music'];
-  const MAXG = { rain: 0.2, wind: 0.42, room: 0.3, roar: 0.36, chapel: 1, drone: 0.19, music: 0.5 };
-  const BASE = { rain: 0, rainLP: 9000, wind: 0, room: 0, roar: 0, crackle: 0, chapel: 0, drone: 0, music: 0.32, heart: 0, hooves: 0, drips: 0 };
+  const LAYERS = ['rain', 'wind', 'room', 'roar', 'chapel', 'drone', 'music', 'clop', 'gallop'];
+  // recorded loops (file is periodic: 0.3 s of the loop either side, so loopStart/loopEnd stay seamless after decoding)
+  const LOOPS = { clop: { src: 'assets/sfx-horses.mp3', a: 0.3, b: 7.5 }, gallop: { src: 'assets/sfx-gallop.mp3', a: 0.3, b: 4.951 } };
+  const LBUF = {};
+  const MAXG = { rain: 0.2, wind: 0.42, room: 0.3, roar: 0.36, chapel: 1, drone: 0.19, music: 0.5, clop: 1.45, gallop: 0.6 };
+  const BASE = { rain: 0, rainLP: 9000, wind: 0, room: 0, roar: 0, crackle: 0, chapel: 0, drone: 0, music: 0.32, heart: 0, hooves: 0, drips: 0, clop: 0, gallop: 0 };
   const SCENES = {
     battle: { wind: 0.35, roar: 0.7, crackle: 0.9, music: 0.3 },
     storm: { rain: 1, wind: 0.75, music: 0.25 },
@@ -620,10 +625,10 @@ window.SND = (() => {
     echo: { room: 0.7, music: 0.3 },
     chapel: { rain: 0.3, rainLP: 600, room: 0.4, chapel: 0.9, music: 0.3 },
     courtyard: { rain: 0.85, wind: 0.35, crackle: 0.25 },
-    ride: { rain: 1, wind: 0.7, hooves: 1 },
+    ride: { rain: 1, wind: 0.7, gallop: 1 },
     ridge: { rain: 0.75, wind: 0.85, hooves: 0.35 },
     gate: { rain: 0.75, wind: 0.45, crackle: 0.3, roar: 0.1 },
-    streets: { rain: 0.6, wind: 0.3, hooves: 1, crackle: 0.12 },
+    streets: { rain: 0.6, wind: 0.3, clop: 1, crackle: 0.12 },
     estate: { rain: 0.6, wind: 0.4, crackle: 0.22 },
     ruin: { wind: 0.3, room: 0.35, drips: 0.9, drone: 0.35, rain: 0.2, rainLP: 1200 },
     pit: { drone: 1, roar: 0.25, crackle: 0.35, wind: 0.12, music: 0.4 },
@@ -671,9 +676,11 @@ window.SND = (() => {
     const comp = c.createDynamicsCompressor();
     comp.threshold.value = -16; comp.knee.value = 12; comp.ratio.value = 3.5; comp.attack.value = 0.005; comp.release.value = 0.3;
     G.out.connect(comp); comp.connect(c.destination);
+    G.mus = gain(0); G.mus.connect(comp); // music track, separate from the effects track (G.out)
     G.rev = c.createConvolver(); G.rev.buffer = makeIR(c, 3.6, 2.6);
     G.revIn = gain(1); const revOut = gain(0.5);
     G.revIn.connect(G.rev); G.rev.connect(revOut); revOut.connect(G.out);
+    G.mrev = c.createConvolver(); G.mrev.buffer = G.rev.buffer; { const mo = gain(0.5); G.mrev.connect(mo); mo.connect(G.mus); }
     G.sfx = gain(1); G.sfx.connect(G.out);
     // rain: hiss whose brightness tells outdoors from indoors
     { const s = loop(G.white), hp = filt('highpass', 450, 0.5), lp = filt('lowpass', 9000, 0.3), g = gain(0); s.connect(hp); hp.connect(lp); lp.connect(g); g.connect(G.out); G.L.rain = g; G.rainLP = lp; }
@@ -699,16 +706,28 @@ window.SND = (() => {
       });
       G.L.drone = g; }
     // music bed: a dark D-minor drone until a real track is supplied
-    { const g = gain(0), send = gain(0.35); g.connect(G.out); g.connect(send); send.connect(G.revIn); G.L.music = g;
+    { const g = gain(0), send = gain(0.35); g.connect(G.mus); g.connect(send); send.connect(G.mrev); G.L.music = g;
       const lp = filt('lowpass', 420, 1.2); G.musicSynth = gain(1); lp.connect(G.musicSynth); G.musicSynth.connect(g); lfo(0.045, 220, lp.frequency);
       [[73.42, 0], [73.42, 8], [110, -5], [146.83, 4], [174.61, -3]].forEach(([f, d]) => {
         const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = d;
         const og = gain(0.055); lfo(0.05 + Math.random() * 0.05, 0.02, og.gain); o.connect(og); og.connect(lp); o.start();
       }); }
     ['crackle', 'heart', 'hooves', 'drips', 'drops'].forEach(n => { const g = gain(1); g.connect(G.out); G[n] = g; });
+    for (const k in LOOPS) { const g = gain(0), sd = gain(0.18); g.connect(G.out); g.connect(sd); sd.connect(G.revIn); G.L[k] = g; if (LBUF[k]) startLoop(G, k); }
     return G;
   }
 
+  function startLoop(Gx, k) {
+    const L = LOOPS[k], s = Gx.c.createBufferSource(); s.buffer = LBUF[k]; s.loop = true; s.loopStart = L.a; s.loopEnd = L.b;
+    s.connect(Gx.L[k]); s.start(0, L.a);
+  }
+  function loadLoops() {
+    for (const k in LOOPS) {
+      if (LBUF[k] || LOOPS[k].loading) continue; LOOPS[k].loading = true;
+      fetch(LOOPS[k].src).then(r => r.arrayBuffer()).then(a => new Promise((res, rej) => ctx.decodeAudioData(a, res, rej)))
+        .then(buf => { LBUF[k] = buf; if (G && G.c === ctx) startLoop(G, k); }).catch(() => { LOOPS[k].loading = false; });
+    }
+  }
   /* ---- one-shot helpers ---- */
   const pan = (G, v) => { const c = G.c; if (c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = v; return p; } return G.gain(1); };
   function burst(G, t, dur, buf) {
@@ -838,7 +857,7 @@ window.SND = (() => {
   };
 
   /* ---- live engine ---- */
-  let ctx = null, G = null, on = false, zones = [], scene = '', lev = Object.assign({}, BASE), levS = Object.assign({}, BASE), sch = {}, cool = {}, lastT = 0, chapelBell = 0;
+  let ctx = null, G = null, on = false, musicOn = false, sfxOn = false, zones = [], scene = '', lev = Object.assign({}, BASE), levS = Object.assign({}, BASE), sch = {}, cool = {}, lastT = 0, chapelBell = 0;
   function applyScene(name) {
     const S = Object.assign({}, BASE, SCENES[name] || {});
     const t = ctx.currentTime, tc = name === 'horror' ? 0.25 : 1.1;
@@ -863,7 +882,7 @@ window.SND = (() => {
   }
   function ready() { return on && ctx && ctx.state === 'running'; }
   function once(name, gap) { const t = performance.now(); if (cool[name] && t - cool[name] < gap) return false; cool[name] = t; return true; }
-  function hit(name, gap, ...args) { if (!ready() || !once(name, gap)) return; HIT[name](G, ctx.currentTime + 0.02, ...args); }
+  function hit(name, gap, ...args) { if (!sfxOn || !ready() || !once(name, gap)) return; HIT[name](G, ctx.currentTime + 0.02, ...args); }
 
   let musicEl = null;
   function startMusic() {
@@ -879,45 +898,73 @@ window.SND = (() => {
       const pr = musicEl.play(); if (pr && pr.catch) pr.catch(() => {});
     } catch (e) { /* the synthesized drone stays */ }
   }
-  async function enable() {
+  // called inside the reader's tap: the context is created and the music asked to play before anything is awaited
+  function ensure() {
     try {
       if (!ctx) {
         try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
-        ctx = new AC(); G = build(ctx);
+        ctx = new AC(); G = build(ctx); loadLoops();
       }
-      startMusic();
-      await ctx.resume();
-      on = true; scene = '';
-      G.out.gain.cancelScheduledValues(ctx.currentTime); G.out.gain.setTargetAtTime(0.85, ctx.currentTime, 0.4);
+      if (ctx.state !== 'running') { const pr = ctx.resume(); if (pr && pr.catch) pr.catch(() => {}); }
       return true;
-    } catch (e) { on = false; return false; }
+    } catch (e) { return false; }
   }
-  function disable() {
-    on = false;
-    if (!ctx) return;
-    G.out.gain.cancelScheduledValues(ctx.currentTime); G.out.gain.setTargetAtTime(0, ctx.currentTime, 0.12);
-    setTimeout(() => { if (!on && ctx) { ctx.suspend(); if (musicEl) musicEl.pause(); } }, 700);
+  function ramp(node, v, tc) { node.gain.cancelScheduledValues(ctx.currentTime); node.gain.setTargetAtTime(v, ctx.currentTime, tc); }
+  function settle() {
+    on = musicOn || sfxOn;
+    if (!on && ctx) setTimeout(() => { if (!musicOn && !sfxOn && ctx) { ctx.suspend(); if (musicEl) musicEl.pause(); } }, 700);
   }
-  document.addEventListener('visibilitychange', () => { if (!ctx) return; if (document.hidden) { ctx.suspend(); if (musicEl) musicEl.pause(); } else if (on) { ctx.resume(); if (musicEl) musicEl.play().catch(() => {}); } });
+  // music button: the music track only
+  function setMusic(v) {
+    if (v) { if (!ensure()) { musicOn = false; return false; } musicOn = true; scene = ''; startMusic(); ramp(G.mus, 0.85, 0.4); }
+    else { musicOn = false; if (ctx) { ramp(G.mus, 0, 0.12); setTimeout(() => { if (!musicOn && musicEl) musicEl.pause(); }, 700); } }
+    settle(); return musicOn;
+  }
+  // SFX button: ambience and hits only
+  function setSfx(v) {
+    if (v) { if (!ensure()) { sfxOn = false; return false; } sfxOn = true; scene = ''; ramp(G.out, 0.85, 0.4); }
+    else { sfxOn = false; if (ctx) ramp(G.out, 0, 0.12); }
+    settle(); return sfxOn;
+  }
+  document.addEventListener('visibilitychange', () => { if (!ctx) return; if (document.hidden) { ctx.suspend(); if (musicEl) musicEl.pause(); } else if (on) { ctx.resume(); if (musicEl && musicOn) musicEl.play().catch(() => {}); } });
 
-  /* ---- toggle ---- */
+  /* ---- buttons: music and sound effects, each on by default from the reader's first tap ---- */
   function wireButton() {
-    const btn = document.getElementById('snd'), hint = document.querySelector('.snd-hint');
-    if (!btn) return;
-    setTimeout(() => { if (!on && window.scrollY < innerHeight * 0.25) hint && hint.classList.add('show'); }, 1600);
+    const sbs = [...document.querySelectorAll('[data-snd]')], hint = null;
+    const tw = document.querySelector('.sndline .tw'); try { if (tw && matchMedia('(hover:hover) and (pointer:fine)').matches) tw.textContent = 'Click'; } catch (e) {}
+    if (!sbs.length) return;
+    let musicPref = true, sfxPref = true, unlockT = -1e9, first = true;
+    const LBL = { music: 'music', sfx: 'sound effects' };
+    const running = () => !!(ctx && ctx.state === 'running');
+    const whenRunning = f => { if (!ctx) return; if (ctx.state === 'running') f(); else ctx.resume().then(f).catch(() => {}); };
+    const sync = () => { for (const b of sbs) { const k = b.dataset.snd, pref = k === 'music' ? musicPref : sfxPref, live = (k === 'music' ? musicOn : sfxOn) && running();
+      b.setAttribute('aria-pressed', String(pref)); b.classList.toggle('armed', pref && !live); b.setAttribute('aria-label', (pref ? 'Turn off ' : 'Turn on ') + LBL[k]); } };
+    // the opening boom, if sound comes on while the reader is still on the title
+    const boom = () => { if (first && sfxOn) { first = false; if (zones.length && window.scrollY + innerHeight * 0.5 < zones[0][1]) hit('boom', 1000); } };
+    const start = () => {
+      let go = false;
+      if (musicPref && !musicOn) { setMusic(true); go = true; }
+      if (sfxPref && !sfxOn) { setSfx(true); go = true; }
+      if (go) { unlockT = performance.now(); hint && hint.classList.remove('show'); whenRunning(() => { boom(); sync(); }); }
+    };
+    const toggle = k => {
+      if (performance.now() - unlockT < 800) { sync(); return; } // the tap that started the sound doesn't also switch it off
+      if (k === 'music') { musicPref = !musicPref; setMusic(musicPref); }
+      else { sfxPref = !sfxPref; setSfx(sfxPref); if (sfxPref) whenRunning(boom); }
+      whenRunning(sync); sync();
+    };
+    for (const b of sbs) b.addEventListener('click', e => { e.preventDefault(); toggle(b.dataset.snd); });
+    const unlock = e => { if (e.type === 'keydown' && (e.key === 'Escape' || e.key === 'Tab')) return; start(); sync(); };
+    for (const ev of ['pointerup', 'touchend', 'click', 'keydown']) addEventListener(ev, unlock, { capture: true, passive: true });
+    setTimeout(() => { if (!running() && window.scrollY < innerHeight * 0.25) hint && hint.classList.add('show'); }, 1600);
     window.addEventListener('scroll', () => { if (window.scrollY > innerHeight * 0.25) hint && hint.classList.remove('show'); }, { passive: true });
-    btn.addEventListener('click', async () => {
-      hint && hint.classList.remove('show'); btn.classList.remove('nudge');
-      if (on) { disable(); btn.setAttribute('aria-pressed', 'false'); btn.setAttribute('aria-label', 'Turn sound on'); return; }
-      const ok = await enable();
-      btn.setAttribute('aria-pressed', ok ? 'true' : 'false'); btn.setAttribute('aria-label', ok ? 'Turn sound off' : 'Turn sound on');
-      if (ok && zones.length && window.scrollY + innerHeight * 0.5 < zones[0][1]) hit('boom', 1000);
-    });
+    sync();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireButton); else wireButton();
 
   return {
     setZones(z) { zones = z; },
+    loops: () => Object.keys(LBUF), setMusic, setSfx, state() { return { musicOn, sfxOn, ctx: ctx ? ctx.state : null, music: !!(musicEl && !musicEl.paused) }; },
     tick(y, vh) {
       if (!ready()) { lastT = 0; return; }
       const mid = y + vh * 0.5;
@@ -944,7 +991,7 @@ window.SND = (() => {
     /* offline level check: render a scene (and optionally a hit) and report loudness */
     async _render(sceneName, secs, hitName, arg) {
       const sr = 44100, off = new OfflineAudioContext(2, sr * secs, sr), g = build(off);
-      g.out.gain.value = 0.85;
+      g.out.gain.value = 0.85; g.mus.gain.value = 0.85;
       const S = Object.assign({}, BASE, SCENES[sceneName] || {});
       for (const k of LAYERS) g.L[k].gain.value = S[k] * MAXG[k];
       g.rainLP.frequency.value = S.rainLP;
@@ -1035,7 +1082,7 @@ window.SND = (() => {
   const FS = [
     '#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\nvarying vec2 v;',
     'uniform sampler2D ti,td,tg;uniform vec2 off,spot;uniform vec4 view,shA,shB,sL,sO;uniform vec3 tint,iris;',
-    'uniform float focus,flash,bright,vig,dark,lines,aspect,tm,fla,lift,sG,ft,lay;uniform vec4 lw;',
+    'uniform float focus,flash,bright,vig,dark,lines,aspect,tm,fla,lift,sG,ft,lay;uniform vec4 lw,lv,lk;',
     'float hsh(vec2 q){q=mod(q,289.);return fract(sin(dot(q,vec2(12.9898,78.233)))*43758.5453);}',
     'float vn(vec2 q){vec2 i=floor(q),f=fract(q);f=f*f*(3.-2.*f);return mix(mix(hsh(i),hsh(i+vec2(1.,0.)),f.x),mix(hsh(i+vec2(0.,1.)),hsh(i+vec2(1.,1.)),f.x),f.y);}',
     'float sdl(vec2 q){vec2 a=vec2(sL.x*aspect,sL.y),b=vec2(sL.z*aspect,sL.w),Q=vec2(q.x*aspect,q.y),d=b-a;return((Q.x-a.x)*d.y-(Q.y-a.y)*d.x)/length(d);}',
@@ -1052,14 +1099,19 @@ window.SND = (() => {
     ' d=texture2D(td,p).r;p=uv-off*(d-focus);',
     ' d=texture2D(td,p).r;p=uv-off*(d-focus);',
     ' vec4 dm=texture2D(td,p);',
-    ' vec3 c=texture2D(ti,p).rgb;',
+    ' float wx=1.,LD=0.;if(lay>.5){',
+    '  float wN=smoothstep(lk.x,lk.y,p.x)*(1.-smoothstep(lk.z,lk.w,p.x));wx=smoothstep(lw.x,lw.y,p.x)*(1.-smoothstep(lw.z,lw.w,p.x));',
+    '  float yb=lv.z-lift,t=smoothstep(yb-.008,yb+.022,p.y),fd=smoothstep(.2,.4,dm.r)*(1.-smoothstep(.6,.8,dm.r)),fw=smoothstep(.08,.3,dm.r)*(1.-smoothstep(.6,.8,dm.r));',
+    '  float L=p.y<yb?lift*smoothstep(lv.x,lv.y,p.y):max(lv.z+(p.y-yb)*(lv.w-lv.z)/(lv.w-yb)-p.y,0.);',
+    '  LD=L*mix(wx*fw,wN*fd,t);}',
+    ' vec3 c=texture2D(ti,p+vec2(0.,LD)).rgb;',
     ' float fb=dm.b*fla;',
     ' if(fb>.01){',
     '  float n=vn(vec2(p.x*90.,p.y*50.+ft*2.2))*.62+vn(vec2(p.x*190.,p.y*105.+ft*4.3))*.38;',
     '  float k=(n-.5)*1.5+.1*sin(ft*7.+p.x*30.);',
     '  c*=1.+fb*k*.42;c+=fb*max(k,0.)*vec3(.15,.07,0.);',
     ' }',
-    ' if(lay>.5){float wx=smoothstep(lw.x,lw.y,p.x)*(1.-smoothstep(lw.z,lw.w,p.x));vec4 sp=texture2D(tg,p+vec2(0.,lift*wx));c=mix(c,sp.rgb,sp.a);}',
+    ' if(lay>.5){vec4 sp=texture2D(tg,p+vec2(0.,lift*wx));c=mix(c,sp.rgb,sp.a);}',
     ' c+=texture2D(tg,p).rgb*flash;',
     ' if(shB.y>.001){',
     '  vec2 A=vec2(shA.x*.5625,shA.y),Bq=vec2(shA.z*.5625,shA.w),P=vec2(p.x*.5625,p.y),D=Bq-A;',
@@ -1090,7 +1142,7 @@ window.SND = (() => {
     ' if(edge<.006)c=mix(c,vec3(.91,.86,.77),1.-smoothstep(.0028,.0042,edge));',
     ' gl_FragColor=vec4(c,1.);',
     '}'].join('\n');
-  const UNI = ['ti', 'td', 'tg', 'off', 'spot', 'view', 'shA', 'shB', 'sL', 'sO', 'tint', 'iris', 'focus', 'flash', 'bright', 'vig', 'dark', 'lines', 'aspect', 'tm', 'fla', 'lift', 'sG', 'ft', 'lay', 'lw'];
+  const UNI = ['ti', 'td', 'tg', 'off', 'spot', 'view', 'shA', 'shB', 'sL', 'sO', 'tint', 'iris', 'focus', 'flash', 'bright', 'vig', 'dark', 'lines', 'aspect', 'tm', 'fla', 'lift', 'sG', 'ft', 'lay', 'lw', 'lv', 'lk'];
   const imgCache = {};
   function getImg(src) {
     if (!imgCache[src]) { const im = new Image(); im.decoding = 'async'; im.src = src; imgCache[src] = im; }
@@ -1163,7 +1215,7 @@ window.SND = (() => {
       gl.uniform1f(U.focus, u.focus); gl.uniform1f(U.flash, u.flash || 0); gl.uniform1f(U.bright, u.bright == null ? 1 : u.bright); gl.uniform1f(U.vig, u.vig == null ? 0.3 : u.vig);
       gl.uniform1f(U.dark, u.dark || 0); gl.uniform1f(U.lines, u.lines || 0); gl.uniform1f(U.aspect, u.aspect || 0.5625); gl.uniform1f(U.tm, u.tm || 0);
       gl.uniform1f(U.fla, RM ? 0 : (u.fla == null ? 1 : u.fla)); gl.uniform1f(U.lift, u.lift || 0); gl.uniform1f(U.ft, u.ft || 0);
-      gl.uniform1f(U.lay, u.lay ? 1 : 0); const lw = u.lw || [0, 0, 1, 1]; gl.uniform4f(U.lw, lw[0], lw[1], lw[2], lw[3]);
+      gl.uniform1f(U.lay, u.lay ? 1 : 0); const lw = u.lw || [0, 0, 1, 1]; gl.uniform4f(U.lw, lw[0], lw[1], lw[2], lw[3]); const lv = u.lv || [-2, -1, 2, 3]; gl.uniform4f(U.lv, lv[0], lv[1], lv[2], lv[3]); const lk = u.lk || [0, .1, .9, 1]; gl.uniform4f(U.lk, lk[0], lk[1], lk[2], lk[3]);
       const tn = u.tint || [0, 0, 0], sp = u.spot || [0.5, 0.45], ir = u.iris || [0.5, 0.5, 2];
       gl.uniform3f(U.tint, tn[0], tn[1], tn[2]); gl.uniform2f(U.spot, sp[0], sp[1]); gl.uniform3f(U.iris, ir[0], ir[1], ir[2]);
       const sa = u.shA || [0, 0, 1, 1], sb = u.shB || [0, 0, 0, 0];
@@ -1387,7 +1439,7 @@ window.SND = (() => {
     castle: { focus: 0.14, K: 0.05, Kx: 0.008, z0: 1.05, z1: 1.11, c1: [0.52, 0.47], zr: [0.25, 0.95], vig: 0.25, flash: true, glowBase: 0.18 },
     p2: { focus: 0.3, K: 0.05, Kx: 0.012, z0: 1.08, z1: 1.04, c1: [0.5, 0.52], zr: [0.1, 0.9], vig: 0.35 },
     p3: { focus: 0.42, K: 0.045, Kx: -0.012, z0: 1.04, z1: 1.11, c1: [0.48, 0.4], zr: [0.15, 0.85], vig: 0.3 },
-    p4: { focus: 0.32, K: 0.05, Kx: 0.01, z0: 1.05, z1: 1.09, c1: [0.5, 0.42], zr: [0.1, 0.9], vig: 0.35, lift: [0.024, 0.28, 0.62, [0.392, 0.434, 0.558, 0.6]] },
+    p4: { focus: 0.32, K: 0.05, Kx: 0.01, z0: 1.05, z1: 1.09, c1: [0.5, 0.42], zr: [0.1, 0.9], vig: 0.35, lift: [0.04, 0.3, 0.52, [0.385, 0.425, 0.57, 0.61], [0.35, 0.396, 0.455, 0.477], [0.415, 0.44, 0.56, 0.585]] },
     p5: { focus: 0.35, K: 0.055, Kx: 0, z0: 1.04, z1: 1.12, c1: [0.5, 0.4], zr: [0.1, 0.95], vig: 0.4 },
     s6: { focus: 0.5, K: 0.05, Kx: 0.01, z0: 1.05, z1: 1.13, c1: [0.5, 0.58], zr: [0.1, 0.95], vig: 0.45, pulse: 0.8,
       shine: { a: [0.665, 0.69], b: [0.27, 0.215], w: 0.11, matte: 1, at: 0.4 } },
@@ -1685,7 +1737,7 @@ window.SND = (() => {
           ox, oy, sx: v[0], sy: v[1], cx: v[2] - shx / P.W * v[0], cy: v[3] - shy / hV * v[1], focus: c.focus == null ? 0.5 : c.focus,
           flash: c.glowBase != null ? c.glowBase + fl : 0, bright, vig: c.vig,
           dark: st ? st.dark : 0, tint: st ? st.tint : null, spot: st ? st.spot : null, lines: st ? st.lines : 0, iris,
-          aspect: P.W / hV, tm: t * 0.001, ft: (t * 0.001) % 1000, lift, lay: !!c.lift, lw: c.lift ? c.lift[3] : null, shA: c.shine ? c.shine.a.concat(c.shine.b) : null, shB
+          aspect: P.W / hV, tm: t * 0.001, ft: (t * 0.001) % 1000, lift, lay: !!c.lift, lw: c.lift ? c.lift[3] : null, lv: c.lift ? c.lift[4] : null, lk: c.lift ? c.lift[5] : null, shA: c.shine ? c.shine.a.concat(c.shine.b) : null, shB
         }, split || {}));
       }
       const zz = (1 / v[0]) * (P.W / P.Wb);

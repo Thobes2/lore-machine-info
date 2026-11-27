@@ -102,6 +102,7 @@ canvas.gl{position:absolute;inset:0;width:100%;height:100%;display:block;opacity
 .sb svg{width:22px;height:22px;display:block}.sb .x{transition:opacity .2s}.sb[aria-pressed=true] .x{opacity:0}
 .sb.armed{animation:armed 2.4s ease-in-out infinite}@keyframes armed{0%,100%{box-shadow:0 0 0 1px rgba(225,239,1,.22),0 0 6px rgba(225,239,1,.15)}50%{box-shadow:0 0 0 1px rgba(225,239,1,.4),0 0 18px rgba(225,239,1,.38)}}
 .sb[aria-pressed=true]{color:#eef7a8;border-color:rgba(225,239,1,.85);box-shadow:0 0 0 1px rgba(225,239,1,.22),0 0 14px rgba(225,239,1,.25)}
+.sbw{position:relative;display:inline-flex}.vpop{position:absolute;left:50%;bottom:calc(100% + 8px);width:34px;height:118px;margin-left:-17px;border-radius:17px;background:rgba(4,10,4,.74);border:1px solid rgba(214,240,190,.38);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .18s,transform .18s,visibility 0s .18s;z-index:31}.vpop::before{content:'';position:absolute;left:-8px;right:-8px;bottom:-12px;height:12px}.sbw.open .vpop{opacity:1;visibility:visible;transform:none;transition:opacity .18s,transform .18s}.vpop input{position:absolute;left:50%;top:50%;width:96px;height:26px;margin:0;padding:0;transform:translate(-50%,-50%) rotate(-90deg);-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;touch-action:none;--v:100%}.vpop input:focus{outline:none}.vpop input:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px rgba(225,239,1,.45)}.vpop input::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(90deg,#e1ef01 var(--v),rgba(214,240,190,.25) var(--v))}.vpop input::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;margin-top:-5.5px;border-radius:50%;background:#eef7a8;border:0}.vpop input::-moz-range-track{height:4px;border-radius:2px;background:rgba(214,240,190,.25)}.vpop input::-moz-range-progress{height:4px;border-radius:2px;background:#e1ef01}.vpop input::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:#eef7a8;border:0}@media (prefers-reduced-motion:reduce){.vpop{transition:none!important}}
 .ttl h1{margin:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:inherit}
 .ttl img.aib{width:46%;margin-bottom:2.4%}
 .end .aibend{width:40%;height:auto;display:block;margin-bottom:-3.6vh}
@@ -763,7 +764,7 @@ const SND=(()=>{
       // sfxs: [mode, threshold, name, level]; mode 'b' / 'top' = how far the panel's bottom / top edge has risen up the screen
       // (.5 = mid-screen, 1 = top of screen); fires once on the way down, re-arms when scrolled back
       if(b.sfxv&&VF[b.k]){const c=VF[b.k],x=clamp(cov*1.6,0,1);if(Math.abs(x-c.tgt)>.01){c.tgt=x;c.g2.gain.setTargetAtTime(x,t,.25)}}
-      if(b.sfxs&&cov>0)for(const s of b.sfxs){const [mode,thr,n,lv]=s;const v=mode==='b'?1-r.bottom/vh:mode==='top'?1-r.top/vh:mode==='p'?b.p:1-((r.top+r.bottom)/2)/vh;
+      if(b.sfxs&&cov>0)for(const s of b.sfxs){const [mode,thr,n,lv]=s;const v=mode==='b'?1-r.bottom/vh:mode==='top'?1-r.top/vh:mode==='p'?b.p:mode.slice(0,3)==='cap'?((b.caps&&b.caps[+mode.slice(3)]||{}).typ||0):1-((r.top+r.bottom)/2)/vh;  // 'capN' = how far bubble N has typed out
         if(v<thr-.1)s.arm=true;else if(v>=thr&&s.arm){s.arm=false;fplay(n,lv)}}}
     for(const n in FB){const f=FB[n];if(!f.g)continue;const fr=cap[n]?w[n]/cap[n]:0;const x=cap[n]*clamp(f.cut?(fr-f.cut)/(1-f.cut)*1.4:fr*1.4,0,1);  // cut: silent while less than this share of the screen shows the panel
     if(Math.abs(x-f.tgt)>.004){f.tgt=x;f.g.gain.setTargetAtTime(x,t,f.tc||.9)}}}  // tc: per-file fade speed (s)
@@ -812,10 +813,19 @@ const SND=(()=>{
   function sync(){S.on=S.music||S.sfx||S.voice;if(!S.on&&S.ctx)setTimeout(()=>{if(!S.on&&S.ctx&&S.ctx.state==='running')S.ctx.suspend()},700)}
   // music button: music bed + ambience + hits
   // music button: the music track only
+  // volume sliders: one level per track (music, SFX, narration), kept for the reader across the site (same keys as Catheartis)
+  const LV=(k,d)=>{try{const x=parseFloat(localStorage.getItem('lm-vol-'+k));return isFinite(x)?Math.min(1,Math.max(0,x)):d}catch(e){return d}};const VG=v=>v*v;
+  const VOL={music:LV('music',1),sfx:LV('sfx',1),voice:LV('voice',1)};
+  function setVol(k,v){v=Math.min(1,Math.max(0,v));VOL[k]=v;try{localStorage.setItem('lm-vol-'+k,String(v))}catch(e){}
+    if(!E||!S.ctx)return;const t=S.ctx.currentTime,g=VG(v);
+    if(k==='music'&&S.music&&(!ONLY||ONLY==='music')){musicBus.gain.cancelScheduledValues(t);musicBus.gain.setTargetAtTime(g,t,.05)}
+    if(k==='sfx'&&S.sfx&&(!ONLY||ONLY==='sfx')){sfxBus.gain.cancelScheduledValues(t);sfxBus.gain.setTargetAtTime(g,t,.05);if(SFX_ON){E.master.gain.cancelScheduledValues(t);E.master.gain.setTargetAtTime(.9*g,t,.05)}}
+    if(k==='voice'&&S.voice&&(!ONLY||ONLY==='voice')){E.voice.gain.cancelScheduledValues(t);E.voice.gain.setTargetAtTime(g,t,.05)}}
+  window.__vol={get:k=>VOL[k],set:setVol};
   function setMusic(v){
     if(v&&!ensure())return;if(!E){S.music=false;return}
     S.music=v;const t=S.ctx.currentTime;
-    if(v){musicBus.gain.cancelScheduledValues(t);musicBus.gain.setTargetAtTime(!ONLY||ONLY==='music'?1:0,t,.05);
+    if(v){musicBus.gain.cancelScheduledValues(t);musicBus.gain.setTargetAtTime(!ONLY||ONLY==='music'?VG(VOL.music):0,t,.05);
       if(music){music.play().catch(()=>{});mg.gain.cancelScheduledValues(t);mg.gain.setValueAtTime(0,t);mg.gain.linearRampToValueAtTime(MUSIC_LEVEL,t+3)}}
     else{musicBus.gain.cancelScheduledValues(t);musicBus.gain.setTargetAtTime(0,t,.15);setTimeout(()=>{if(!S.music&&music)music.pause()},700)}
     sync()}
@@ -823,14 +833,14 @@ const SND=(()=>{
   function setSfx(v){
     if(v&&!ensure())return;if(!E){S.sfx=false;return}
     S.sfx=v;const t=S.ctx.currentTime;E.master.gain.cancelScheduledValues(t);
-    E.master.gain.setTargetAtTime(v&&SFX_ON&&(!ONLY||ONLY==='sfx')?.9:0,t,v?.25:.15);
-    sfxBus.gain.cancelScheduledValues(t);sfxBus.gain.setTargetAtTime(v&&(!ONLY||ONLY==='sfx')?1:0,t,v?.25:.15);
+    E.master.gain.setTargetAtTime(v&&SFX_ON&&(!ONLY||ONLY==='sfx')?.9*VG(VOL.sfx):0,t,v?.25:.15);
+    sfxBus.gain.cancelScheduledValues(t);sfxBus.gain.setTargetAtTime(v&&(!ONLY||ONLY==='sfx')?VG(VOL.sfx):0,t,v?.25:.15);
     sync()}
   // narration button: voice-over only
   function setVoice(v){
     if(v&&!ensure())return;if(!E){S.voice=false;return}
     S.voice=v;const t=S.ctx.currentTime;
-    if(v){S.justOn=true;E.voice.gain.cancelScheduledValues(t);E.voice.gain.setTargetAtTime(!ONLY||ONLY==='voice'?1:0,t,.05)}
+    if(v){S.justOn=true;E.voice.gain.cancelScheduledValues(t);E.voice.gain.setTargetAtTime(!ONLY||ONLY==='voice'?VG(VOL.voice):0,t,.05)}
     else{voStop(.2);duck(false);E.voice.gain.cancelScheduledValues(t);E.voice.gain.setTargetAtTime(0,t,.15)}
     sync()}
   function hit(name,k){if(!SFX_ON||!S.sfx||!E||!HITS[name])return;const now=performance.now();if(cool[name]&&now-cool[name]<2500)return;cool[name]=now;(S.log||(S.log=[])).push(name);HITS[name](E,S.ctx.currentTime+.02,k)}
@@ -984,5 +994,27 @@ window.__construct={vid:k=>{const b=B[k];return b&&b.vid&&{t:b.vid.currentTime,p
   state:k=>{const b=B[k];return b&&{slot:!!b.slot,noGL:b.noGL,still:b.still.style.visibility||'visible'}}};
 })();
 </script>
+<script>(()=>{const bar=document.getElementById('sndbar');if(!bar||!window.__vol)return;
+const touch=(()=>{try{return matchMedia('(hover:none)').matches}catch(e){return false}})();
+const NAME={music:'Music',sfx:'Sound effects',voice:'Narration'};
+for(const btn of bar.querySelectorAll('[data-snd]')){
+  const k=btn.dataset.snd,w=document.createElement('span');w.className='sbw';btn.parentNode.insertBefore(w,btn);w.appendChild(btn);
+  const pop=document.createElement('span');pop.className='vpop';
+  pop.innerHTML='<input type="range" min="0" max="100" step="1" aria-label="'+(NAME[k]||k)+' volume">';w.appendChild(pop);
+  const r=pop.querySelector('input');r.value=Math.round(__vol.get(k)*100);
+  const paint=()=>r.style.setProperty('--v',r.value+'%');paint();
+  let hideT=0;const open=()=>{clearTimeout(hideT);w.classList.add('open')},close=()=>{clearTimeout(hideT);w.classList.remove('open')},
+    later=ms=>{clearTimeout(hideT);hideT=setTimeout(close,ms)};
+  r.addEventListener('input',()=>{__vol.set(k,r.value/100);paint();if(touch)later(3000)});
+  w.addEventListener('mouseenter',open);w.addEventListener('mouseleave',()=>later(260));
+  w.addEventListener('focusin',open);w.addEventListener('focusout',e=>{if(!w.contains(e.relatedTarget))later(200)});
+  // touch: press and hold a button opens its slider; the tap that ends the hold does not toggle the track
+  let lpT=0,held=false;
+  btn.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')return;held=false;clearTimeout(lpT);lpT=setTimeout(()=>{held=true;open();later(3500)},450)});
+  for(const ev of ['pointerup','pointercancel','pointerleave'])btn.addEventListener(ev,()=>clearTimeout(lpT));
+  btn.addEventListener('click',e=>{if(held){held=false;e.preventDefault();e.stopImmediatePropagation()}},true);
+  btn.addEventListener('contextmenu',e=>{if(e.pointerType!=='mouse')e.preventDefault()});
+  document.addEventListener('pointerdown',e=>{if(!w.contains(e.target))close()},true);
+}})();</script>
 </body>
 </html>

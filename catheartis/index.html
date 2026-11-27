@@ -156,6 +156,7 @@ body{font-family:var(--font-title);-webkit-font-smoothing:antialiased;overflow-x
 .sb:hover{background:rgba(24,18,14,.78)}
 .sb:focus-visible{outline:2px solid #ffd28a;outline-offset:3px}
 .sb.armed{animation:sndnudge 2.4s ease-in-out infinite}
+.sbw{position:relative;display:inline-flex}.vpop{position:absolute;left:50%;top:calc(100% + 8px);width:34px;height:118px;margin-left:-17px;border-radius:17px;background:rgba(8,8,12,.74);border:1px solid rgba(239,230,210,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s,transform .18s,visibility 0s .18s;z-index:31}.vpop::before{content:'';position:absolute;left:-8px;right:-8px;top:-12px;height:12px}.sbw.open .vpop{opacity:1;visibility:visible;transform:none;transition:opacity .18s,transform .18s}.vpop input{position:absolute;left:50%;top:50%;width:96px;height:26px;margin:0;padding:0;transform:translate(-50%,-50%) rotate(-90deg);-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;touch-action:none;--v:100%}.vpop input:focus{outline:none}.vpop input:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px rgba(255,210,138,.45)}.vpop input::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(90deg,#ffb35a var(--v),rgba(239,230,210,.25) var(--v))}.vpop input::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;margin-top:-5.5px;border-radius:50%;background:#ffd9a8;border:0}.vpop input::-moz-range-track{height:4px;border-radius:2px;background:rgba(239,230,210,.25)}.vpop input::-moz-range-progress{height:4px;border-radius:2px;background:#ffb35a}.vpop input::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:#ffd9a8;border:0}@media (prefers-reduced-motion:reduce){.vpop{transition:none!important}}
 .sndline{margin:2.6cqw 0 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.25em .5em;font-family:var(--font-title);font-weight:600;font-size:12px;line-height:1;letter-spacing:.22em;text-transform:uppercase;color:#e9c9a6;text-shadow:0 1px 3px #000;opacity:0}
 .go .sndline{animation:rise 1s 1.75s ease forwards}
 .sb.mini{width:2.6em;height:2.6em;letter-spacing:0;-webkit-backdrop-filter:none;backdrop-filter:none}
@@ -858,6 +859,8 @@ window.SND = (() => {
   };
 
   /* ---- live engine ---- */
+  const LV=(k,d)=>{try{const x=parseFloat(localStorage.getItem('lm-vol-'+k));return isFinite(x)?Math.min(1,Math.max(0,x)):d}catch(e){return d}};const VG=v=>v*v;
+  let mv = LV('music', 1), sv = LV('sfx', 1);
   let ctx = null, G = null, on = false, musicOn = false, sfxOn = false, zones = [], scene = '', lev = Object.assign({}, BASE), levS = Object.assign({}, BASE), sch = {}, cool = {}, lastT = 0, chapelBell = 0;
   function applyScene(name) {
     const S = Object.assign({}, BASE, SCENES[name] || {});
@@ -917,18 +920,27 @@ window.SND = (() => {
   }
   // music button: the music track only
   function setMusic(v) {
-    if (v) { if (!ensure()) { musicOn = false; return false; } musicOn = true; scene = ''; startMusic(); ramp(G.mus, 0.85, 0.4); }
+    if (v) { if (!ensure()) { musicOn = false; return false; } musicOn = true; scene = ''; startMusic(); ramp(G.mus, 0.85 * VG(mv), 0.4); }
     else { musicOn = false; if (ctx) { ramp(G.mus, 0, 0.12); setTimeout(() => { if (!musicOn && musicEl) musicEl.pause(); }, 700); } }
     settle(); return musicOn;
   }
   // SFX button: ambience and hits only
   function setSfx(v) {
-    if (v) { if (!ensure()) { sfxOn = false; return false; } sfxOn = true; scene = ''; ramp(G.out, 0.85, 0.4); }
+    if (v) { if (!ensure()) { sfxOn = false; return false; } sfxOn = true; scene = ''; ramp(G.out, 0.85 * VG(sv), 0.4); }
     else { sfxOn = false; if (ctx) ramp(G.out, 0, 0.12); }
     settle(); return sfxOn;
   }
   document.addEventListener('visibilitychange', () => { if (!ctx) return; if (document.hidden) { ctx.suspend(); if (musicEl) musicEl.pause(); } else if (on) { ctx.resume(); if (musicEl && musicOn) musicEl.play().catch(() => {}); } });
 
+  // volume sliders: a level per track, kept for the reader on this site
+  function setVol(k, v) {
+    v = Math.min(1, Math.max(0, v)); if (k === 'music') mv = v; else sv = v;
+    try { localStorage.setItem('lm-vol-' + k, String(v)); } catch (e) {}
+    if (!ctx || !G) return;
+    if (k === 'music' && musicOn) ramp(G.mus, 0.85 * VG(mv), 0.05);
+    if (k === 'sfx' && sfxOn) ramp(G.out, 0.85 * VG(sv), 0.05);
+  }
+  window.__vol = { get: k => (k === 'music' ? mv : sv), set: setVol };
   /* ---- buttons: music and sound effects, each on by default from the reader's first tap ---- */
   function wireButton() {
     const sbs = [...document.querySelectorAll('[data-snd]')], hint = null;
@@ -2088,5 +2100,26 @@ window.SND = (() => {
   requestAnimationFrame(frame);
 })();
 </script>
+<script>(()=>{const bar=document.getElementById('sndbar');if(!bar||!window.__vol)return;
+const touch=(()=>{try{return matchMedia('(hover:none)').matches}catch(e){return false}})();
+for(const btn of bar.querySelectorAll('[data-snd="music"],[data-snd="sfx"]')){
+  const k=btn.dataset.snd,w=document.createElement('span');w.className='sbw';btn.parentNode.insertBefore(w,btn);w.appendChild(btn);
+  const pop=document.createElement('span');pop.className='vpop';
+  pop.innerHTML='<input type="range" min="0" max="100" step="1" aria-label="'+(k==='music'?'Music':'Sound effects')+' volume">';w.appendChild(pop);
+  const r=pop.querySelector('input');r.value=Math.round(__vol.get(k)*100);
+  const paint=()=>r.style.setProperty('--v',r.value+'%');paint();
+  let hideT=0;const open=()=>{clearTimeout(hideT);w.classList.add('open')},close=()=>{clearTimeout(hideT);w.classList.remove('open')},
+    later=ms=>{clearTimeout(hideT);hideT=setTimeout(close,ms)};
+  r.addEventListener('input',()=>{__vol.set(k,r.value/100);paint();if(touch)later(3000)});
+  w.addEventListener('mouseenter',open);w.addEventListener('mouseleave',()=>later(260));
+  w.addEventListener('focusin',open);w.addEventListener('focusout',e=>{if(!w.contains(e.relatedTarget))later(200)});
+  // touch: press and hold the button opens its slider; the tap that ends the hold does not toggle the track
+  let lpT=0,held=false;
+  btn.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')return;held=false;clearTimeout(lpT);lpT=setTimeout(()=>{held=true;open();later(3500)},450)});
+  for(const ev of ['pointerup','pointercancel','pointerleave'])btn.addEventListener(ev,()=>clearTimeout(lpT));
+  btn.addEventListener('click',e=>{if(held){held=false;e.preventDefault();e.stopImmediatePropagation()}},true);
+  btn.addEventListener('contextmenu',e=>{if(e.pointerType!=='mouse')e.preventDefault()});
+  document.addEventListener('pointerdown',e=>{if(!w.contains(e.target))close()},true);
+}})();</script>
 </body>
 </html>
